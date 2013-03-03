@@ -6,18 +6,18 @@ comments: true
 categories: 
 ---
 
-<strong>I can't believe how much I've learned in 19 days of class.</strong> My last blog post was about understanding iterations, and now it's hard to image a time when that didn't make sense to me. 
+**I can't believe how much I've learned in 19 days of class.** My last blog post was about understanding iterations, and now it's hard to image a time when that didn't make sense to me. 
 
- <ul> **Highlights of the last few weeks include:**
+ <ul> Highlights of the last few weeks include:
   <li> Hearing <a href="http://steveklabnik.com/"> Steve Klabnik </a> speak about contributing to open source projects and his work on Rails. </li>
   <li> Building my own webserver on <a href="www.dediserve.com"> Dediserve.com </a> with the help of <a href="http://spike.grobste.in/"> Spike Grobstein </a> </li>
   <li> Understanding the breakdown of a MVC. I will never complain about my facebook page taking an extra 2 seconds to load ever again, especially on my mobile device. It really is like magic. </li>
-  <li> learning rails week 1. and my first rails app. </li>
+  <li> Learning rails week 1. and my first rails app. </li>
 </ul>
 
-  <p>While everything I've learned has been absolutely mindblowing, the thing I really took away from this week was how intricate a process it is just to log into facebook or twitter or online banking and have my information load in miliseconds on my computer. I now can appreciate how much work just goes into the design and coding to create the page in the first place. But also just to get the page live. Building a web server and grasping the complexity of the call and response that goes on behind the spaces was mind blowing. This post will cover setting up your server, connecting to it for the first time, creating your own user to connect, as well as disabling your insecure root user. Stay tuned for follow ups about installing gems, deploying with Capistrano, generating SSH keys on github, installing Passenger, and installing and configuring nginx.  </p>
+  While everything I've learned has been absolutely mind blowing, the thing that really hit home for me was how intricate a process it is just to log into facebook, twitter or online banking and have my information load in miliseconds. Along with appreciating how much work just goes into the design and coding to create the page, I also have a deep appreciate for Sysadmins, who's sole role is to keep your site up and running on a live server. Building a web server and grasping the complexity of the call and response that goes on behind the spaces was eye-opening. This post will cover setting up your server, connecting to it for the first time, creating your own user, as well as disabling your insecure root user. [NB: Stay tuned for follow ups about installing gems, deploying with Capistrano, generating SSH keys on github, installing Passenger, and installing and configuring nginx].  
 
-  <p><strong> A web server </strong> is a combination of both hardware and software that acts has a host to content, and delivers that content in the form of HTML through HTTP to the client, which in most cases is the browser. </p>
+  <strong>So what is a web server? A web server </strong> is a combination of both hardware and software that acts as a host to content, and delivers that content in the form of HTML through HTTP to the client, which in most cases is the browser.
 
 <h3> Creating your Server </h3>
   <p>We used <a href="www.dediserve.com" alt="Dediserve's Website"> Dediserve.com </a> as our cloud provider. They offer extensive Linux based distributions. In specific, we used Linxu's Ubuntu distribution, which is one of the most popular in use today. </p>
@@ -26,14 +26,14 @@ categories:
 
   <p> Once there, you'll be prompted to select a server hostname, a password for your server, what OS templace you would like (in this case, we used Ubuntu 12.04 x64), as well as bandwidth, disk space, memory, and CPU cores.</p>
 
-  <p>Once finished, Dediserve will automate and IP address for you. </p>
+  <p>Once finished, Dediserve will automate an IP address for you. </p>
 
 
   {% img /images/Dediserve.png %}
 
   <p><strong> An IP address is a unique set of numbers </strong> that represents a location for your server in the cloud. Every server has an IP address and every computer has an IP address. The IP addresses are what the server and computers use to find each other and communicate back and forth. </p>
 
-  <p> Dediserve will automatically generate your selected password as the password for the root user (or default administrator) for your server. This user has no restrictions in terms of access to your server. Because of this, it's considered bad practice to use this as your regular log-on. Also in terms of security of your server, it is the easiest path for someone to hack on to your server. (Further down in the instructions we will disable the root user). </p>
+  <p> Dediserve will automatically generate your selected password as the password for the root user (or default administrator) for your server. This user has no restrictions in terms of access. Because of this, it's considered bad practice to use this as your regular log-on. In terms of security of your server, this user is considerd insecure because it provides the easiest path for someone to hack on to your server. (Keep reading to learn how to disable the root user). </p>
 
 <h3> Connecting to Your Server </h3>
   </p>The next step is to create a connection to your server, using SSH. SSH stands for Secure SHell and is a way to conenct remotely to your server via commandline: </p>
@@ -46,9 +46,9 @@ You should get a prompt delcaring that the 'authenticity of host can't be establ
 
 <h3> Creating Your Own User </h3>
 The next step is to create your own user admin, which will override the root user. To do so, you will use the `useradd` command. 
-`useradd --help ` will bring up a list of options, including `s <shell>`, `-G <groups>`, and  `m`
+`useradd --help ` will bring up a list of options, including `s <shell>`, `-G <groups>`, and  `m`. The `--help` argument provides a list of argument options, as well as instructions for how to use them.
 
-We will want to run `useradd -s /bin/bash -G sudo -m USERNAME`. This command adds a user to your server, selects Bash as your commandline interface, adds sudo (or Super User Do) to your group giving your new admin full access, and then finally your new username is added to the home directory. 
+We will want to run `useradd -s /bin/bash -G sudo -m USERNAME`. This command adds a user to your server, selects Bash as your commandline interface, adds `sudo` (or Super User Do) to your group giving your new admin full access, and then finally your new username is added to the home directory. 
 
 You'll want to make sure and replace `USERNAME` with the username that you would like to use. 
 Then you'll need to create a password for your user by entering `passwd USERNAME`.
