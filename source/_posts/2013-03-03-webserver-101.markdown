@@ -6,7 +6,7 @@ comments: true
 categories: 
 ---
 
-**I can't believe how much I've learned in 19 days of class.** My last blog post was about understanding iterations, and now it's hard to image a time when that didn't make sense to me. 
+<strong>I can't believe how much I've learned in 19 days of class.<strong> My last blog post was about understanding iterations, and now it's hard to image a time when that didn't make sense to me. 
 
  <ul> Highlights of the last few weeks include:
   <li> Hearing <a href="http://steveklabnik.com/"> Steve Klabnik </a> speak about contributing to open source projects and his work on Rails. </li>
