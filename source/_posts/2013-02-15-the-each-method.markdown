@@ -6,6 +6,21 @@ comments: true
 categories: 
 ---
 
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
 <p><strong>Today marks day 9 into my 60 day course</strong> at <a href="flatironschool.com"> the Flatiron School. </a> Essentially, I'm 15% done. I would best summarize the last 9 days with these simple words: anxiety, frustration, and (sometimes) victory.<p>
 
 <p><strong>The thing about this course,</strong> essentially a "full-immersion language course", is the pace in which things are taught. It's fast. I was prepared for fast, but not this fast. We've been told from day one, "If you don't understand something now, don't worry. You will use these methods for the rest of your life, and at some point, they will make sense." I'm not used to moving on to new material before I grasp the current material, but we've also been told to trust the structure of the program, so I have.</p>

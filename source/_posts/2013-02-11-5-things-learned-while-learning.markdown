@@ -6,6 +6,20 @@ comments: true
 categories: 
 ---
 
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
 <h1>5 Things I've Learned About Myself While Learning to Code:</h1>
 <ul style="list-style:none">
 <p><li><strong>1. I need physical activity in order to well sleep at night.</strong> This statement rang true even when I was doing the prework for the <a href="http://flatironschool.com">Flatiron School</a>. I'm an active girl, and now I'm sitting for 10-12 hours a day. I had no idea the effect this sudden change would have on me. And oh the sleepless nights. Even when all my work is said and done, I can't seem to go to bed before 2am. The moral of the story is that I need to be more diligent about the gym. And here's the catch-22: I would rather spend my time hacking and reading about hacking than anything else. <li></p>
