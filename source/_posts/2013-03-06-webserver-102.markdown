@@ -211,11 +211,11 @@ To start Nginx, enter
 
 This should automatically return your prompt. Nginx spawns a connect in the background so that you can continue to work directly on your server. Once it's running, you should be able to access your application by going to
 
-  http://YOUR-IP
+    http://YOUR-IP
 
 To stop Nginx, enter
 
-  sudo nginx -s stop
+    sudo nginx -s stop
 
 
 And that's it! Your application has been deployed to your very own server! 
