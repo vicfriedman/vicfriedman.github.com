@@ -4,7 +4,7 @@
   <title><![CDATA[Too Busy Coding...]]></title>
   <link href="http://vicfriedman.github.com/atom.xml" rel="self"/>
   <link href="http://vicfriedman.github.com/"/>
-  <updated>2013-03-17T19:13:16-04:00</updated>
+  <updated>2013-03-17T19:16:22-04:00</updated>
   <id>http://vicfriedman.github.com/</id>
   <author>
     <name><![CDATA[Victoria Friedman]]></name>
@@ -18,7 +18,7 @@
     <link href="http://vicfriedman.github.com/blog/2013/03/17/inheritence/"/>
     <updated>2013-03-17T16:57:00-04:00</updated>
     <id>http://vicfriedman.github.com/blog/2013/03/17/inheritence</id>
-    <content type="html"><![CDATA[<p>One of the big differences between Ruby and other object oriented languages is that a class in Ruby can inherit from one and only one class. Essentially, each class can only have one child.</p>
+    <content type="html"><![CDATA[<p>One of the big differences between Ruby and other object oriented languages is that a class in Ruby can inherit from one and only one class. Essentially, each class can only have one parent, but many children.</p>
 
 <p>A great example to understand basic inheritence is to think about it in terms of animals. A cat is a mammal. And all mammals are animals. To break this down in Ruby, that inheritence would look like this:</p>
 
