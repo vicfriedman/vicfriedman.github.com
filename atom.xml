@@ -4,7 +4,7 @@
   <title><![CDATA[Too Busy Coding...]]></title>
   <link href="http://vicfriedman.github.com/atom.xml" rel="self"/>
   <link href="http://vicfriedman.github.com/"/>
-  <updated>2013-03-17T19:16:22-04:00</updated>
+  <updated>2013-03-17T19:17:04-04:00</updated>
   <id>http://vicfriedman.github.com/</id>
   <author>
     <name><![CDATA[Victoria Friedman]]></name>
@@ -36,7 +36,7 @@ end
 
 <pre><code>class Animal
 
-  def breath
+  def breathe
     "inhale"
   end
 end
@@ -56,7 +56,7 @@ class Cat &lt; Mammal
 end
 </code></pre>
 
-<p>In this case, all instances of the Cat class say &#8220;MEOW&#8221;, have true hair, and breath. However, they only inherit directly from Mammal, and Mammal only directly inherits from Animal. No instances of Mammal say &#8220;MEOW&#8221;.</p>
+<p>In this case, all instances of the Cat class say &#8220;MEOW&#8221;, have true hair, and breathe. However, they only inherit directly from Mammal, and Mammal only directly inherits from Animal. No instances of Mammal say &#8220;MEOW&#8221;.</p>
 
 <p>Another great way to extend functionality to a class in Ruby is through the use of Modules.</p>
 
