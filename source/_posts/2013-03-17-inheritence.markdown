@@ -7,7 +7,7 @@ categories:
 ---
 
 
-One of the big differences between Ruby and other object oriented languages is that a class in Ruby can inherit from one and only one class. Essentially, each class can only have one child. 
+One of the big differences between Ruby and other object oriented languages is that a class in Ruby can inherit from one and only one class. Essentially, each class can only have one parent, but many children. 
 
 A great example to understand basic inheritence is to think about it in terms of animals. A cat is a mammal. And all mammals are animals. To break this down in Ruby, that inheritence would look like this:
 
