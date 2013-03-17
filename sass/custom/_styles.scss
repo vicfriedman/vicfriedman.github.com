@@ -12,13 +12,13 @@
     /* ----- main layout ----- */
 
 
-    html { background: #262C33 url("../images/background.png"); }
+    html { background: #262C33 url("../images/background_nyc.jpg"); background_repeat: no-repeat; }
 
     body { font-size: 1em; }
 
-    body > div { background-image: none; }
+    body > div { background-image: none; background_repeat: no-repeat; }
 
-    body > div > div { background-image: none; }
+    body > div > div { background-image: none; background_repeat: no-repeat;  }
 
 
     /* ----- header ----- */
