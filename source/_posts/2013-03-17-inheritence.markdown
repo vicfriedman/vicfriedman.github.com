@@ -24,7 +24,7 @@ The `<` denotes inheritence. In this example, the class Cat inherits all the pro
 
     class Animal
 
-      def breath
+      def breathe
         "inhale"
       end
     end
@@ -43,7 +43,7 @@ The `<` denotes inheritence. In this example, the class Cat inherits all the pro
       end
     end
 
-In this case, all instances of the Cat class say "MEOW", have true hair, and breath. However, they only inherit directly from Mammal, and Mammal only directly inherits from Animal. No instances of Mammal say "MEOW". 
+In this case, all instances of the Cat class say "MEOW", have true hair, and breathe. However, they only inherit directly from Mammal, and Mammal only directly inherits from Animal. No instances of Mammal say "MEOW". 
 
 
 Another great way to extend functionality to a class in Ruby is through the use of Modules.
