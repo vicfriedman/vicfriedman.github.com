@@ -9,7 +9,7 @@
   <meta name="author" content="Victoria Friedman">
 
   
-  <meta name="description" content="In my last post, I explained how to create a webserver using Dediserve.com. [NB: Dediserve.com is the cloud provider]. This post will cover the &hellip;">
+  <meta name="description" content="One of the big differences between Ruby and other object oriented languages is that a class in Ruby can inherit from one and only one class. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,6 +21,7 @@
   <link rel="canonical" href="http://vicfriedman.github.com/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="/javascripts/ender.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
@@ -28,6 +29,7 @@
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
 
 
   
@@ -36,14 +38,10 @@
 
 <body   >
   <header role="banner"><hgroup>
-  <h1><a href="/">Too Busy Coding...</a></h1>
-  
-    <h2>Girl learns to code in New York City</h2>
-  
 </hgroup>
 
 </header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
   <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
   
 </ul>
@@ -60,11 +58,155 @@
   <li><a href="/blog/archives">Archives</a></li>
 </ul>
 
-</nav>
+</nav> -->
   <div id="main">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/17/inheritence/">Inheritence</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-17T16:57:00-04:00" pubdate data-updated="true">Mar 17<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>One of the big differences between Ruby and other object oriented languages is that a class in Ruby can inherit from one and only one class. Essentially, each class can only have one child.</p>
+
+<p>A great example to understand basic inheritence is to think about it in terms of animals. A cat is a mammal. And all mammals are animals. To break this down in Ruby, that inheritence would look like this:</p>
+
+<pre><code>class Animal
+end
+
+class Mammal &lt; Animal
+end
+
+class Cat &lt; Mammal
+end
+</code></pre>
+
+<p>The <code>&lt;</code> denotes inheritence. In this example, the class Cat inherits all the properties from the Mammal class, as well as the Animal class.</p>
+
+<pre><code>class Animal
+
+  def breath
+    "inhale"
+  end
+end
+
+class Mammal &lt; Animal
+
+  def hair
+    "Mammals are the only category of animals that have true hair"
+  end
+end
+
+class Cat &lt; Mammal
+
+  def meow
+    "MEOW"
+  end
+end
+</code></pre>
+
+<p>In this case, all instances of the Cat class say &#8220;MEOW&#8221;, have true hair, and breath. However, they only inherit directly from Mammal, and Mammal only directly inherits from Animal. No instances of Mammal say &#8220;MEOW&#8221;.</p>
+
+<p>Another great way to extend functionality to a class in Ruby is through the use of Modules.</p>
+
+<p>A Module is a collection of methods and constants.  A module is made up of resuable code that doesn&#8217;t naturally form a class. Because it is not a class, a module can&#8217;t have instance methods.</p>
+
+<p>Modules allow you to implement mixins. A mixin is a way to either include or extend the functionality of your Module to mulitple Ruby classes.</p>
+
+<p>When you Include a module in a class you are including the module methods as instance methods of that class. When you Extend a module in a class, you are adding the module methods as class methods. Essentially, when you declare <code>extend</code> in your classes, you are saying <code>self.extend</code>.</p>
+
+<p>I found a great example of this functionality in action via <a href="http://rubysource.com/ruby-mixins-2/">Ruby Source</a>.</p>
+
+<pre><code>module Logging
+  def logger
+    @logger ||= Logger.new(opts)
+  end
+end
+
+class Person
+  include Logging
+    def relocate
+      logger.debug "Relocating person..."
+        # do relocation stuff
+    end
+end
+</code></pre>
+
+<p>In this example, the Logging module provides an instance of a logger (<code>@logger</code>). Because class Person includes the Logging module, all of it&#8217;s methods are mixed-in as instances methods. The method logger is now a method that acts on all instances of the Person class.</p>
+
+<p>Another option is to extend the Logger module:</p>
+
+<pre><code>  module Logging
+
+    def logger
+      @@logger ||= Logger.new(opts)
+    end
+
+  end
+
+  class Person
+    extend Logging
+
+      def relocate
+        Person.logger.debug "Relocating person..."
+
+        # could also access it with this
+
+        self.class.logger.debug "Relocating person..."
+
+      end
+    end
+</code></pre>
+
+<p>In this example, the Logger module as a class variable <code>@@logger</code> which allows this module to be extended to multiple classes. Because the module is extended to the class Person, the method defined in the module can only be called on the class itself, here it is demonstrated in two ways:</p>
+
+<pre><code>Person.logger.debug
+</code></pre>
+
+<p>and</p>
+
+<pre><code>self.logger.debug
+</code></pre>
+
+<ol><h3>Helpful Resources:</h3>
+<li>Inheritence: <a href="http://rubylearning.com/satishtalim/ruby_inheritance.html">Ruby Learning</a></li>
+<li>Modules: <a href="http://www.ruby-doc.org/docs/ProgrammingRuby/html/tut_modules.html">The Pragmatic Programmer&#8217;s Guide</a> </li>
+<li>More Modules: <a href="http://ruby-doc.org/core-2.0/Module.html">Ruby Documentation</a></li>
+</ol>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -688,15 +830,29 @@ But take note of the actual return value from Ruby, it is still the original arr
   
   <div class="pagination">
     
-    <a href="/blog/archives">Blog Archives</a>
+    <a href="archives">Blog Archives</a>
     
   </div>
 </div>
 <aside class="sidebar">
   
     <section>
+  <ul id="recent_posts">
+      <li class="post">
+      <a href="http://vicfriedman.github.com" alt="Home"><img src="/images/Home.png"></a>
+      <a href="http://vicfriedman.github.com/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
+      <a href="mailto:" alt="E-Mail"><img src="/images/Envelope.png"></a>
+      <a href="http://vicfriedman.github.com/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
+      </li>
+  </ul>
+</section>
+<section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/17/inheritence/">inheritence</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/03/06/webserver-102/">webserver 102</a>
@@ -712,10 +868,6 @@ But take note of the actual return value from Ruby, it is still the original arr
     
       <li class="post">
         <a href="/blog/2013/02/11/5-things-learned-while-learning/">5 Things</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/02/05/hello-world/">Hello, world!</a>
       </li>
     
   </ul>
