@@ -4,7 +4,7 @@
   <title><![CDATA[Too Busy Coding...]]></title>
   <link href="http://vicfriedman.github.com/atom.xml" rel="self"/>
   <link href="http://vicfriedman.github.com/"/>
-  <updated>2013-03-24T17:30:05-04:00</updated>
+  <updated>2013-03-24T17:37:56-04:00</updated>
   <id>http://vicfriedman.github.com/</id>
   <author>
     <name><![CDATA[Victoria Friedman]]></name>
@@ -18,7 +18,7 @@
     <link href="http://vicfriedman.github.com/blog/2013/03/24/action-mailer-configurations/"/>
     <updated>2013-03-24T16:26:00-04:00</updated>
     <id>http://vicfriedman.github.com/blog/2013/03/24/action-mailer-configurations</id>
-    <content type="html"><![CDATA[<p>This week, I started working on a presentation with two other girls, <a href="http://1aurabrown.github.com/">Laura Brown</a> and <a href="http://anabecker.tumblr.com/">Ana Becker</a> to present at the NYC on Rails meetup this coming Thursday(March 28). Our app revolves around using <a href ="http://rubygems.org/gems/actionmailer"> ActionMailer</a>. And this was the first time I&#8217;ve tried to use the gem.</p>
+    <content type="html"><![CDATA[<p>This week, I started working on a presentation with two other girls, <a href="http://1aurabrown.github.com/">Laura Brown</a> and <a href="http://anabecker.tumblr.com/">Ana Becker</a> to present at the <a href="http://www.meetup.com/nyc-on-rails/">NYC on Rails</a> meetup this coming Thursday (March 28). Our app revolves around using <a href ="http://rubygems.org/gems/actionmailer"> ActionMailer</a>. And this was the first time I&#8217;ve tried to use the gem.</p>
 
 <p>The documentation for it is really good, and the implementation doesn&#8217;t require too many steps. <a href="http://guides.rubyonrails.org/action_mailer_basics.html">RailsGuides</a> has a great step by step breakdown of the entire process, inluding the steps for generating a Mailer.</p>
 
