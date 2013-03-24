@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Hello, world! - Too Busy Coding...</title>
+  <title>inheritence - Too Busy Coding...</title>
   <meta name="author" content="Victoria Friedman">
 
   
-  <meta name="description" content="var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-38989132-1']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement(' &hellip;">
+  <meta name="description" content="One of the big differences between Ruby and other object oriented languages is that a class in Ruby can inherit from one and only one class. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://vicfriedman.github.com/blog/2013/02/05/hello-world/">
+  <link rel="canonical" href="http://vicfriedman.github.com/blog/2013/03/17/inheritence/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
    <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
@@ -66,7 +66,7 @@
   
   <header>
     
-      <h1 class="entry-title">Hello, World!</h1>
+      <h1 class="entry-title">Inheritence</h1>
     
     
       <p class="meta">
@@ -82,29 +82,122 @@
   
 
 
-<time datetime="2013-02-05T17:29:00-05:00" pubdate data-updated="true">Feb 5<span>th</span>, 2013</time>
+<time datetime="2013-03-17T16:57:00-04:00" pubdate data-updated="true">Mar 17<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><script type="text/javascript">
+<div class="entry-content"><p>One of the big differences between Ruby and other object oriented languages is that a class in Ruby can inherit from one and only one class. Essentially, each class can only have one parent, but many children.</p>
 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-38989132-1']);
-  _gaq.push(['_trackPageview']);
+<p>A great example to understand basic inheritence is to think about it in terms of animals. A cat is a mammal. And all mammals are animals. To break this down in Ruby, that inheritence would look like this:</p>
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+<pre><code>class Animal
+end
 
-</script>
+class Mammal &lt; Animal
+end
+
+class Cat &lt; Mammal
+end
+</code></pre>
+
+<p>The <code>&lt;</code> denotes inheritence. In this example, the class Cat inherits all the properties from the Mammal class, as well as the Animal class.</p>
+
+<pre><code>class Animal
+
+  def breathe
+    "inhale"
+  end
+end
+
+class Mammal &lt; Animal
+
+  def hair
+    "Mammals are the only category of animals that have true hair"
+  end
+end
+
+class Cat &lt; Mammal
+
+  def meow
+    "MEOW"
+  end
+end
+</code></pre>
+
+<p>In this case, all instances of the Cat class say &#8220;MEOW&#8221;, have true hair, and breathe. However, they only inherit directly from Mammal, and Mammal only directly inherits from Animal. No instances of Mammal say &#8220;MEOW&#8221;.</p>
+
+<p>Another great way to extend functionality to a class in Ruby is through the use of Modules.</p>
+
+<p>A Module is a collection of methods and constants.  A module is made up of resuable code that doesn&#8217;t naturally form a class. Because it is not a class, a module can&#8217;t have instance methods.</p>
+
+<p>Modules allow you to implement mixins. A mixin is a way to either include or extend the functionality of your Module to mulitple Ruby classes.</p>
+
+<p>When you Include a module in a class you are including the module methods as instance methods of that class. When you Extend a module in a class, you are adding the module methods as class methods. Essentially, when you declare <code>extend</code> in your classes, you are saying <code>self.extend</code>.</p>
+
+<p>I found a great example of this functionality in action via <a href="http://rubysource.com/ruby-mixins-2/">Ruby Source</a>.</p>
+
+<pre><code>module Logging
+  def logger
+    @logger ||= Logger.new(opts)
+  end
+end
+
+class Person
+  include Logging
+    def relocate
+      logger.debug "Relocating person..."
+        # do relocation stuff
+    end
+end
+</code></pre>
+
+<p>In this example, the Logging module provides an instance of a logger (<code>@logger</code>). Because class Person includes the Logging module, all of it&#8217;s methods are mixed-in as instances methods. The method logger is now a method that acts on all instances of the Person class.</p>
+
+<p>Another option is to extend the Logger module:</p>
+
+<pre><code>  module Logging
+
+    def logger
+      @@logger ||= Logger.new(opts)
+    end
+
+  end
+
+  class Person
+    extend Logging
+
+      def relocate
+        Person.logger.debug "Relocating person..."
+
+        # could also access it with this
+
+        self.class.logger.debug "Relocating person..."
+
+      end
+    end
+</code></pre>
+
+<p>In this example, the Logger module as a class variable <code>@@logger</code> which allows this module to be extended to multiple classes. Because the module is extended to the class Person, the method defined in the module can only be called on the class itself, here it is demonstrated in two ways:</p>
+
+<pre><code>Person.logger.debug
+</code></pre>
+
+<p>and</p>
+
+<pre><code>self.logger.debug
+</code></pre>
+
+<ol><h3>Helpful Resources:</h3>
+<li>Inheritence: <a href="http://rubylearning.com/satishtalim/ruby_inheritance.html">Ruby Learning</a></li>
+<li>Modules: <a href="http://www.ruby-doc.org/docs/ProgrammingRuby/html/tut_modules.html">The Pragmatic Programmer&#8217;s Guide</a> </li>
+<li>More Modules: <a href="http://ruby-doc.org/core-2.0/Module.html">Ruby Documentation</a></li>
+</ol>
 
 
-<p>Are you there God? It&#8217;s me, Margaret.</p>
+
 </div>
 
 
@@ -127,7 +220,7 @@
   
 
 
-<time datetime="2013-02-05T17:29:00-05:00" pubdate data-updated="true">Feb 5<span>th</span>, 2013</time>
+<time datetime="2013-03-17T16:57:00-04:00" pubdate data-updated="true">Mar 17<span>th</span>, 2013</time>
       
 
 
@@ -135,7 +228,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2013/02/05/hello-world/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2013/02/05/hello-world/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2013/03/17/inheritence/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2013/03/17/inheritence/" >Tweet</a>
   
   
   
@@ -144,8 +237,8 @@
     
     <p class="meta">
       
+        <a class="basic-alignment left" href="/blog/2013/03/06/webserver-102/" title="Previous Post: webserver 102">&laquo; webserver 102</a>
       
-        <a class="basic-alignment right" href="/blog/2013/02/11/5-things-learned-while-learning/" title="Next Post: 5 Things">5 Things &raquo;</a>
       
     </p>
   </footer>
