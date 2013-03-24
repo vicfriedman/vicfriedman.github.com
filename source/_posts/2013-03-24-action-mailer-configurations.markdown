@@ -14,20 +14,20 @@ All of that was easy. I only wanted to render a default template in my view, and
 
 My problem fell in the configurations. I had no idea that I had to setup SMTP configurations to send my email. And then once I figured that out, where do I enter my specific configurations.
 
-**Step 1:** 
+**Step 1:** <br>
 At first we weren't getting any errors. It seemed as if our app was sending emails...but no one was getting any of them. The first thing we had to do was edit `config/evironments/development.rb`. That file contains the line:
       config.action_mailer.raise_delivery_errors = false
 which needs to be changed to read:
       config.action_mailer.raise_delivery_errors = true
 And then we started to get errors we could work from.
 
-**Step 2:** 
+**Step 2:** <br>
 Because we're using a Gmail account for our gem, we had to configure ActionMailer specifically for that account. The first step to that was to include the following two lines:
     config.action_mailer.perform_deliveries = true
     config.action_mailer.delivery_method = :smtp
-These lines delcares that SMTP will deliver our emails. SMTP stands for Simple Mail Transfer Protocol. They also have a layer of authentication built into it's functionality
+These lines delcares that SMTP will deliver our emails. SMTP stands for Simple Mail Transfer Protocol. This protocol also has a layer of authentication built into it's functionality
 
-**Step 3:**
+**Step 3:**<br>
 The next step is to declare your specific SMTP configurations.
      config.action_mailer.smtp_settings = {
       :address => 'smtp.gmail.com',
