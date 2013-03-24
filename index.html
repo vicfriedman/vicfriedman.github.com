@@ -100,7 +100,7 @@
 
 <p>My problem fell in the configurations. I had no idea that I had to setup SMTP configurations to send my email. And then once I figured that out, where do I enter my specific configurations.</p>
 
-<p><strong>Step 1:</strong>
+<p><strong>Step 1:</strong> <br>
 At first we weren&#8217;t getting any errors. It seemed as if our app was sending emails&#8230;but no one was getting any of them. The first thing we had to do was edit <code>config/evironments/development.rb</code>. That file contains the line:</p>
 
 <pre><code>  config.action_mailer.raise_delivery_errors = false
@@ -113,7 +113,7 @@ At first we weren&#8217;t getting any errors. It seemed as if our app was sendin
 
 <p>And then we started to get errors we could work from.</p>
 
-<p><strong>Step 2:</strong>
+<p><strong>Step 2:</strong> <br>
 Because we&#8217;re using a Gmail account for our gem, we had to configure ActionMailer specifically for that account. The first step to that was to include the following two lines:</p>
 
 <pre><code>config.action_mailer.perform_deliveries = true
@@ -122,7 +122,7 @@ config.action_mailer.delivery_method = :smtp
 
 <p>These lines delcares that SMTP will deliver our emails. SMTP stands for Simple Mail Transfer Protocol. They also have a layer of authentication built into it&#8217;s functionality</p>
 
-<p><strong>Step 3:</strong>
+<p><strong>Step 3:</strong><br>
 The next step is to declare your specific SMTP configurations.</p>
 
 <pre><code> config.action_mailer.smtp_settings = {
