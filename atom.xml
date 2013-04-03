@@ -4,7 +4,7 @@
   <title><![CDATA[Too Busy Coding...]]></title>
   <link href="http://vicfriedman.github.com/atom.xml" rel="self"/>
   <link href="http://vicfriedman.github.com/"/>
-  <updated>2013-04-02T20:17:40-04:00</updated>
+  <updated>2013-04-02T20:18:39-04:00</updated>
   <id>http://vicfriedman.github.com/</id>
   <author>
     <name><![CDATA[Victoria Friedman]]></name>
@@ -43,7 +43,7 @@
 
 <p><img src="http://vicfriedman.github.com/images/post_images/delete.png"></p>
 
-<p>The next thing I learned about cron mail, was that <code>exit</code>, exits you from your inbox, but doesn&#8217;t save any changes. <code>quit</code> is the command that saves and exits. And as you can see in the image above, after I <code>quit</code> and then enter my mailbox again, I&#8217;m told <code>no mail for victoria</code></p>
+<p>The next thing I learned about cron mail, was that <code>exit</code>, exits you from your inbox, but doesn&#8217;t save any changes. <code>quit</code> is the command that saves and exits. And as you can see in the image above, after I <code>quit</code> and then entered my mailbox again, I&#8217;m told <code>no mail for victoria</code></p>
 ]]></content>
   </entry>
   
