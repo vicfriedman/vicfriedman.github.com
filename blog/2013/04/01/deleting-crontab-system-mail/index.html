@@ -5,15 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Blog Archive - Too Busy Coding...</title>
+  <title>deleting crontab system mail - Too Busy Coding...</title>
   <meta name="author" content="Victoria Friedman">
 
   
-  <meta name="description" content="Blog Archive 2013 deleting crontab system mail
-Apr 01 2013 action mailer configurations
-Mar 24 2013 inheritence
-Mar 17 2013 webserver 102
-Mar 06 &hellip;">
+  <meta name="description" content="Last week, I presented an app to NYC on Rails. The main focus was to learn about ActionMailer, paired with cron jobs and the Whenever gem. The &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -22,7 +18,7 @@ Mar 06 &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://vicfriedman.github.com/archives/">
+  <link rel="canonical" href="http://vicfriedman.github.com/blog/2013/04/01/deleting-crontab-system-mail/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
    <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
@@ -66,101 +62,103 @@ Mar 06 &hellip;">
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Blog Archive</h1>
+    
+      <h1 class="entry-title">Deleting Crontab System Mail</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-01T21:17:00-04:00" pubdate data-updated="true">Apr 1<span>st</span>, 2013</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives">
 
 
+<div class="entry-content"><p><strong><em>Last week, I presented an app to <a href="http://www.meetup.com/nyc-on-rails/">NYC on Rails</a>.</em></strong> The main focus was to learn about ActionMailer, paired with cron jobs and the <a href="https://github.com/javan/whenever">Whenever gem</a>.</p>
 
-  
-  <h2>2013</h2>
+<p><strong><em>The hardest part of all of it was configuring the cron log</em></strong> to write to the correct files. I was getting permission errors when trying to get cron to write to the log directly in my application. In the end, I managed to configure the crontab to print errors to a directy of my computer.</p>
 
-<article>
-  
-<h1><a href="/blog/2013/04/01/deleting-crontab-system-mail/">deleting crontab system mail</a></h1>
-<time datetime="2013-04-01T21:17:00-04:00" pubdate><span class='month'>Apr</span> <span class='day'>01</span> <span class='year'>2013</span></time>
+<pre><code>set :cron_log, "~/log/cron_log.log"
+</code></pre>
 
+<p><strong><em>While this gave cron proper permissions,</em></strong> and allowed me to debug during development, I ended up 283 system emails on my computer, sent directly to victoria@victoria-miranda-friedman&#8217;s-macbook. And I had no idea how to remove them from my root directory.</p>
 
-</article>
+<p>Every time I entered terminal, I saw this message:</p>
 
+<p><img src="/images/post_images/youve_got_mail.png"></p>
 
+<p>In order to enter your mailbox, type <code>mail</code>. This will display:</p>
 
-<article>
-  
-<h1><a href="/blog/2013/03/24/action-mailer-configurations/">action mailer configurations</a></h1>
-<time datetime="2013-03-24T16:26:00-04:00" pubdate><span class='month'>Mar</span> <span class='day'>24</span> <span class='year'>2013</span></time>
+<p><img src="/images/post_images/mail_display.png"></p>
 
+<p>The return in terminal clearly tells you <code>Type ? for help.</code>, which returns:</p>
 
-</article>
+<p><img src="/images/post_images/mail_options.png"></p>
 
+<p>And from here, you get clear instructions on how to delete your mail. To delete one email, enter <code>d 1</code>. If you wanted to delete ten emails, you would enter <code>d 1-10</code>, or in my first attempt <code>d 1-283</code>.</p>
 
+<p><img src="/images/post_images/delete.png"></p>
 
-<article>
-  
-<h1><a href="/blog/2013/03/17/inheritence/">inheritence</a></h1>
-<time datetime="2013-03-17T16:57:00-04:00" pubdate><span class='month'>Mar</span> <span class='day'>17</span> <span class='year'>2013</span></time>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/03/06/webserver-102/">webserver 102</a></h1>
-<time datetime="2013-03-06T17:50:00-05:00" pubdate><span class='month'>Mar</span> <span class='day'>06</span> <span class='year'>2013</span></time>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/03/03/webserver-101/">webserver 101</a></h1>
-<time datetime="2013-03-03T13:38:00-05:00" pubdate><span class='month'>Mar</span> <span class='day'>03</span> <span class='year'>2013</span></time>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/02/15/the-each-method/">The Each Method</a></h1>
-<time datetime="2013-02-15T07:40:00-05:00" pubdate><span class='month'>Feb</span> <span class='day'>15</span> <span class='year'>2013</span></time>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/02/11/5-things-learned-while-learning/">5 Things</a></h1>
-<time datetime="2013-02-11T19:51:00-05:00" pubdate><span class='month'>Feb</span> <span class='day'>11</span> <span class='year'>2013</span></time>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/02/05/hello-world/">Hello, world!</a></h1>
-<time datetime="2013-02-05T17:29:00-05:00" pubdate><span class='month'>Feb</span> <span class='day'>05</span> <span class='year'>2013</span></time>
-
-
-</article>
-
+<p>The next thing I learned about cron mail, was that <code>exit</code>, exits you from your inbox, but doesn&#8217;t save any changes. <code>quit</code> is the command that saves and exits. And as you can see in the image above, after I <code>quit</code> and then enter my mailbox again, I&#8217;m told <code>no mail for victoria</code></p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Victoria Friedman</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-01T21:17:00-04:00" pubdate data-updated="true">Apr 1<span>st</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2013/04/01/deleting-crontab-system-mail/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2013/04/01/deleting-crontab-system-mail/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/03/24/action-mailer-configurations/" title="Previous Post: action mailer configurations">&laquo; action mailer configurations</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>
