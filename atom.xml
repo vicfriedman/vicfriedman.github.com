@@ -4,7 +4,7 @@
   <title><![CDATA[Too Busy Coding...]]></title>
   <link href="http://vicfriedman.github.com/atom.xml" rel="self"/>
   <link href="http://vicfriedman.github.com/"/>
-  <updated>2013-04-02T20:16:30-04:00</updated>
+  <updated>2013-04-02T20:17:40-04:00</updated>
   <id>http://vicfriedman.github.com/</id>
   <author>
     <name><![CDATA[Victoria Friedman]]></name>
@@ -35,7 +35,7 @@
 
 <p><img src="http://vicfriedman.github.com/images/post_images/mail_display.png"></p>
 
-<p>The return in terminal clearly tells you <code>Type ? for help.</code>, which returns:</p>
+<p>The return in terminal clearly tells you <code>Type ? for help.</code>, which returns a list of all possible methods to act on your mailbox and its contents</p>
 
 <p><img src="http://vicfriedman.github.com/images/post_images/mail_options.png"></p>
 
