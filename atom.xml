@@ -4,7 +4,7 @@
   <title><![CDATA[Too Busy Coding...]]></title>
   <link href="http://vicfriedman.github.com/atom.xml" rel="self"/>
   <link href="http://vicfriedman.github.com/"/>
-  <updated>2013-04-02T20:15:31-04:00</updated>
+  <updated>2013-04-02T20:16:30-04:00</updated>
   <id>http://vicfriedman.github.com/</id>
   <author>
     <name><![CDATA[Victoria Friedman]]></name>
@@ -25,7 +25,7 @@
 <pre><code>set :cron_log, "~/log/cron_log.log"
 </code></pre>
 
-<p><strong><em>While this gave cron proper permissions,</em></strong> and allowed me to debug during development, I ended up 283 system emails on my computer, sent directly to victoria@victoria-miranda-friedman&#8217;s-macbook. And I had no idea how to remove them from my root directory.</p>
+<p><strong><em>While this gave cron proper permissions</em></strong> and allowed me to debug during development, I ended up 283 system emails on my computer, sent directly to victoria@victoria-miranda-friedman&#8217;s-macbook. And I had no idea how to remove them from my root directory.</p>
 
 <p>Every time I entered terminal, I saw this message:</p>
 
