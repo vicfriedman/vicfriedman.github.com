@@ -4,7 +4,7 @@
   <title><![CDATA[Too Busy Coding...]]></title>
   <link href="http://vicfriedman.github.com/atom.xml" rel="self"/>
   <link href="http://vicfriedman.github.com/"/>
-  <updated>2013-04-02T20:18:39-04:00</updated>
+  <updated>2013-04-13T16:39:34-04:00</updated>
   <id>http://vicfriedman.github.com/</id>
   <author>
     <name><![CDATA[Victoria Friedman]]></name>
@@ -12,6 +12,68 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[ruby marshaling]]></title>
+    <link href="http://vicfriedman.github.com/blog/2013/04/10/ruby-marshaling/"/>
+    <updated>2013-04-10T14:11:00-04:00</updated>
+    <id>http://vicfriedman.github.com/blog/2013/04/10/ruby-marshaling</id>
+    <content type="html"><![CDATA[<p><strong><em>As my semester at <a href="http://flatironschool.com/">The Flatiron School</a> winds down,</em></strong> we&#8217;ve been spending our time building our final projects. My group, <a href="tmd.io">Tyler Davis</a>, <a href="dolin.github.com">Danny Olinsky</a>, and <a href="http://jlarusso.github.io/">Jesse La Russo</a>, is building a modern-take on an old fashioned gold star board. Aka, you write a blog post? You get a gold star. You finish a Code School course? You get a gold star. We&#8217;ve built in a lot of other functionality (our own authentication and authorization, the ability for users to give each other stars, background cron jobs, etc. etc.), but that&#8217;s the gist of it.</p>
+
+<p><strong><em>The best thing about this whole process</em></strong> has been the things I&#8217;ve learned from the errors we get. In this way, I learned about the <a href="http://ruby-doc.org/core-1.9.3/Marshal.html">Ruby Marshal Module</a>.</p>
+
+<p><strong><em>The Marshal Module</em></strong> essentially takes a collection of Ruby Objects and converts them into a byte stream, and then allows it to be stored and accessed elsewhere.</p>
+
+<p><strong><em>One of this big things with our project has been working with APIs</em></strong> in order to automate the processes of giving stars. The Treehouse API was particularly difficult to parse through, so for the time being, I created a dictionary to deal with their objects. Essentially, we want to give a star for every category a user completes.</p>
+
+<pre><code>  @@dictionary = {
+  "Website Basics" =&gt; ["Website Basics"],
+  "Technology Foundations" =&gt; ['Graphic Basics'],
+  "Aesthetic Foundations" =&gt; ["Elements", "Principles", "Color Theory"],
+  "HTML" =&gt; ["Introduction", "Text", "Lists", "Links", "Objects", "Tables", "Forms"],
+  "CSS Foundations" =&gt; ["Introduction", "Selectors", "Data Types", "Text", "Box Model", "Page Layout", "Printing", "Framework Foundations"],
+  "CSS3" =&gt; ["Selectors", "Typography", "Web Fonts", "Borders", "Gradients", "Backgrounds", "Transitions", "Transforms", "Animation", "Multi-Column Layouts", "Media Queries"],
+  "Build a Responsive Website" =&gt; ["Introduction to Response Web Design", "Fluid Foundation", "Adaptive Design", "Responsive Design", "Advanced Techniques"],
+  "Introduction to Programming" =&gt; ["Basics", "Control Structures", "Objects and Arrays", "Functions"],
+  "JavaScript Foundations" =&gt; ["Introduction Variables", "JavaScript Strings", "JavaScript Numbers", "JavaScript Arrays", "JavaScript Functions", "JavaScript Objects"],
+  "Ruby Foundations" =&gt; ["Ruby Basics", "Objects, Classes, and Variables", "Ruby Strings", "Ruby Numbers", "Ruby Arrays", "Ruby Hashes", "Ruby Methods", "Ruby Loops", "Ruby Blocks", "Ruby Procs &amp; Lambdas", "Ruby Modules", "Ruby Core", "Standard Library", "Ruby Testing"],
+  "Build a Simple Ruby on Rails Application" =&gt; ["Getting Started with Rails", "Rails Frontend Development", "Ruby on Rails Authentication", "Customizing Ruby on Rails Forms", "Writing Tests", "Rails Routing", "Testing the Whole App", "Building the Profile Page", "Rails Deployment"]
+}
+</code></pre>
+
+<p><strong><em>In this dictionary,</em></strong> the star (which is also the Treehouse badge category) is the key. The values (represented as an array of strings) are all the badges you can earn. Essentially, the values are the requirements a user must fulfill to receive a Treehouse Star. In order to do that, we had to create methods that would parse through the Treehouse API, take a collection of all a user&#8217;s badges, and iterate those badges through our dictionary.</p>
+
+<pre><code>  def check_star_requirement(th_json)
+    #check json of badge names on profile
+    badges = th_json["badges"].collect { |badge| badge["name"] }
+    completed_stars_array = @@dictionary.each do |star, requirement|
+      star if check_requirements(badges, requirement) 
+    end
+    completed_stars_array.compact
+  end
+
+  def check_requirements(badges, requirement)
+    (badges &amp; requirement) == requirement
+  end 
+</code></pre>
+
+<p>The <code>check_star_requirement</code> methodtakes the Treehose json for a user (in my case, <a href="http://teamtreehouse.com/victoriafriedman.json">teamtreehouse.victoriafriedman.json</a>), iterates through their information on the Treehouse API and collects all their badges. Those badges are saved in an array called <code>badges</code>. Then the dictionary is saved as an array, <code>completed_stars_array</code> and iterated through.</p>
+
+<p>It then calls the <code>check_requirements</code> method, which iterates through the values of the dictionary. If the strings in <code>badges</code> matches any of values in <code>dictionary</code>, then a user will receive that star.</p>
+
+<p>All of this seemed to be working great until we checked our database. Rails &#8220;marshaled&#8221; our data. An individual entry in our Star table in the Name column, looked like this:</p>
+
+<pre><code>  Aesthetic Foundations
+    - Elements
+    - Principles
+    - Color Theory
+</code></pre>
+
+<p>Avi pointed us towards the Ruby Marshaling Module. Essentially, Ruby was taking our entire collection, our dictionary, and transforming each key-value pair into a string (which apparently looked like the above example). We were essentially calling, <code>Marshal::Dump</code>, which saves the data and returns the original string. Because the <code>each</code> method also just returns the original string, our iteration wasn&#8217;t just saving the key, <code>Aesthetic Foundations</code>, to our database, but the entire string.</p>
+
+<p>Our solution to this problem was really simple, essentially we replaced <code>each</code> with <code>collect</code>. Collect returns the new array, so in our case, it returns an array of key values in the dictionary, but only the key where values are all contained in the badges array.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[deleting crontab system mail]]></title>

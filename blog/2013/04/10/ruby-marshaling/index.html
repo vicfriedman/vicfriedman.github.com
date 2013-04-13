@@ -1,0 +1,318 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>ruby marshaling - Too Busy Coding...</title>
+  <meta name="author" content="Victoria Friedman">
+
+  
+  <meta name="description" content="As my semester at The Flatiron School winds down, we&#8217;ve been spending our time building our final projects. My group, Tyler Davis, Danny &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vicfriedman.github.com/blog/2013/04/10/ruby-marshaling/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Too Busy Coding..." type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+</hgroup>
+
+</header>
+  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vicfriedman.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav> -->
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Ruby Marshaling</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-10T14:11:00-04:00" pubdate data-updated="true">Apr 10<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><strong><em>As my semester at <a href="http://flatironschool.com/">The Flatiron School</a> winds down,</em></strong> we&#8217;ve been spending our time building our final projects. My group, <a href="tmd.io">Tyler Davis</a>, <a href="dolin.github.com">Danny Olinsky</a>, and <a href="http://jlarusso.github.io/">Jesse La Russo</a>, is building a modern-take on an old fashioned gold star board. Aka, you write a blog post? You get a gold star. You finish a Code School course? You get a gold star. We&#8217;ve built in a lot of other functionality (our own authentication and authorization, the ability for users to give each other stars, background cron jobs, etc. etc.), but that&#8217;s the gist of it.</p>
+
+<p><strong><em>The best thing about this whole process</em></strong> has been the things I&#8217;ve learned from the errors we get. In this way, I learned about the <a href="http://ruby-doc.org/core-1.9.3/Marshal.html">Ruby Marshal Module</a>.</p>
+
+<p><strong><em>The Marshal Module</em></strong> essentially takes a collection of Ruby Objects and converts them into a byte stream, and then allows it to be stored and accessed elsewhere.</p>
+
+<p><strong><em>One of this big things with our project has been working with APIs</em></strong> in order to automate the processes of giving stars. The Treehouse API was particularly difficult to parse through, so for the time being, I created a dictionary to deal with their objects. Essentially, we want to give a star for every category a user completes.</p>
+
+<pre><code>  @@dictionary = {
+  "Website Basics" =&gt; ["Website Basics"],
+  "Technology Foundations" =&gt; ['Graphic Basics'],
+  "Aesthetic Foundations" =&gt; ["Elements", "Principles", "Color Theory"],
+  "HTML" =&gt; ["Introduction", "Text", "Lists", "Links", "Objects", "Tables", "Forms"],
+  "CSS Foundations" =&gt; ["Introduction", "Selectors", "Data Types", "Text", "Box Model", "Page Layout", "Printing", "Framework Foundations"],
+  "CSS3" =&gt; ["Selectors", "Typography", "Web Fonts", "Borders", "Gradients", "Backgrounds", "Transitions", "Transforms", "Animation", "Multi-Column Layouts", "Media Queries"],
+  "Build a Responsive Website" =&gt; ["Introduction to Response Web Design", "Fluid Foundation", "Adaptive Design", "Responsive Design", "Advanced Techniques"],
+  "Introduction to Programming" =&gt; ["Basics", "Control Structures", "Objects and Arrays", "Functions"],
+  "JavaScript Foundations" =&gt; ["Introduction Variables", "JavaScript Strings", "JavaScript Numbers", "JavaScript Arrays", "JavaScript Functions", "JavaScript Objects"],
+  "Ruby Foundations" =&gt; ["Ruby Basics", "Objects, Classes, and Variables", "Ruby Strings", "Ruby Numbers", "Ruby Arrays", "Ruby Hashes", "Ruby Methods", "Ruby Loops", "Ruby Blocks", "Ruby Procs &amp; Lambdas", "Ruby Modules", "Ruby Core", "Standard Library", "Ruby Testing"],
+  "Build a Simple Ruby on Rails Application" =&gt; ["Getting Started with Rails", "Rails Frontend Development", "Ruby on Rails Authentication", "Customizing Ruby on Rails Forms", "Writing Tests", "Rails Routing", "Testing the Whole App", "Building the Profile Page", "Rails Deployment"]
+}
+</code></pre>
+
+<p><strong><em>In this dictionary,</em></strong> the star (which is also the Treehouse badge category) is the key. The values (represented as an array of strings) are all the badges you can earn. Essentially, the values are the requirements a user must fulfill to receive a Treehouse Star. In order to do that, we had to create methods that would parse through the Treehouse API, take a collection of all a user&#8217;s badges, and iterate those badges through our dictionary.</p>
+
+<pre><code>  def check_star_requirement(th_json)
+    #check json of badge names on profile
+    badges = th_json["badges"].collect { |badge| badge["name"] }
+    completed_stars_array = @@dictionary.each do |star, requirement|
+      star if check_requirements(badges, requirement) 
+    end
+    completed_stars_array.compact
+  end
+
+  def check_requirements(badges, requirement)
+    (badges &amp; requirement) == requirement
+  end 
+</code></pre>
+
+<p>The <code>check_star_requirement</code> methodtakes the Treehose json for a user (in my case, <a href="http://teamtreehouse.com/victoriafriedman.json">teamtreehouse.victoriafriedman.json</a>), iterates through their information on the Treehouse API and collects all their badges. Those badges are saved in an array called <code>badges</code>. Then the dictionary is saved as an array, <code>completed_stars_array</code> and iterated through.</p>
+
+<p>It then calls the <code>check_requirements</code> method, which iterates through the values of the dictionary. If the strings in <code>badges</code> matches any of values in <code>dictionary</code>, then a user will receive that star.</p>
+
+<p>All of this seemed to be working great until we checked our database. Rails &#8220;marshaled&#8221; our data. An individual entry in our Star table in the Name column, looked like this:</p>
+
+<pre><code>  Aesthetic Foundations
+    - Elements
+    - Principles
+    - Color Theory
+</code></pre>
+
+<p>Avi pointed us towards the Ruby Marshaling Module. Essentially, Ruby was taking our entire collection, our dictionary, and transforming each key-value pair into a string (which apparently looked like the above example). We were essentially calling, <code>Marshal::Dump</code>, which saves the data and returns the original string. Because the <code>each</code> method also just returns the original string, our iteration wasn&#8217;t just saving the key, <code>Aesthetic Foundations</code>, to our database, but the entire string.</p>
+
+<p>Our solution to this problem was really simple, essentially we replaced <code>each</code> with <code>collect</code>. Collect returns the new array, so in our case, it returns an array of key values in the dictionary, but only the key where values are all contained in the badges array.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Victoria Friedman</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-10T14:11:00-04:00" pubdate data-updated="true">Apr 10<span>th</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2013/04/10/ruby-marshaling/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2013/04/10/ruby-marshaling/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/04/01/deleting-crontab-system-mail/" title="Previous Post: deleting crontab system mail">&laquo; deleting crontab system mail</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <ul id="recent_posts">
+      <li class="post">
+      <a href="http://vicfriedman.github.com" alt="Home"><img src="/images/Home.png"></a>
+      <a href="http://vicfriedman.github.com/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
+      <a href="mailto:" alt="E-Mail"><img src="/images/Envelope.png"></a>
+      <a href="http://vicfriedman.github.com/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
+      </li>
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/10/ruby-marshaling/">ruby marshaling</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/01/deleting-crontab-system-mail/">deleting crontab system mail</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/24/action-mailer-configurations/">action mailer configurations</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/17/inheritence/">inheritence</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/06/webserver-102/">webserver 102</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/vicfriedman">@vicfriedman</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'vicfriedman',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("vicfriedman", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/vicfriedman" class="twitter-follow-button" data-show-count="false">Follow @vicfriedman</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Victoria Friedman -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
