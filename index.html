@@ -9,7 +9,7 @@
   <meta name="author" content="Victoria Friedman">
 
   
-  <meta name="description" content="As my semester at The Flatiron School winds down, we&#8217;ve been spending our time building our final projects. My group, Tyler Davis, Danny &hellip;">
+  <meta name="description" content="This morning, I learned what a linked list is. A linked list is a data structure that is comprised on a group of nodes. Essentially, each dataset is &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -63,6 +63,65 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/22/a-lesson-in-linked-lists/">A Lesson in Linked Lists</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-22T13:43:00-04:00" pubdate data-updated="true">Apr 22<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong><em>This morning, I learned what a linked list is.</em></strong> A linked list is a data structure that is comprised on a group of nodes. Essentially, each dataset is made up of it&#8217;s information, and a pointer. A pointer is a link to the next node in the data sequence. In the simplest of terms, if I am a dataset, I only know about myself, and the person that comes after me.</p>
+
+<p><strong><em>Linked lists are most commonly compared to arrays.</em></strong> They both store data, and both have their pros and cons. In compiled languages, arrays are a fixed size. If you define an array to have 100 elements, it has 100 elements. While there are methods to resize an array in compiled languages, from what I&#8217;ve read, it&#8217;s not an easy task. Linked lists allow for a significantly easier process for inserting and deleting data, without shifting entire groups of elements up or down.</p>
+
+<p><strong><em>So here is an example of a basic link list:</em></strong></p>
+
+<p><img src="/images/linklist1.png"></p>
+
+<p>This small data sequence is going to be listed in alphabetical order. All linked lists start with HEAD, which denotes the begining of the data sequence. The head contains a pointer, which points to the first object in the data set. In this case, HEAD points to &#8220;Boston&#8221;. The first dataset, contains the name of the city, and a pointer to the following dataset, here it is San Fransico. San Francisco points to the end, which is always signified by NULL. The last dataset will always point to NULL.</p>
+
+<p>So in this case, Boston only knows that it exists, and knows about San Fransico. San Francisco only knows they exist, and that NULL exists. They don&#8217;t know anything about Boston.</p>
+
+<p>So the process for inserting another city is fairly simple. Say we wanted to insert New York. Because of the alphabetical order, you will want to insert it between Boston and San Francisco. To do so, all you need to do is make New York point to San Francisco, and change Boston to point to New York. There is no shifting of indexes, or anything like that.</p>
+
+<p><img src="/images/linklist2.png"></p>
+
+<p>However the process of searching a linked list is difficult. While in an array, if you were trying to find San Francisco you should simply do <code>array[2]</code> to access San Francisco, it&#8217;s a much more expensive process in linked lists. In this final example, in order to search for San Francisco, you have to start at head, move through Boston and New York, to finally arrive at the data you are searching for.</p>
+
+<ol>Resources:
+<li>http://cslibrary.stanford.edu/103/LinkedListBasics.pdf</li>
+<li>http://www.youtube.com/watch?v=LOHBGyK3Hbs</li>
+<li>www.youtube.com/watch?v=oiW79L8VYXk</li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1084,6 +1143,10 @@ But take note of the actual return value from Ruby, it is still the original arr
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/04/22/a-lesson-in-linked-lists/">a lesson in linked lists</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/04/10/ruby-marshaling/">ruby marshaling</a>
       </li>
     
@@ -1097,10 +1160,6 @@ But take note of the actual return value from Ruby, it is still the original arr
     
       <li class="post">
         <a href="/blog/2013/03/17/inheritence/">inheritence</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/03/06/webserver-102/">webserver 102</a>
       </li>
     
   </ul>
