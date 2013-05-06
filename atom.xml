@@ -4,7 +4,7 @@
   <title><![CDATA[Too Busy Coding...]]></title>
   <link href="http://vicfriedman.github.com/atom.xml" rel="self"/>
   <link href="http://vicfriedman.github.com/"/>
-  <updated>2013-04-22T15:58:27-04:00</updated>
+  <updated>2013-05-06T11:41:41-04:00</updated>
   <id>http://vicfriedman.github.com/</id>
   <author>
     <name><![CDATA[Victoria Friedman]]></name>
@@ -12,6 +12,23 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[coding abroad]]></title>
+    <link href="http://vicfriedman.github.com/blog/2013/05/06/coding-abroad/"/>
+    <updated>2013-05-06T11:06:00-04:00</updated>
+    <id>http://vicfriedman.github.com/blog/2013/05/06/coding-abroad</id>
+    <content type="html"><![CDATA[<p><strong><em>I just got back from a week vacation in Paris.</em></strong> The highlight of my trip was the day I spent with two different Ruby developers. Through some twitter introductions, I was able to schedule a morning at <a href="http://www.verseauparis.com/">Verseau Paris</a> with founder<a href="http://twitter.com/tracyloisel">Tracy Loisel</a> and an afternoon with <a href="http://twitter.com/tibastral">Thibaut Assus</a>, founder of <a href="http://meetup.rubyparis.org/">Paris.rb</a>.</p>
+
+<p><strong><em>It was so incredible to be welcome so whole-heartedly by developers abroad.</em></strong> Tracy was so willing to tell me his story, intrdouce me to his team, and show me around his office. And while there was a little bit of a language barrier (my french isn&#8217;t perfect), coding is international. We both have a story of why we started coding and Ruby provided a common language and basis of understanding. They even posted about me on <a href="https://www.facebook.com/photo.php?fbid=521981374527257&set=a.309755622416501.69405.309620859096644&type=1&theater">facebook!</a></p>
+
+<p>  <img src="http://vicfriedman.github.com/images/verseau.jpg"></p>
+
+<p><strong><em>I had a very similiar experience in the afternoon with Thibaut.</em></strong> He welcomed me into his home, told me all about his projects, figured out we knew people in common, and we even laughed about how the PHP array method is bizarre. Commonality.</p>
+
+<p><strong><em>My experience with these developers really hammered home how welcoming the Ruby community is.</em></strong> I am a very new developer, and these amazing developers in Paris were each willing to spend a few hours with me. I don&#8217;t know if you can find that in other industries. It was incredibly reaffirming for me. I am so excited to spend the rest of my life coding. Programming isn&#8217;t people talking to computers, it&#8217;s people talking to people, and bringing people together. It&#8217;s amazing.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[a lesson in linked lists]]></title>

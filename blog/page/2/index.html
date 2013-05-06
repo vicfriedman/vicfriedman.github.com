@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>action mailer configurations - Too Busy Coding...</title>
+  <title>Too Busy Coding...</title>
   <meta name="author" content="Victoria Friedman">
 
   
-  <meta name="description" content="This week, I started working on a presentation with two other girls, Laura Brown and Ana Becker to present at the NYC on Rails meetup this coming &hellip;">
+  <meta name="description" content="var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-38989132-1']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement(' &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://vicfriedman.github.com/blog/2013/03/24/action-mailer-configurations/">
+  <link rel="canonical" href="http://vicfriedman.github.com/blog/page/2/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
    <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
@@ -61,12 +61,15 @@
 </nav> -->
   <div id="main">
     <div id="content">
-      <div>
-<article class="hentry" role="article">
+      <div class="blog-index">
   
+  
+  
+    <article>
+      
   <header>
     
-      <h1 class="entry-title">Action Mailer Configurations</h1>
+      <h1 class="entry-title"><a href="/blog/2013/02/05/hello-world/">Hello, World!</a></h1>
     
     
       <p class="meta">
@@ -82,111 +85,44 @@
   
 
 
-<time datetime="2013-03-24T16:26:00-04:00" pubdate data-updated="true">Mar 24<span>th</span>, 2013</time>
+<time datetime="2013-02-05T17:29:00-05:00" pubdate data-updated="true">Feb 5<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>This week, I started working on a presentation with two other girls, <a href="http://1aurabrown.github.com/">Laura Brown</a> and <a href="http://anabecker.tumblr.com/">Ana Becker</a> to present at the <a href="http://www.meetup.com/nyc-on-rails/">NYC on Rails</a> meetup this coming Thursday (March 28). Our app revolves around using <a href ="http://rubygems.org/gems/actionmailer"> ActionMailer</a>. And this was the first time I&#8217;ve tried to use the gem.</p>
+  <div class="entry-content"><script type="text/javascript">
 
-<p>The documentation for it is really good, and the implementation doesn&#8217;t require too many steps. <a href="http://guides.rubyonrails.org/action_mailer_basics.html">RailsGuides</a> has a great step by step breakdown of the entire process, inluding the steps for generating a Mailer.</p>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
 
-<p>All of that was easy. I only wanted to render a default template in my view, and am staying away from user authentication.</p>
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
 
-<p>My problem fell in the configurations. I had no idea that I had to setup SMTP configurations to send my email. And then once I figured that out, where do I enter my specific configurations.</p>
+</script>
 
-<p><strong>Step 1:</strong> <br>
-At first we weren&#8217;t getting any errors. It seemed as if our app was sending emails&#8230;but no one was getting any of them. The first thing we had to do was edit <code>config/evironments/development.rb</code>. That file contains the line:</p>
 
-<pre><code>  config.action_mailer.raise_delivery_errors = false
-</code></pre>
-
-<p>which needs to be changed to read:</p>
-
-<pre><code>  config.action_mailer.raise_delivery_errors = true
-</code></pre>
-
-<p>And then we started to get errors we could work from.</p>
-
-<p><strong>Step 2:</strong> <br>
-Because we&#8217;re using a Gmail account for our gem, we had to configure ActionMailer specifically for that account. The first step to that was to include the following two lines:</p>
-
-<pre><code>config.action_mailer.perform_deliveries = true
-config.action_mailer.delivery_method = :smtp
-</code></pre>
-
-<p>These lines delcares that SMTP will deliver our emails. SMTP stands for Simple Mail Transfer Protocol. This protocol also has a layer of authentication built into it&#8217;s functionality</p>
-
-<p><strong>Step 3:</strong><br>
-The next step is to declare your specific SMTP configurations.</p>
-
-<pre><code> config.action_mailer.smtp_settings = {
-  :address =&gt; 'smtp.gmail.com',
-  :port =&gt; 587,
-  :domain =&gt; 'localhost:3000',
-  :authentication =&gt; :plain,
-  :user_name =&gt; '&lt;email_address&gt;',
-  :password =&gt; '&lt;email_password&gt;',
-  :authentication =&gt; 'plain',
-  :enable_starttls_auto =&gt; true
-}
-</code></pre>
-
-<p>These configurations state that we&#8217;re using Gmail, we&#8217;re running our app on localhost:3000, and also includes the email address and password for that account that are associated with the app. The last two lines of the settings handle the authentication of the email account.</p>
-
-<p>And that&#8217;s it!</p>
+<p>Are you there God? It&#8217;s me, Margaret.</p>
 </div>
-
-
-  <footer>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">Victoria Friedman</span></span>
-
-      
-
-
-
-
-
-
-
-
   
 
 
-<time datetime="2013-03-24T16:26:00-04:00" pubdate data-updated="true">Mar 24<span>th</span>, 2013</time>
-      
-
-
-    </p>
+    </article>
+  
+  <div class="pagination">
     
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2013/03/24/action-mailer-configurations/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2013/03/24/action-mailer-configurations/" >Tweet</a>
-  
-  
-  
-</div>
-
+    <a href="archives">Blog Archives</a>
     
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2013/03/17/inheritence/" title="Previous Post: inheritence">&laquo; inheritence</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2013/04/01/deleting-crontab-system-mail/" title="Next Post: deleting crontab system mail">deleting crontab system mail &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
-
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
 </div>
-
 <aside class="sidebar">
   
     <section>
@@ -229,7 +165,7 @@ The next step is to declare your specific SMTP configurations.</p>
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating...</li>
+    <li class="loading">Status updating&#8230;</li>
   </ul>
   
   <a href="https://github.com/vicfriedman">@vicfriedman</a> on GitHub
@@ -259,7 +195,7 @@ The next step is to declare your specific SMTP configurations.</p>
 <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
-    <li class="loading">Status updating...</li>
+    <li class="loading">Status updating&#8230;</li>
   </ul>
   <script type="text/javascript">
     $.domReady(function(){
@@ -278,7 +214,6 @@ The next step is to declare your specific SMTP configurations.</p>
 
   
 </aside>
-
 
     </div>
   </div>
