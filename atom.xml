@@ -4,7 +4,7 @@
   <title><![CDATA[Too Busy Coding...]]></title>
   <link href="http://vicfriedman.github.com/atom.xml" rel="self"/>
   <link href="http://vicfriedman.github.com/"/>
-  <updated>2013-05-06T11:41:41-04:00</updated>
+  <updated>2013-05-07T15:56:04-04:00</updated>
   <id>http://vicfriedman.github.com/</id>
   <author>
     <name><![CDATA[Victoria Friedman]]></name>
@@ -12,6 +12,43 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[method_missing]]></title>
+    <link href="http://vicfriedman.github.com/blog/2013/05/07/method-missing/"/>
+    <updated>2013-05-07T14:53:00-04:00</updated>
+    <id>http://vicfriedman.github.com/blog/2013/05/07/method-missing</id>
+    <content type="html"><![CDATA[<p>Last night I learned about Ruby&#8217;s <code>method_missing</code>.</p>
+
+<p>As Ruby code is executed, it travels up the chain of inheritence to discover where your methods are defined. It will execute the first line of code that matches the method name in the method lookup path.</p>
+
+<p>And of course, when there is an instance where you attempt to call an undefined method, the <code>NoMethodError</code> exception is raised. When this happens, Ruby searches up levels of inheritence until it reaches class BasicObject, which is the parent class of all classes in Ruby. Once it reaches BasicObject and still is unable to find a method, <code>NoMethodError</code> is returned.</p>
+
+<p>This is where <code>method_missing</code> comes in to play. <code>method_missing</code> is a type of metaprogramming that allows programmers to call methods without explicitely defining them.</p>
+
+<pre><code>class Test
+  def method_missing(name, *args, &amp;block)
+    puts "NAME: #{name}"
+    puts "ARG: #{args}"
+    puts "BLOCK: #{block}"
+  end
+
+end
+
+t = Test.new
+
+t.some_method("arbitrary argument")
+
+#=&gt; NAME: some_method
+    ARG: ["arbitrary argument"]
+    BLOCK: 
+</code></pre>
+
+<p>In this example, the only method defined in my class is <code>method_missing</code>. I passed in the method name, optional arguments, and an optional block. Once I instantiate a new instance of the Test class, I call a method <code>some_method</code> on it. But <code>some_method</code> hasn&#8217;t been defined. Normally this would return <code>NoMethodError</code> but because I used <code>method_missing</code>, <code>some_method</code> is accessible to me.</p>
+
+<p>As you can see in my definition of <code>method_missing</code>, I asked it to print out the method name, any potential arguments, and any potential blocks. <code>some_method</code> has method name and an argument, but not a block. Everything I attempted to call on my instance of the Test class is executed thanks to <code>method_missing</code>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[coding abroad]]></title>
