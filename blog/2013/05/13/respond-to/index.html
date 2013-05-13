@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>5 Things - Too Busy Coding...</title>
+  <title>respond_to - Too Busy Coding...</title>
   <meta name="author" content="Victoria Friedman">
 
   
-  <meta name="description" content="var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-38989132-1']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement(' &hellip;">
+  <meta name="description" content="My last post was about method_missing. Since that post, I&#8217;ve gotten to play around with method_missing a lot, and think I&#8217;ve begun to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://vicfriedman.github.com/blog/2013/02/11/5-things-learned-while-learning/">
+  <link rel="canonical" href="http://vicfriedman.github.com/blog/2013/05/13/respond-to/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
    <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
@@ -66,7 +66,7 @@
   
   <header>
     
-      <h1 class="entry-title">5 Things</h1>
+      <h1 class="entry-title">Respond_to</h1>
     
     
       <p class="meta">
@@ -82,49 +82,47 @@
   
 
 
-<time datetime="2013-02-11T19:51:00-05:00" pubdate data-updated="true">Feb 11<span>th</span>, 2013</time>
+<time datetime="2013-05-13T12:01:00-04:00" pubdate data-updated="true">May 13<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><script type="text/javascript">
+<div class="entry-content"><p>My last post was about <code>method_missing</code>. Since that post, I&#8217;ve gotten to play around with <code>method_missing</code> a lot, and think I&#8217;ve begun to grasp its power. It&#8217;s a crazy tool, and one that can be dangerous if not used wisely.</p>
 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-38989132-1']);
-  _gaq.push(['_trackPageview']);
+<p>One thing I learned while rewriting the functionality of <code>method_missing</code> is that you must reopen and rewrite <code>respond_to</code> as well. <code>respond_to</code> is used to determine if an object responds to a method, i.e. allows the object to know a method is being called on it.</p>
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+<p>Becase <code>method_missing</code> allows you to call undefined methods, the object needs to know in some capicty what those are.
+In the below example, I have written <code>method_missing</code> to be able to use <code>.get_*</code> and <code>.set_*</code> in order to access object in my database. The method name gets passed as a symbol to method missing, so it must be turned into a string before being used.</p>
 
-</script>
+<pre><code>def self.method_missing(method_name, *args, &amp;block)
+  method_string = method_name.to_s
+  if method_string.start_with?("get_")
+    #do xyz
+  elsif method_string.start)with?("set_")
+    #do xyz
+  else
+    super
+  end
+end
 
+def self.respond_to?(method_sym, include_private = false)
+  if method_sym.to_s =~ /^get_(.*)$/ || method_sym.to_s =~ /^set_(.*)$/
+    true
+  else
+    super
+  end
+end
+</code></pre>
 
+<p>Here, <code>respond_to</code> now responds to my version of <code>method_missing</code>. I am essentially searching if the string version of my method includes <code>get_*</code> or <code>set_*</code> and if it does, it is a method that can be called on an object.</p>
 
+<p>The <code>include_private = false</code> is necessary because by default, <code>respond_to</code> must be passed additional parameters to search for private methods. Methods are private for a reason, they don&#8217;t need to be accessed everywhere and by every object.</p>
 
-<h1>5 Things I&#8217;ve Learned About Myself While Learning to Code:</h1>
+<p>Also in both <code>method_missing</code> and <code>respond_to</code> my if/else clause ends by calling <code>super</code>. Essentially, if none of the above returns true, go back to your normal functionality and deliver me an error message.</p>
 
-
-<ul style="list-style:none">
-<p><li><strong>1. I need physical activity in order to well sleep at night.</strong> This statement rang true even when I was doing the prework for the <a href="http://flatironschool.com">Flatiron School</a>. I&#8217;m an active girl, and now I&#8217;m sitting for 10-12 hours a day. I had no idea the effect this sudden change would have on me. And oh the sleepless nights. Even when all my work is said and done, I can&#8217;t seem to go to bed before 2am. The moral of the story is that I need to be more diligent about the gym. And here&#8217;s the catch-22: I would rather spend my time hacking and reading about hacking than anything else. <li></p>
-
-
-<p><li><strong>2. I am prideful.</strong> Sure everyone has pride, but I did not realize to what extent I exalted my own mental capacity, until eight days ago. My class is smart. So imagine a class of dedicated brainiacs. Imagine sitting in that room during lecture feeling so horribly lost. Do you really want to be the girl to raise your hand and say &#8220;I have no idea what&#8217;s going on. Can you please re-explain?&#8221; It&#8217;s a terrifying concept. It&#8217;s admitting defeat. The feeling exactly mirrors that of saying &#8220;I am dumb.&#8221; That&#8217;s pride rising to the surface. And it&#8217;s something I&#8217;ve had to work on getting over, because otherwise I&#8217;ll never learn.</li></p>
-
-
-<p><li><strong>3. The highs beat all the lows.</strong> I spend most of my day with error messages, and that&#8217;s not an exageration. I am a Ruby Newbie, and proud of it. Those error messages, paired with overwhelming feelings of frustration and discouragement, and an ever present desire to bang my head into a wall makes my victories that much sweeter. And yes, I wrote my first Ruby program today. It took four people over an hour, but you can bet that I&#8217;m calling my mom as soon as I get home to brag.</li></p>
-
-
-<p><li><strong>4. It&#8217;s hard to take the training wheels off and just ride.</strong> I have two incredible teachers who are great resources for all my coding questions. And my computer is this expensive machine, that some part of me is still afraid to break with one single rm -rf (and I didn&#8217;t even know I could do that until one month ago). So I&#8217;ve hesitated in trying things on my own. &#8220;What if I ruin all of it? What if my computer just bursts into a million pieces?&#8221; The list of irrational fears goes on. And here&#8217;s the thing, I&#8217;ve already made a huge jump in being at the Flatiron School in the first place. I threw my training wheels to the curb the second I signed myself up for these 12 intense weeks. So why stop now? Yes it&#8217;s hard. Yes, it&#8217;s scary. But won&#8217;t I be that much of a better person by the end of all of this by claiming it as my own? The Flatiron School celebrates failure, and so do I.</li></p>
-
-
-<p><li><strong>5. Time flies when you&#8217;re having fun.</strong> This past Friday, we were given one hour to work on an assignment between blocks of lectures. And literally before I knew it, we were called back to lecture. I had barely even looked up from my computer. I hadn&#8217;t registered a single thing from the outside world, other than the six words I had composed that were hopefully going to turn into a successful method. It didn&#8217;t. I actually got the entire problem wrong, but that&#8217;s ok. Because the thing I took from that hour is that in 5 days of class, coding has become a part of me. I have never been able to do anything with such uninterrupted vigor ever. And this is just the beginning.</li></p>
-</ul>
-
+<p>Also note I am using class methods here. My practice with <code>method_missing</code> and <code>respond_to</code> was geared towards reading and writing objects to my database.</p>
 </div>
 
 
@@ -147,7 +145,7 @@
   
 
 
-<time datetime="2013-02-11T19:51:00-05:00" pubdate data-updated="true">Feb 11<span>th</span>, 2013</time>
+<time datetime="2013-05-13T12:01:00-04:00" pubdate data-updated="true">May 13<span>th</span>, 2013</time>
       
 
 
@@ -155,7 +153,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2013/02/11/5-things-learned-while-learning/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2013/02/11/5-things-learned-while-learning/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2013/05/13/respond-to/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2013/05/13/respond-to/" >Tweet</a>
   
   
   
@@ -164,10 +162,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/02/05/hello-world/" title="Previous Post: Hello, world!">&laquo; Hello, world!</a>
+        <a class="basic-alignment left" href="/blog/2013/05/07/method-missing/" title="Previous Post: method_missing">&laquo; method_missing</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/02/15/the-each-method/" title="Next Post: The Each Method">The Each Method &raquo;</a>
       
     </p>
   </footer>

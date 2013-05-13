@@ -4,7 +4,7 @@
   <title><![CDATA[Too Busy Coding...]]></title>
   <link href="http://vicfriedman.github.com/atom.xml" rel="self"/>
   <link href="http://vicfriedman.github.com/"/>
-  <updated>2013-05-07T15:56:04-04:00</updated>
+  <updated>2013-05-13T12:24:18-04:00</updated>
   <id>http://vicfriedman.github.com/</id>
   <author>
     <name><![CDATA[Victoria Friedman]]></name>
@@ -12,6 +12,48 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[respond_to]]></title>
+    <link href="http://vicfriedman.github.com/blog/2013/05/13/respond-to/"/>
+    <updated>2013-05-13T12:01:00-04:00</updated>
+    <id>http://vicfriedman.github.com/blog/2013/05/13/respond-to</id>
+    <content type="html"><![CDATA[<p>My last post was about <code>method_missing</code>. Since that post, I&#8217;ve gotten to play around with <code>method_missing</code> a lot, and think I&#8217;ve begun to grasp its power. It&#8217;s a crazy tool, and one that can be dangerous if not used wisely.</p>
+
+<p>One thing I learned while rewriting the functionality of <code>method_missing</code> is that you must reopen and rewrite <code>respond_to</code> as well. <code>respond_to</code> is used to determine if an object responds to a method, i.e. allows the object to know a method is being called on it.</p>
+
+<p>Becase <code>method_missing</code> allows you to call undefined methods, the object needs to know in some capicty what those are.
+In the below example, I have written <code>method_missing</code> to be able to use <code>.get_*</code> and <code>.set_*</code> in order to access object in my database. The method name gets passed as a symbol to method missing, so it must be turned into a string before being used.</p>
+
+<pre><code>def self.method_missing(method_name, *args, &amp;block)
+  method_string = method_name.to_s
+  if method_string.start_with?("get_")
+    #do xyz
+  elsif method_string.start)with?("set_")
+    #do xyz
+  else
+    super
+  end
+end
+
+def self.respond_to?(method_sym, include_private = false)
+  if method_sym.to_s =~ /^get_(.*)$/ || method_sym.to_s =~ /^set_(.*)$/
+    true
+  else
+    super
+  end
+end
+</code></pre>
+
+<p>Here, <code>respond_to</code> now responds to my version of <code>method_missing</code>. I am essentially searching if the string version of my method includes <code>get_*</code> or <code>set_*</code> and if it does, it is a method that can be called on an object.</p>
+
+<p>The <code>include_private = false</code> is necessary because by default, <code>respond_to</code> must be passed additional parameters to search for private methods. Methods are private for a reason, they don&#8217;t need to be accessed everywhere and by every object.</p>
+
+<p>Also in both <code>method_missing</code> and <code>respond_to</code> my if/else clause ends by calling <code>super</code>. Essentially, if none of the above returns true, go back to your normal functionality and deliver me an error message.</p>
+
+<p>Also note I am using class methods here. My practice with <code>method_missing</code> and <code>respond_to</code> was geared towards reading and writing objects to my database.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[method_missing]]></title>

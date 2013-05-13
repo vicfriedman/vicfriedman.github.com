@@ -69,6 +69,89 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/02/15/the-each-method/">The Each Method</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-15T07:40:00-05:00" pubdate data-updated="true">Feb 15<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+
+
+<p><strong>Today marks day 9 into my 60 day course</strong> at <a href="flatironschool.com"> the Flatiron School. </a> Essentially, I&#8217;m 15% done. I would best summarize the last 9 days with these simple words: anxiety, frustration, and (sometimes) victory.<p>
+
+<p><strong>The thing about this course,</strong> essentially a &#8220;full-immersion language course&#8221;, is the pace in which things are taught. It&#8217;s fast. I was prepared for fast, but not this fast. We&#8217;ve been told from day one, &#8220;If you don&#8217;t understand something now, don&#8217;t worry. You will use these methods for the rest of your life, and at some point, they will make sense.&#8221; I&#8217;m not used to moving on to new material before I grasp the current material, but we&#8217;ve also been told to trust the structure of the program, so I have.</p>
+
+<p><strong>So each day has been filled with new material,</strong> and thus new frustrations. A day hasn&#8217;t gone by where I&#8217;ve been utterly and completely lost. I don&#8217;t want to define myself as the potential crier for the class, but&#8230;.I could be.</p>
+
+<p><strong>Yesterday, after spending close to three hours on homework,</strong> I called it a night. And then something happened, a moment of realization. I UNDERSTAND ITERATIONS. Two days prior, literally a mere 48 hours, iterations were some mystical thing that I was struggling to grasp. And without even realizing it, I had been using the each method with ease in my programs. AND I DIDN&#8217;T EVEN REALIZE THAT I UNDERSTOOD THEM. The pace of the class kept me from noticing when material had sunk in.</p>
+
+<p><strong>And with that introduction, I give you the each method.</strong></p>
+
+<p>Say you have an array of candy:</p>
+
+<img src ="/images/post_images/array.png" alt ="Image of and array containing reeces, twizzlers, mambas and snickers">
+
+
+<p>The each method iterates, or loops, through each item in an array. In layman&#8217;s terms, the method acts as a pointer and moves through the array, first to &#8220;reeces&#8221;, then to &#8220;twizzlers&#8221;, then &#8220;mambas&#8221;, and finally to &#8220;snickers&#8221;. Objects that can be iterated through are called enumerables. In Ruby, strings, hashes, and arrays are all enumerators.</p>
+
+Once the array has been defined, we can implement the each method on that array.
+The each method only returns the original array, meaning all it does is move through each index. Nothing is actually done to or with the data, and no new array is created.
+
+<img src ="/images/post_images/array_each_do.png" alt ="Image of and array containing reeces, twizzlers, mambas and snickers">
+
+
+<p>However, you can do things like this: </p>
+
+<img src ="/images/post_images/array_puts.png" alt ="Image of and array containing reeces, twizzlers, mambas and snickers">
+
+
+<p>Here I added a puts in my block of code. The |candy| refers to each type of candy included my array. In my string, I refer back to each individual instance of candy, which then includes it in the string.
+But take note of the actual return value from Ruby, it is still the original array. Again, the each method does not do anything to the original array, it simply takes stock of each item in the array as it passes through and implements the code included in the block (which here is to puts my string).</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/02/11/5-things-learned-while-learning/">5 Things</a></h1>
     
     
@@ -211,6 +294,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/05/13/respond-to/">respond_to</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/05/07/method-missing/">method_missing</a>
       </li>
     
@@ -224,10 +311,6 @@
     
       <li class="post">
         <a href="/blog/2013/04/10/ruby-marshaling/">ruby marshaling</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/01/deleting-crontab-system-mail/">deleting crontab system mail</a>
       </li>
     
   </ul>
