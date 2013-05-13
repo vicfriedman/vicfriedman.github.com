@@ -4,7 +4,7 @@
   <title><![CDATA[Too Busy Coding...]]></title>
   <link href="http://vicfriedman.github.com/atom.xml" rel="self"/>
   <link href="http://vicfriedman.github.com/"/>
-  <updated>2013-03-24T17:37:56-04:00</updated>
+  <updated>2013-05-13T12:24:18-04:00</updated>
   <id>http://vicfriedman.github.com/</id>
   <author>
     <name><![CDATA[Victoria Friedman]]></name>
@@ -12,6 +12,230 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[respond_to]]></title>
+    <link href="http://vicfriedman.github.com/blog/2013/05/13/respond-to/"/>
+    <updated>2013-05-13T12:01:00-04:00</updated>
+    <id>http://vicfriedman.github.com/blog/2013/05/13/respond-to</id>
+    <content type="html"><![CDATA[<p>My last post was about <code>method_missing</code>. Since that post, I&#8217;ve gotten to play around with <code>method_missing</code> a lot, and think I&#8217;ve begun to grasp its power. It&#8217;s a crazy tool, and one that can be dangerous if not used wisely.</p>
+
+<p>One thing I learned while rewriting the functionality of <code>method_missing</code> is that you must reopen and rewrite <code>respond_to</code> as well. <code>respond_to</code> is used to determine if an object responds to a method, i.e. allows the object to know a method is being called on it.</p>
+
+<p>Becase <code>method_missing</code> allows you to call undefined methods, the object needs to know in some capicty what those are.
+In the below example, I have written <code>method_missing</code> to be able to use <code>.get_*</code> and <code>.set_*</code> in order to access object in my database. The method name gets passed as a symbol to method missing, so it must be turned into a string before being used.</p>
+
+<pre><code>def self.method_missing(method_name, *args, &amp;block)
+  method_string = method_name.to_s
+  if method_string.start_with?("get_")
+    #do xyz
+  elsif method_string.start)with?("set_")
+    #do xyz
+  else
+    super
+  end
+end
+
+def self.respond_to?(method_sym, include_private = false)
+  if method_sym.to_s =~ /^get_(.*)$/ || method_sym.to_s =~ /^set_(.*)$/
+    true
+  else
+    super
+  end
+end
+</code></pre>
+
+<p>Here, <code>respond_to</code> now responds to my version of <code>method_missing</code>. I am essentially searching if the string version of my method includes <code>get_*</code> or <code>set_*</code> and if it does, it is a method that can be called on an object.</p>
+
+<p>The <code>include_private = false</code> is necessary because by default, <code>respond_to</code> must be passed additional parameters to search for private methods. Methods are private for a reason, they don&#8217;t need to be accessed everywhere and by every object.</p>
+
+<p>Also in both <code>method_missing</code> and <code>respond_to</code> my if/else clause ends by calling <code>super</code>. Essentially, if none of the above returns true, go back to your normal functionality and deliver me an error message.</p>
+
+<p>Also note I am using class methods here. My practice with <code>method_missing</code> and <code>respond_to</code> was geared towards reading and writing objects to my database.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[method_missing]]></title>
+    <link href="http://vicfriedman.github.com/blog/2013/05/07/method-missing/"/>
+    <updated>2013-05-07T14:53:00-04:00</updated>
+    <id>http://vicfriedman.github.com/blog/2013/05/07/method-missing</id>
+    <content type="html"><![CDATA[<p>Last night I learned about Ruby&#8217;s <code>method_missing</code>.</p>
+
+<p>As Ruby code is executed, it travels up the chain of inheritence to discover where your methods are defined. It will execute the first line of code that matches the method name in the method lookup path.</p>
+
+<p>And of course, when there is an instance where you attempt to call an undefined method, the <code>NoMethodError</code> exception is raised. When this happens, Ruby searches up levels of inheritence until it reaches class BasicObject, which is the parent class of all classes in Ruby. Once it reaches BasicObject and still is unable to find a method, <code>NoMethodError</code> is returned.</p>
+
+<p>This is where <code>method_missing</code> comes in to play. <code>method_missing</code> is a type of metaprogramming that allows programmers to call methods without explicitely defining them.</p>
+
+<pre><code>class Test
+  def method_missing(name, *args, &amp;block)
+    puts "NAME: #{name}"
+    puts "ARG: #{args}"
+    puts "BLOCK: #{block}"
+  end
+
+end
+
+t = Test.new
+
+t.some_method("arbitrary argument")
+
+#=&gt; NAME: some_method
+    ARG: ["arbitrary argument"]
+    BLOCK: 
+</code></pre>
+
+<p>In this example, the only method defined in my class is <code>method_missing</code>. I passed in the method name, optional arguments, and an optional block. Once I instantiate a new instance of the Test class, I call a method <code>some_method</code> on it. But <code>some_method</code> hasn&#8217;t been defined. Normally this would return <code>NoMethodError</code> but because I used <code>method_missing</code>, <code>some_method</code> is accessible to me.</p>
+
+<p>As you can see in my definition of <code>method_missing</code>, I asked it to print out the method name, any potential arguments, and any potential blocks. <code>some_method</code> has method name and an argument, but not a block. Everything I attempted to call on my instance of the Test class is executed thanks to <code>method_missing</code>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[coding abroad]]></title>
+    <link href="http://vicfriedman.github.com/blog/2013/05/06/coding-abroad/"/>
+    <updated>2013-05-06T11:06:00-04:00</updated>
+    <id>http://vicfriedman.github.com/blog/2013/05/06/coding-abroad</id>
+    <content type="html"><![CDATA[<p><strong><em>I just got back from a week vacation in Paris.</em></strong> The highlight of my trip was the day I spent with two different Ruby developers. Through some twitter introductions, I was able to schedule a morning at <a href="http://www.verseauparis.com/">Verseau Paris</a> with founder<a href="http://twitter.com/tracyloisel">Tracy Loisel</a> and an afternoon with <a href="http://twitter.com/tibastral">Thibaut Assus</a>, founder of <a href="http://meetup.rubyparis.org/">Paris.rb</a>.</p>
+
+<p><strong><em>It was so incredible to be welcome so whole-heartedly by developers abroad.</em></strong> Tracy was so willing to tell me his story, intrdouce me to his team, and show me around his office. And while there was a little bit of a language barrier (my french isn&#8217;t perfect), coding is international. We both have a story of why we started coding and Ruby provided a common language and basis of understanding. They even posted about me on <a href="https://www.facebook.com/photo.php?fbid=521981374527257&set=a.309755622416501.69405.309620859096644&type=1&theater">facebook!</a></p>
+
+<p>  <img src="http://vicfriedman.github.com/images/verseau.jpg"></p>
+
+<p><strong><em>I had a very similiar experience in the afternoon with Thibaut.</em></strong> He welcomed me into his home, told me all about his projects, figured out we knew people in common, and we even laughed about how the PHP array method is bizarre. Commonality.</p>
+
+<p><strong><em>My experience with these developers really hammered home how welcoming the Ruby community is.</em></strong> I am a very new developer, and these amazing developers in Paris were each willing to spend a few hours with me. I don&#8217;t know if you can find that in other industries. It was incredibly reaffirming for me. I am so excited to spend the rest of my life coding. Programming isn&#8217;t people talking to computers, it&#8217;s people talking to people, and bringing people together. It&#8217;s amazing.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[a lesson in linked lists]]></title>
+    <link href="http://vicfriedman.github.com/blog/2013/04/22/a-lesson-in-linked-lists/"/>
+    <updated>2013-04-22T13:43:00-04:00</updated>
+    <id>http://vicfriedman.github.com/blog/2013/04/22/a-lesson-in-linked-lists</id>
+    <content type="html"><![CDATA[<p><strong><em>This morning, I learned what a linked list is.</em></strong> A linked list is a data structure that is comprised on a group of nodes. Essentially, each dataset is made up of it&#8217;s information, and a pointer. A pointer is a link to the next node in the data sequence. In the simplest of terms, if I am a dataset, I only know about myself, and the person that comes after me.</p>
+
+<p><strong><em>Linked lists are most commonly compared to arrays.</em></strong> They both store data, and both have their pros and cons. In compiled languages, arrays are a fixed size. If you define an array to have 100 elements, it has 100 elements. While there are methods to resize an array in compiled languages, from what I&#8217;ve read, it&#8217;s not an easy task. Linked lists allow for a significantly easier process for inserting and deleting data, without shifting entire groups of elements up or down.</p>
+
+<p><strong><em>So here is an example of a basic link list:</em></strong></p>
+
+<p><img src="http://vicfriedman.github.com/images/linklist1.png"></p>
+
+<p>This small data sequence is going to be listed in alphabetical order. All linked lists start with HEAD, which denotes the begining of the data sequence. The head contains a pointer, which points to the first object in the data set. In this case, HEAD points to &#8220;Boston&#8221;. The first dataset, contains the name of the city, and a pointer to the following dataset, here it is San Fransico. San Francisco points to the end, which is always signified by NULL. The last dataset will always point to NULL.</p>
+
+<p>So in this case, Boston only knows that it exists, and knows about San Fransico. San Francisco only knows they exist, and that NULL exists. They don&#8217;t know anything about Boston.</p>
+
+<p>So the process for inserting another city is fairly simple. Say we wanted to insert New York. Because of the alphabetical order, you will want to insert it between Boston and San Francisco. To do so, all you need to do is make New York point to San Francisco, and change Boston to point to New York. There is no shifting of indexes, or anything like that.</p>
+
+<p><img src="http://vicfriedman.github.com/images/linklist2.png"></p>
+
+<p>However the process of searching a linked list is difficult. While in an array, if you were trying to find San Francisco you should simply do <code>array[2]</code> to access San Francisco, it&#8217;s a much more expensive process in linked lists. In this final example, in order to search for San Francisco, you have to start at head, move through Boston and New York, to finally arrive at the data you are searching for.</p>
+
+<ol>Resources:
+<li>http://cslibrary.stanford.edu/103/LinkedListBasics.pdf</li>
+<li>http://www.youtube.com/watch?v=LOHBGyK3Hbs</li>
+<li>www.youtube.com/watch?v=oiW79L8VYXk</li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[ruby marshaling]]></title>
+    <link href="http://vicfriedman.github.com/blog/2013/04/10/ruby-marshaling/"/>
+    <updated>2013-04-10T14:11:00-04:00</updated>
+    <id>http://vicfriedman.github.com/blog/2013/04/10/ruby-marshaling</id>
+    <content type="html"><![CDATA[<p><strong><em>As my semester at <a href="http://flatironschool.com/">The Flatiron School</a> winds down,</em></strong> we&#8217;ve been spending our time building our final projects. My group, <a href="tmd.io">Tyler Davis</a>, <a href="dolin.github.com">Danny Olinsky</a>, and <a href="http://jlarusso.github.io/">Jesse La Russo</a>, is building a modern-take on an old fashioned gold star board. Aka, you write a blog post? You get a gold star. You finish a Code School course? You get a gold star. We&#8217;ve built in a lot of other functionality (our own authentication and authorization, the ability for users to give each other stars, background cron jobs, etc. etc.), but that&#8217;s the gist of it.</p>
+
+<p><strong><em>The best thing about this whole process</em></strong> has been the things I&#8217;ve learned from the errors we get. In this way, I learned about the <a href="http://ruby-doc.org/core-1.9.3/Marshal.html">Ruby Marshal Module</a>.</p>
+
+<p><strong><em>The Marshal Module</em></strong> essentially takes a collection of Ruby Objects and converts them into a byte stream, and then allows it to be stored and accessed elsewhere.</p>
+
+<p><strong><em>One of this big things with our project has been working with APIs</em></strong> in order to automate the processes of giving stars. The Treehouse API was particularly difficult to parse through, so for the time being, I created a dictionary to deal with their objects. Essentially, we want to give a star for every category a user completes.</p>
+
+<pre><code>  @@dictionary = {
+  "Website Basics" =&gt; ["Website Basics"],
+  "Technology Foundations" =&gt; ['Graphic Basics'],
+  "Aesthetic Foundations" =&gt; ["Elements", "Principles", "Color Theory"],
+  "HTML" =&gt; ["Introduction", "Text", "Lists", "Links", "Objects", "Tables", "Forms"],
+  "CSS Foundations" =&gt; ["Introduction", "Selectors", "Data Types", "Text", "Box Model", "Page Layout", "Printing", "Framework Foundations"],
+  "CSS3" =&gt; ["Selectors", "Typography", "Web Fonts", "Borders", "Gradients", "Backgrounds", "Transitions", "Transforms", "Animation", "Multi-Column Layouts", "Media Queries"],
+  "Build a Responsive Website" =&gt; ["Introduction to Response Web Design", "Fluid Foundation", "Adaptive Design", "Responsive Design", "Advanced Techniques"],
+  "Introduction to Programming" =&gt; ["Basics", "Control Structures", "Objects and Arrays", "Functions"],
+  "JavaScript Foundations" =&gt; ["Introduction Variables", "JavaScript Strings", "JavaScript Numbers", "JavaScript Arrays", "JavaScript Functions", "JavaScript Objects"],
+  "Ruby Foundations" =&gt; ["Ruby Basics", "Objects, Classes, and Variables", "Ruby Strings", "Ruby Numbers", "Ruby Arrays", "Ruby Hashes", "Ruby Methods", "Ruby Loops", "Ruby Blocks", "Ruby Procs &amp; Lambdas", "Ruby Modules", "Ruby Core", "Standard Library", "Ruby Testing"],
+  "Build a Simple Ruby on Rails Application" =&gt; ["Getting Started with Rails", "Rails Frontend Development", "Ruby on Rails Authentication", "Customizing Ruby on Rails Forms", "Writing Tests", "Rails Routing", "Testing the Whole App", "Building the Profile Page", "Rails Deployment"]
+}
+</code></pre>
+
+<p><strong><em>In this dictionary,</em></strong> the star (which is also the Treehouse badge category) is the key. The values (represented as an array of strings) are all the badges you can earn. Essentially, the values are the requirements a user must fulfill to receive a Treehouse Star. In order to do that, we had to create methods that would parse through the Treehouse API, take a collection of all a user&#8217;s badges, and iterate those badges through our dictionary.</p>
+
+<pre><code>  def check_star_requirement(th_json)
+    #check json of badge names on profile
+    badges = th_json["badges"].collect { |badge| badge["name"] }
+    completed_stars_array = @@dictionary.each do |star, requirement|
+      star if check_requirements(badges, requirement) 
+    end
+    completed_stars_array.compact
+  end
+
+  def check_requirements(badges, requirement)
+    (badges &amp; requirement) == requirement
+  end 
+</code></pre>
+
+<p>The <code>check_star_requirement</code> methodtakes the Treehose json for a user (in my case, <a href="http://teamtreehouse.com/victoriafriedman.json">teamtreehouse.victoriafriedman.json</a>), iterates through their information on the Treehouse API and collects all their badges. Those badges are saved in an array called <code>badges</code>. Then the dictionary is saved as an array, <code>completed_stars_array</code> and iterated through.</p>
+
+<p>It then calls the <code>check_requirements</code> method, which iterates through the values of the dictionary. If the strings in <code>badges</code> matches any of values in <code>dictionary</code>, then a user will receive that star.</p>
+
+<p>All of this seemed to be working great until we checked our database. Rails &#8220;marshaled&#8221; our data. An individual entry in our Star table in the Name column, looked like this:</p>
+
+<pre><code>  Aesthetic Foundations
+    - Elements
+    - Principles
+    - Color Theory
+</code></pre>
+
+<p>Avi pointed us towards the Ruby Marshaling Module. Essentially, Ruby was taking our entire collection, our dictionary, and transforming each key-value pair into a string (which apparently looked like the above example). We were essentially calling, <code>Marshal::Dump</code>, which saves the data and returns the original string. Because the <code>each</code> method also just returns the original string, our iteration wasn&#8217;t just saving the key, <code>Aesthetic Foundations</code>, to our database, but the entire string.</p>
+
+<p>Our solution to this problem was really simple, essentially we replaced <code>each</code> with <code>collect</code>. Collect returns the new array, so in our case, it returns an array of key values in the dictionary, but only the key where values are all contained in the badges array.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[deleting crontab system mail]]></title>
+    <link href="http://vicfriedman.github.com/blog/2013/04/01/deleting-crontab-system-mail/"/>
+    <updated>2013-04-01T21:17:00-04:00</updated>
+    <id>http://vicfriedman.github.com/blog/2013/04/01/deleting-crontab-system-mail</id>
+    <content type="html"><![CDATA[<p><strong><em>Last week, I presented an app to <a href="http://www.meetup.com/nyc-on-rails/">NYC on Rails</a>.</em></strong> The main focus was to learn about ActionMailer, paired with cron jobs and the <a href="https://github.com/javan/whenever">Whenever gem</a>.</p>
+
+<p><strong><em>The hardest part of all of it was configuring the cron log</em></strong> to write to the correct files. I was getting permission errors when trying to get cron to write to the log directly in my application. In the end, I managed to configure the crontab to print errors to a directy of my computer.</p>
+
+<pre><code>set :cron_log, "~/log/cron_log.log"
+</code></pre>
+
+<p><strong><em>While this gave cron proper permissions</em></strong> and allowed me to debug during development, I ended up 283 system emails on my computer, sent directly to victoria@victoria-miranda-friedman&#8217;s-macbook. And I had no idea how to remove them from my root directory.</p>
+
+<p>Every time I entered terminal, I saw this message:</p>
+
+<p><img src="http://vicfriedman.github.com/images/post_images/youve_got_mail.png"></p>
+
+<p>In order to enter your mailbox, type <code>mail</code>. This will display:</p>
+
+<p><img src="http://vicfriedman.github.com/images/post_images/mail_display.png"></p>
+
+<p>The return in terminal clearly tells you <code>Type ? for help.</code>, which returns a list of all possible methods to act on your mailbox and its contents</p>
+
+<p><img src="http://vicfriedman.github.com/images/post_images/mail_options.png"></p>
+
+<p>And from here, you get clear instructions on how to delete your mail. To delete one email, enter <code>d 1</code>. If you wanted to delete ten emails, you would enter <code>d 1-10</code>, or in my first attempt <code>d 1-283</code>.</p>
+
+<p><img src="http://vicfriedman.github.com/images/post_images/delete.png"></p>
+
+<p>The next thing I learned about cron mail, was that <code>exit</code>, exits you from your inbox, but doesn&#8217;t save any changes. <code>quit</code> is the command that saves and exits. And as you can see in the image above, after I <code>quit</code> and then entered my mailbox again, I&#8217;m told <code>no mail for victoria</code></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[action mailer configurations]]></title>

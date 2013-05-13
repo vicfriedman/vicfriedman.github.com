@@ -9,7 +9,7 @@
   <meta name="author" content="Victoria Friedman">
 
   
-  <meta name="description" content="This week, I started working on a presentation with two other girls, Laura Brown and Ana Becker to present at the NYC on Rails meetup this coming &hellip;">
+  <meta name="description" content="My last post was about method_missing. Since that post, I&#8217;ve gotten to play around with method_missing a lot, and think I&#8217;ve begun to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -63,6 +63,392 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/13/respond-to/">Respond_to</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-13T12:01:00-04:00" pubdate data-updated="true">May 13<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>My last post was about <code>method_missing</code>. Since that post, I&#8217;ve gotten to play around with <code>method_missing</code> a lot, and think I&#8217;ve begun to grasp its power. It&#8217;s a crazy tool, and one that can be dangerous if not used wisely.</p>
+
+<p>One thing I learned while rewriting the functionality of <code>method_missing</code> is that you must reopen and rewrite <code>respond_to</code> as well. <code>respond_to</code> is used to determine if an object responds to a method, i.e. allows the object to know a method is being called on it.</p>
+
+<p>Becase <code>method_missing</code> allows you to call undefined methods, the object needs to know in some capicty what those are.
+In the below example, I have written <code>method_missing</code> to be able to use <code>.get_*</code> and <code>.set_*</code> in order to access object in my database. The method name gets passed as a symbol to method missing, so it must be turned into a string before being used.</p>
+
+<pre><code>def self.method_missing(method_name, *args, &amp;block)
+  method_string = method_name.to_s
+  if method_string.start_with?("get_")
+    #do xyz
+  elsif method_string.start)with?("set_")
+    #do xyz
+  else
+    super
+  end
+end
+
+def self.respond_to?(method_sym, include_private = false)
+  if method_sym.to_s =~ /^get_(.*)$/ || method_sym.to_s =~ /^set_(.*)$/
+    true
+  else
+    super
+  end
+end
+</code></pre>
+
+<p>Here, <code>respond_to</code> now responds to my version of <code>method_missing</code>. I am essentially searching if the string version of my method includes <code>get_*</code> or <code>set_*</code> and if it does, it is a method that can be called on an object.</p>
+
+<p>The <code>include_private = false</code> is necessary because by default, <code>respond_to</code> must be passed additional parameters to search for private methods. Methods are private for a reason, they don&#8217;t need to be accessed everywhere and by every object.</p>
+
+<p>Also in both <code>method_missing</code> and <code>respond_to</code> my if/else clause ends by calling <code>super</code>. Essentially, if none of the above returns true, go back to your normal functionality and deliver me an error message.</p>
+
+<p>Also note I am using class methods here. My practice with <code>method_missing</code> and <code>respond_to</code> was geared towards reading and writing objects to my database.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/07/method-missing/">Method_missing</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-07T14:53:00-04:00" pubdate data-updated="true">May 7<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Last night I learned about Ruby&#8217;s <code>method_missing</code>.</p>
+
+<p>As Ruby code is executed, it travels up the chain of inheritence to discover where your methods are defined. It will execute the first line of code that matches the method name in the method lookup path.</p>
+
+<p>And of course, when there is an instance where you attempt to call an undefined method, the <code>NoMethodError</code> exception is raised. When this happens, Ruby searches up levels of inheritence until it reaches class BasicObject, which is the parent class of all classes in Ruby. Once it reaches BasicObject and still is unable to find a method, <code>NoMethodError</code> is returned.</p>
+
+<p>This is where <code>method_missing</code> comes in to play. <code>method_missing</code> is a type of metaprogramming that allows programmers to call methods without explicitely defining them.</p>
+
+<pre><code>class Test
+  def method_missing(name, *args, &amp;block)
+    puts "NAME: #{name}"
+    puts "ARG: #{args}"
+    puts "BLOCK: #{block}"
+  end
+
+end
+
+t = Test.new
+
+t.some_method("arbitrary argument")
+
+#=&gt; NAME: some_method
+    ARG: ["arbitrary argument"]
+    BLOCK: 
+</code></pre>
+
+<p>In this example, the only method defined in my class is <code>method_missing</code>. I passed in the method name, optional arguments, and an optional block. Once I instantiate a new instance of the Test class, I call a method <code>some_method</code> on it. But <code>some_method</code> hasn&#8217;t been defined. Normally this would return <code>NoMethodError</code> but because I used <code>method_missing</code>, <code>some_method</code> is accessible to me.</p>
+
+<p>As you can see in my definition of <code>method_missing</code>, I asked it to print out the method name, any potential arguments, and any potential blocks. <code>some_method</code> has method name and an argument, but not a block. Everything I attempted to call on my instance of the Test class is executed thanks to <code>method_missing</code>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/06/coding-abroad/">Coding Abroad</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-06T11:06:00-04:00" pubdate data-updated="true">May 6<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong><em>I just got back from a week vacation in Paris.</em></strong> The highlight of my trip was the day I spent with two different Ruby developers. Through some twitter introductions, I was able to schedule a morning at <a href="http://www.verseauparis.com/">Verseau Paris</a> with founder<a href="http://twitter.com/tracyloisel">Tracy Loisel</a> and an afternoon with <a href="http://twitter.com/tibastral">Thibaut Assus</a>, founder of <a href="http://meetup.rubyparis.org/">Paris.rb</a>.</p>
+
+<p><strong><em>It was so incredible to be welcome so whole-heartedly by developers abroad.</em></strong> Tracy was so willing to tell me his story, intrdouce me to his team, and show me around his office. And while there was a little bit of a language barrier (my french isn&#8217;t perfect), coding is international. We both have a story of why we started coding and Ruby provided a common language and basis of understanding. They even posted about me on <a href="https://www.facebook.com/photo.php?fbid=521981374527257&set=a.309755622416501.69405.309620859096644&type=1&theater">facebook!</a></p>
+
+<p>  <img src="/images/verseau.jpg"></p>
+
+<p><strong><em>I had a very similiar experience in the afternoon with Thibaut.</em></strong> He welcomed me into his home, told me all about his projects, figured out we knew people in common, and we even laughed about how the PHP array method is bizarre. Commonality.</p>
+
+<p><strong><em>My experience with these developers really hammered home how welcoming the Ruby community is.</em></strong> I am a very new developer, and these amazing developers in Paris were each willing to spend a few hours with me. I don&#8217;t know if you can find that in other industries. It was incredibly reaffirming for me. I am so excited to spend the rest of my life coding. Programming isn&#8217;t people talking to computers, it&#8217;s people talking to people, and bringing people together. It&#8217;s amazing.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/22/a-lesson-in-linked-lists/">A Lesson in Linked Lists</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-22T13:43:00-04:00" pubdate data-updated="true">Apr 22<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong><em>This morning, I learned what a linked list is.</em></strong> A linked list is a data structure that is comprised on a group of nodes. Essentially, each dataset is made up of it&#8217;s information, and a pointer. A pointer is a link to the next node in the data sequence. In the simplest of terms, if I am a dataset, I only know about myself, and the person that comes after me.</p>
+
+<p><strong><em>Linked lists are most commonly compared to arrays.</em></strong> They both store data, and both have their pros and cons. In compiled languages, arrays are a fixed size. If you define an array to have 100 elements, it has 100 elements. While there are methods to resize an array in compiled languages, from what I&#8217;ve read, it&#8217;s not an easy task. Linked lists allow for a significantly easier process for inserting and deleting data, without shifting entire groups of elements up or down.</p>
+
+<p><strong><em>So here is an example of a basic link list:</em></strong></p>
+
+<p><img src="/images/linklist1.png"></p>
+
+<p>This small data sequence is going to be listed in alphabetical order. All linked lists start with HEAD, which denotes the begining of the data sequence. The head contains a pointer, which points to the first object in the data set. In this case, HEAD points to &#8220;Boston&#8221;. The first dataset, contains the name of the city, and a pointer to the following dataset, here it is San Fransico. San Francisco points to the end, which is always signified by NULL. The last dataset will always point to NULL.</p>
+
+<p>So in this case, Boston only knows that it exists, and knows about San Fransico. San Francisco only knows they exist, and that NULL exists. They don&#8217;t know anything about Boston.</p>
+
+<p>So the process for inserting another city is fairly simple. Say we wanted to insert New York. Because of the alphabetical order, you will want to insert it between Boston and San Francisco. To do so, all you need to do is make New York point to San Francisco, and change Boston to point to New York. There is no shifting of indexes, or anything like that.</p>
+
+<p><img src="/images/linklist2.png"></p>
+
+<p>However the process of searching a linked list is difficult. While in an array, if you were trying to find San Francisco you should simply do <code>array[2]</code> to access San Francisco, it&#8217;s a much more expensive process in linked lists. In this final example, in order to search for San Francisco, you have to start at head, move through Boston and New York, to finally arrive at the data you are searching for.</p>
+
+<ol>Resources:
+<li>http://cslibrary.stanford.edu/103/LinkedListBasics.pdf</li>
+<li>http://www.youtube.com/watch?v=LOHBGyK3Hbs</li>
+<li>www.youtube.com/watch?v=oiW79L8VYXk</li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/10/ruby-marshaling/">Ruby Marshaling</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-10T14:11:00-04:00" pubdate data-updated="true">Apr 10<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong><em>As my semester at <a href="http://flatironschool.com/">The Flatiron School</a> winds down,</em></strong> we&#8217;ve been spending our time building our final projects. My group, <a href="tmd.io">Tyler Davis</a>, <a href="dolin.github.com">Danny Olinsky</a>, and <a href="http://jlarusso.github.io/">Jesse La Russo</a>, is building a modern-take on an old fashioned gold star board. Aka, you write a blog post? You get a gold star. You finish a Code School course? You get a gold star. We&#8217;ve built in a lot of other functionality (our own authentication and authorization, the ability for users to give each other stars, background cron jobs, etc. etc.), but that&#8217;s the gist of it.</p>
+
+<p><strong><em>The best thing about this whole process</em></strong> has been the things I&#8217;ve learned from the errors we get. In this way, I learned about the <a href="http://ruby-doc.org/core-1.9.3/Marshal.html">Ruby Marshal Module</a>.</p>
+
+<p><strong><em>The Marshal Module</em></strong> essentially takes a collection of Ruby Objects and converts them into a byte stream, and then allows it to be stored and accessed elsewhere.</p>
+
+<p><strong><em>One of this big things with our project has been working with APIs</em></strong> in order to automate the processes of giving stars. The Treehouse API was particularly difficult to parse through, so for the time being, I created a dictionary to deal with their objects. Essentially, we want to give a star for every category a user completes.</p>
+
+<pre><code>  @@dictionary = {
+  "Website Basics" =&gt; ["Website Basics"],
+  "Technology Foundations" =&gt; ['Graphic Basics'],
+  "Aesthetic Foundations" =&gt; ["Elements", "Principles", "Color Theory"],
+  "HTML" =&gt; ["Introduction", "Text", "Lists", "Links", "Objects", "Tables", "Forms"],
+  "CSS Foundations" =&gt; ["Introduction", "Selectors", "Data Types", "Text", "Box Model", "Page Layout", "Printing", "Framework Foundations"],
+  "CSS3" =&gt; ["Selectors", "Typography", "Web Fonts", "Borders", "Gradients", "Backgrounds", "Transitions", "Transforms", "Animation", "Multi-Column Layouts", "Media Queries"],
+  "Build a Responsive Website" =&gt; ["Introduction to Response Web Design", "Fluid Foundation", "Adaptive Design", "Responsive Design", "Advanced Techniques"],
+  "Introduction to Programming" =&gt; ["Basics", "Control Structures", "Objects and Arrays", "Functions"],
+  "JavaScript Foundations" =&gt; ["Introduction Variables", "JavaScript Strings", "JavaScript Numbers", "JavaScript Arrays", "JavaScript Functions", "JavaScript Objects"],
+  "Ruby Foundations" =&gt; ["Ruby Basics", "Objects, Classes, and Variables", "Ruby Strings", "Ruby Numbers", "Ruby Arrays", "Ruby Hashes", "Ruby Methods", "Ruby Loops", "Ruby Blocks", "Ruby Procs &amp; Lambdas", "Ruby Modules", "Ruby Core", "Standard Library", "Ruby Testing"],
+  "Build a Simple Ruby on Rails Application" =&gt; ["Getting Started with Rails", "Rails Frontend Development", "Ruby on Rails Authentication", "Customizing Ruby on Rails Forms", "Writing Tests", "Rails Routing", "Testing the Whole App", "Building the Profile Page", "Rails Deployment"]
+}
+</code></pre>
+
+<p><strong><em>In this dictionary,</em></strong> the star (which is also the Treehouse badge category) is the key. The values (represented as an array of strings) are all the badges you can earn. Essentially, the values are the requirements a user must fulfill to receive a Treehouse Star. In order to do that, we had to create methods that would parse through the Treehouse API, take a collection of all a user&#8217;s badges, and iterate those badges through our dictionary.</p>
+
+<pre><code>  def check_star_requirement(th_json)
+    #check json of badge names on profile
+    badges = th_json["badges"].collect { |badge| badge["name"] }
+    completed_stars_array = @@dictionary.each do |star, requirement|
+      star if check_requirements(badges, requirement) 
+    end
+    completed_stars_array.compact
+  end
+
+  def check_requirements(badges, requirement)
+    (badges &amp; requirement) == requirement
+  end 
+</code></pre>
+
+<p>The <code>check_star_requirement</code> methodtakes the Treehose json for a user (in my case, <a href="http://teamtreehouse.com/victoriafriedman.json">teamtreehouse.victoriafriedman.json</a>), iterates through their information on the Treehouse API and collects all their badges. Those badges are saved in an array called <code>badges</code>. Then the dictionary is saved as an array, <code>completed_stars_array</code> and iterated through.</p>
+
+<p>It then calls the <code>check_requirements</code> method, which iterates through the values of the dictionary. If the strings in <code>badges</code> matches any of values in <code>dictionary</code>, then a user will receive that star.</p>
+
+<p>All of this seemed to be working great until we checked our database. Rails &#8220;marshaled&#8221; our data. An individual entry in our Star table in the Name column, looked like this:</p>
+
+<pre><code>  Aesthetic Foundations
+    - Elements
+    - Principles
+    - Color Theory
+</code></pre>
+
+<p>Avi pointed us towards the Ruby Marshaling Module. Essentially, Ruby was taking our entire collection, our dictionary, and transforming each key-value pair into a string (which apparently looked like the above example). We were essentially calling, <code>Marshal::Dump</code>, which saves the data and returns the original string. Because the <code>each</code> method also just returns the original string, our iteration wasn&#8217;t just saving the key, <code>Aesthetic Foundations</code>, to our database, but the entire string.</p>
+
+<p>Our solution to this problem was really simple, essentially we replaced <code>each</code> with <code>collect</code>. Collect returns the new array, so in our case, it returns an array of key values in the dictionary, but only the key where values are all contained in the badges array.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/01/deleting-crontab-system-mail/">Deleting Crontab System Mail</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-01T21:17:00-04:00" pubdate data-updated="true">Apr 1<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong><em>Last week, I presented an app to <a href="http://www.meetup.com/nyc-on-rails/">NYC on Rails</a>.</em></strong> The main focus was to learn about ActionMailer, paired with cron jobs and the <a href="https://github.com/javan/whenever">Whenever gem</a>.</p>
+
+<p><strong><em>The hardest part of all of it was configuring the cron log</em></strong> to write to the correct files. I was getting permission errors when trying to get cron to write to the log directly in my application. In the end, I managed to configure the crontab to print errors to a directy of my computer.</p>
+
+<pre><code>set :cron_log, "~/log/cron_log.log"
+</code></pre>
+
+<p><strong><em>While this gave cron proper permissions</em></strong> and allowed me to debug during development, I ended up 283 system emails on my computer, sent directly to victoria@victoria-miranda-friedman&#8217;s-macbook. And I had no idea how to remove them from my root directory.</p>
+
+<p>Every time I entered terminal, I saw this message:</p>
+
+<p><img src="/images/post_images/youve_got_mail.png"></p>
+
+<p>In order to enter your mailbox, type <code>mail</code>. This will display:</p>
+
+<p><img src="/images/post_images/mail_display.png"></p>
+
+<p>The return in terminal clearly tells you <code>Type ? for help.</code>, which returns a list of all possible methods to act on your mailbox and its contents</p>
+
+<p><img src="/images/post_images/mail_options.png"></p>
+
+<p>And from here, you get clear instructions on how to delete your mail. To delete one email, enter <code>d 1</code>. If you wanted to delete ten emails, you would enter <code>d 1-10</code>, or in my first attempt <code>d 1-283</code>.</p>
+
+<p><img src="/images/post_images/delete.png"></p>
+
+<p>The next thing I learned about cron mail, was that <code>exit</code>, exits you from your inbox, but doesn&#8217;t save any changes. <code>quit</code> is the command that saves and exits. And as you can see in the image above, after I <code>quit</code> and then entered my mailbox again, I&#8217;m told <code>no mail for victoria</code></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -706,212 +1092,9 @@ Then you&#8217;ll need to create a password for your user by entering <code>pass
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/15/the-each-method/">The Each Method</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-15T07:40:00-05:00" pubdate data-updated="true">Feb 15<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-38989132-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-
-
-
-
-<p><strong>Today marks day 9 into my 60 day course</strong> at <a href="flatironschool.com"> the Flatiron School. </a> Essentially, I&#8217;m 15% done. I would best summarize the last 9 days with these simple words: anxiety, frustration, and (sometimes) victory.<p>
-
-<p><strong>The thing about this course,</strong> essentially a &#8220;full-immersion language course&#8221;, is the pace in which things are taught. It&#8217;s fast. I was prepared for fast, but not this fast. We&#8217;ve been told from day one, &#8220;If you don&#8217;t understand something now, don&#8217;t worry. You will use these methods for the rest of your life, and at some point, they will make sense.&#8221; I&#8217;m not used to moving on to new material before I grasp the current material, but we&#8217;ve also been told to trust the structure of the program, so I have.</p>
-
-<p><strong>So each day has been filled with new material,</strong> and thus new frustrations. A day hasn&#8217;t gone by where I&#8217;ve been utterly and completely lost. I don&#8217;t want to define myself as the potential crier for the class, but&#8230;.I could be.</p>
-
-<p><strong>Yesterday, after spending close to three hours on homework,</strong> I called it a night. And then something happened, a moment of realization. I UNDERSTAND ITERATIONS. Two days prior, literally a mere 48 hours, iterations were some mystical thing that I was struggling to grasp. And without even realizing it, I had been using the each method with ease in my programs. AND I DIDN&#8217;T EVEN REALIZE THAT I UNDERSTOOD THEM. The pace of the class kept me from noticing when material had sunk in.</p>
-
-<p><strong>And with that introduction, I give you the each method.</strong></p>
-
-<p>Say you have an array of candy:</p>
-
-<img src ="/images/post_images/array.png" alt ="Image of and array containing reeces, twizzlers, mambas and snickers">
-
-
-<p>The each method iterates, or loops, through each item in an array. In layman&#8217;s terms, the method acts as a pointer and moves through the array, first to &#8220;reeces&#8221;, then to &#8220;twizzlers&#8221;, then &#8220;mambas&#8221;, and finally to &#8220;snickers&#8221;. Objects that can be iterated through are called enumerables. In Ruby, strings, hashes, and arrays are all enumerators.</p>
-
-Once the array has been defined, we can implement the each method on that array.
-The each method only returns the original array, meaning all it does is move through each index. Nothing is actually done to or with the data, and no new array is created.
-
-<img src ="/images/post_images/array_each_do.png" alt ="Image of and array containing reeces, twizzlers, mambas and snickers">
-
-
-<p>However, you can do things like this: </p>
-
-<img src ="/images/post_images/array_puts.png" alt ="Image of and array containing reeces, twizzlers, mambas and snickers">
-
-
-<p>Here I added a puts in my block of code. The |candy| refers to each type of candy included my array. In my string, I refer back to each individual instance of candy, which then includes it in the string.
-But take note of the actual return value from Ruby, it is still the original array. Again, the each method does not do anything to the original array, it simply takes stock of each item in the array as it passes through and implements the code included in the block (which here is to puts my string).</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/11/5-things-learned-while-learning/">5 Things</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-11T19:51:00-05:00" pubdate data-updated="true">Feb 11<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-38989132-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-
-
-
-
-<h1>5 Things I&#8217;ve Learned About Myself While Learning to Code:</h1>
-
-
-<ul style="list-style:none">
-<p><li><strong>1. I need physical activity in order to well sleep at night.</strong> This statement rang true even when I was doing the prework for the <a href="http://flatironschool.com">Flatiron School</a>. I&#8217;m an active girl, and now I&#8217;m sitting for 10-12 hours a day. I had no idea the effect this sudden change would have on me. And oh the sleepless nights. Even when all my work is said and done, I can&#8217;t seem to go to bed before 2am. The moral of the story is that I need to be more diligent about the gym. And here&#8217;s the catch-22: I would rather spend my time hacking and reading about hacking than anything else. <li></p>
-
-
-<p><li><strong>2. I am prideful.</strong> Sure everyone has pride, but I did not realize to what extent I exalted my own mental capacity, until eight days ago. My class is smart. So imagine a class of dedicated brainiacs. Imagine sitting in that room during lecture feeling so horribly lost. Do you really want to be the girl to raise your hand and say &#8220;I have no idea what&#8217;s going on. Can you please re-explain?&#8221; It&#8217;s a terrifying concept. It&#8217;s admitting defeat. The feeling exactly mirrors that of saying &#8220;I am dumb.&#8221; That&#8217;s pride rising to the surface. And it&#8217;s something I&#8217;ve had to work on getting over, because otherwise I&#8217;ll never learn.</li></p>
-
-
-<p><li><strong>3. The highs beat all the lows.</strong> I spend most of my day with error messages, and that&#8217;s not an exageration. I am a Ruby Newbie, and proud of it. Those error messages, paired with overwhelming feelings of frustration and discouragement, and an ever present desire to bang my head into a wall makes my victories that much sweeter. And yes, I wrote my first Ruby program today. It took four people over an hour, but you can bet that I&#8217;m calling my mom as soon as I get home to brag.</li></p>
-
-
-<p><li><strong>4. It&#8217;s hard to take the training wheels off and just ride.</strong> I have two incredible teachers who are great resources for all my coding questions. And my computer is this expensive machine, that some part of me is still afraid to break with one single rm -rf (and I didn&#8217;t even know I could do that until one month ago). So I&#8217;ve hesitated in trying things on my own. &#8220;What if I ruin all of it? What if my computer just bursts into a million pieces?&#8221; The list of irrational fears goes on. And here&#8217;s the thing, I&#8217;ve already made a huge jump in being at the Flatiron School in the first place. I threw my training wheels to the curb the second I signed myself up for these 12 intense weeks. So why stop now? Yes it&#8217;s hard. Yes, it&#8217;s scary. But won&#8217;t I be that much of a better person by the end of all of this by claiming it as my own? The Flatiron School celebrates failure, and so do I.</li></p>
-
-
-<p><li><strong>5. Time flies when you&#8217;re having fun.</strong> This past Friday, we were given one hour to work on an assignment between blocks of lectures. And literally before I knew it, we were called back to lecture. I had barely even looked up from my computer. I hadn&#8217;t registered a single thing from the outside world, other than the six words I had composed that were hopefully going to turn into a successful method. It didn&#8217;t. I actually got the entire problem wrong, but that&#8217;s ok. Because the thing I took from that hour is that in 5 days of class, coding has become a part of me. I have never been able to do anything with such uninterrupted vigor ever. And this is just the beginning.</li></p>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/05/hello-world/">Hello, World!</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-05T17:29:00-05:00" pubdate data-updated="true">Feb 5<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-38989132-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-
-
-<p>Are you there God? It&#8217;s me, Margaret.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/2/">&larr; Older</a>
     
     <a href="archives">Blog Archives</a>
     
@@ -934,23 +1117,23 @@ But take note of the actual return value from Ruby, it is still the original arr
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/03/24/action-mailer-configurations/">action mailer configurations</a>
+        <a href="/blog/2013/05/13/respond-to/">respond_to</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/03/17/inheritence/">inheritence</a>
+        <a href="/blog/2013/05/07/method-missing/">method_missing</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/03/06/webserver-102/">webserver 102</a>
+        <a href="/blog/2013/05/06/coding-abroad/">coding abroad</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/03/03/webserver-101/">webserver 101</a>
+        <a href="/blog/2013/04/22/a-lesson-in-linked-lists/">a lesson in linked lists</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/02/15/the-each-method/">The Each Method</a>
+        <a href="/blog/2013/04/10/ruby-marshaling/">ruby marshaling</a>
       </li>
     
   </ul>

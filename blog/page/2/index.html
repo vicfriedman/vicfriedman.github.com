@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>5 Things - Too Busy Coding...</title>
+  <title>Too Busy Coding...</title>
   <meta name="author" content="Victoria Friedman">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://vicfriedman.github.com/blog/2013/02/11/5-things-learned-while-learning/">
+  <link rel="canonical" href="http://vicfriedman.github.com/blog/page/2/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
    <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
@@ -61,12 +61,98 @@
 </nav> -->
   <div id="main">
     <div id="content">
-      <div>
-<article class="hentry" role="article">
+      <div class="blog-index">
   
+  
+  
+    <article>
+      
   <header>
     
-      <h1 class="entry-title">5 Things</h1>
+      <h1 class="entry-title"><a href="/blog/2013/02/15/the-each-method/">The Each Method</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-15T07:40:00-05:00" pubdate data-updated="true">Feb 15<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+
+
+<p><strong>Today marks day 9 into my 60 day course</strong> at <a href="flatironschool.com"> the Flatiron School. </a> Essentially, I&#8217;m 15% done. I would best summarize the last 9 days with these simple words: anxiety, frustration, and (sometimes) victory.<p>
+
+<p><strong>The thing about this course,</strong> essentially a &#8220;full-immersion language course&#8221;, is the pace in which things are taught. It&#8217;s fast. I was prepared for fast, but not this fast. We&#8217;ve been told from day one, &#8220;If you don&#8217;t understand something now, don&#8217;t worry. You will use these methods for the rest of your life, and at some point, they will make sense.&#8221; I&#8217;m not used to moving on to new material before I grasp the current material, but we&#8217;ve also been told to trust the structure of the program, so I have.</p>
+
+<p><strong>So each day has been filled with new material,</strong> and thus new frustrations. A day hasn&#8217;t gone by where I&#8217;ve been utterly and completely lost. I don&#8217;t want to define myself as the potential crier for the class, but&#8230;.I could be.</p>
+
+<p><strong>Yesterday, after spending close to three hours on homework,</strong> I called it a night. And then something happened, a moment of realization. I UNDERSTAND ITERATIONS. Two days prior, literally a mere 48 hours, iterations were some mystical thing that I was struggling to grasp. And without even realizing it, I had been using the each method with ease in my programs. AND I DIDN&#8217;T EVEN REALIZE THAT I UNDERSTOOD THEM. The pace of the class kept me from noticing when material had sunk in.</p>
+
+<p><strong>And with that introduction, I give you the each method.</strong></p>
+
+<p>Say you have an array of candy:</p>
+
+<img src ="/images/post_images/array.png" alt ="Image of and array containing reeces, twizzlers, mambas and snickers">
+
+
+<p>The each method iterates, or loops, through each item in an array. In layman&#8217;s terms, the method acts as a pointer and moves through the array, first to &#8220;reeces&#8221;, then to &#8220;twizzlers&#8221;, then &#8220;mambas&#8221;, and finally to &#8220;snickers&#8221;. Objects that can be iterated through are called enumerables. In Ruby, strings, hashes, and arrays are all enumerators.</p>
+
+Once the array has been defined, we can implement the each method on that array.
+The each method only returns the original array, meaning all it does is move through each index. Nothing is actually done to or with the data, and no new array is created.
+
+<img src ="/images/post_images/array_each_do.png" alt ="Image of and array containing reeces, twizzlers, mambas and snickers">
+
+
+<p>However, you can do things like this: </p>
+
+<img src ="/images/post_images/array_puts.png" alt ="Image of and array containing reeces, twizzlers, mambas and snickers">
+
+
+<p>Here I added a puts in my block of code. The |candy| refers to each type of candy included my array. In my string, I refer back to each individual instance of candy, which then includes it in the string.
+But take note of the actual return value from Ruby, it is still the original array. Again, the each method does not do anything to the original array, it simply takes stock of each item in the array as it passes through and implements the code included in the block (which here is to puts my string).</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/11/5-things-learned-while-learning/">5 Things</a></h1>
     
     
       <p class="meta">
@@ -89,7 +175,7 @@
   </header>
 
 
-<div class="entry-content"><script type="text/javascript">
+  <div class="entry-content"><script type="text/javascript">
 
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-38989132-1']);
@@ -126,55 +212,71 @@
 </ul>
 
 </div>
-
-
-  <footer>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">Victoria Friedman</span></span>
-
-      
-
-
-
-
-
-
-
-
   
 
 
-<time datetime="2013-02-11T19:51:00-05:00" pubdate data-updated="true">Feb 11<span>th</span>, 2013</time>
+    </article>
+  
+  
+    <article>
       
-
-
-    </p>
+  <header>
     
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2013/02/11/5-things-learned-while-learning/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2013/02/11/5-things-learned-while-learning/" >Tweet</a>
-  
-  
-  
-</div>
-
+      <h1 class="entry-title"><a href="/blog/2013/02/05/hello-world/">Hello, World!</a></h1>
     
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2013/02/05/hello-world/" title="Previous Post: Hello, world!">&laquo; Hello, world!</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2013/02/15/the-each-method/" title="Next Post: The Each Method">The Each Method &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
+    
+      <p class="meta">
+        
 
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-05T17:29:00-05:00" pubdate data-updated="true">Feb 5<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+<p>Are you there God? It&#8217;s me, Margaret.</p>
 </div>
+  
+  
 
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="archives">Blog Archives</a>
+    
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
+</div>
 <aside class="sidebar">
   
     <section>
@@ -217,7 +319,7 @@
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating...</li>
+    <li class="loading">Status updating&#8230;</li>
   </ul>
   
   <a href="https://github.com/vicfriedman">@vicfriedman</a> on GitHub
@@ -247,7 +349,7 @@
 <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
-    <li class="loading">Status updating...</li>
+    <li class="loading">Status updating&#8230;</li>
   </ul>
   <script type="text/javascript">
     $.domReady(function(){
@@ -266,7 +368,6 @@
 
   
 </aside>
-
 
     </div>
   </div>
