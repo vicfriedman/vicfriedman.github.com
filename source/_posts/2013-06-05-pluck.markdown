@@ -1,0 +1,37 @@
+---
+layout: post
+title: "pluck"
+date: 2013-06-05 09:59
+comments: true
+categories: 
+---
+
+***Recently during a pairing session, I learned about the ActiveRecord query, `pluck`.*** Essentially, it performs a single column select and returns an array of that data.
+
+Say you have a Person class, and you want to select all the names for everyone in that class, all you would need to call is:
+      Person.pluck(:name)
+      =>["Victoria", "Nat", "Peach"]
+
+
+Essentially, this is like calling,
+      SELECT name FROM person;
+
+
+
+You can also use `pluck` to replace using `collect` and `map`.
+
+      Person.select(:name).map { |p| p.name }
+      =>["Victoria", "Nat", "Peach"]
+
+Instead,
+
+      Person.pluck(:name)
+      =>["Victoria", "Nat", "Peach"]
+
+Using `pluck` in this case is far more efficient than using map to return the same set of results. In the example with `map`, a full ActiveRecord Person record is returned and then the map is performed. `pluck` works directly at a database level, and only queries for exactly the information requested. 
+
+***<ol>Helpful Links:***
+  <li>http://guides.rubyonrails.org/active_record_querying.html#pluck</li>
+  <li>http://apidock.com/rails/ActiveRecord/Calculations/pluck</li>
+  <li>http://blog.hashrocket.com/posts/rails-quick-tips-activerecord-calculations-pluck</li>
+</ol>
