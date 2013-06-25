@@ -4,7 +4,7 @@
   <title><![CDATA[Too Busy Coding...]]></title>
   <link href="http://vicfriedman.github.com/atom.xml" rel="self"/>
   <link href="http://vicfriedman.github.com/"/>
-  <updated>2013-06-06T14:30:42-04:00</updated>
+  <updated>2013-06-24T23:57:46-04:00</updated>
   <id>http://vicfriedman.github.com/</id>
   <author>
     <name><![CDATA[Victoria Friedman]]></name>
@@ -12,6 +12,86 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[oracle instant client]]></title>
+    <link href="http://vicfriedman.github.com/blog/2013/06/24/oracle-instant-client/"/>
+    <updated>2013-06-24T21:00:00-04:00</updated>
+    <id>http://vicfriedman.github.com/blog/2013/06/24/oracle-instant-client</id>
+    <content type="html"><![CDATA[<p><strong><em>So today was my first day as a Software Engineer at Time Inc.</em></strong> I can already tell it&#8217;s going to be such an incredible learning experience, and all we did was environment setup today.</p>
+
+<p><strong>The hardest part about all of this, was setting up the client for an Oracle database.</strong> An Oracle database is an object-relational database management system, which means that it is similar to a relational-database but uses an object-oriented model. Essential, it supports objects, classes and inheritence directly in the database schemas and query language, as well as supports custom data-types and methods.</p>
+
+<p>The process of installing took me roughly 4 hours, even with the help of some great blog guides. So I thought I would give it a go at simplyifying the process even further.</p>
+
+<p><strong>1. The first step is to find your operating system in order to download the necessary components.</strong> I was using a Mac OS X Intel. Those options can be found <a href="http://www.oracle.com/technetwork/database/features/instant-client/index-097480.html">here </a>.</p>
+
+<br>
+
+
+<p><strong>2. Download Instant Client Basic, SDK and SQL*Plus.</strong> SDK stands for software development kit, and is a set of developer tools. SQLPlus is a command line tool for making SQL queries to an Oracle database. Those options can be found <a href="http://www.oracle.com/technetwork/topics/intel-macsoft-096467.html">here</a>. One thing I will make note of, I originally tried downloading the latest Version, 11.2.0.3.0, but ended up having to remove all those directories and start over again with Version 10.2.0.4 with the 64-bit package.</p>
+
+<br>
+
+
+<p><strong>3. When I downloaded the instant client, SDK and SQLPlus, they were already unzipped,</strong> so I was able to bypass that step (I was using OS X, 10.8.5). The next step was to make a directory to store instant client: <code>mkdir ~/opt/oracle</code></p>
+
+<br>
+
+
+<p><strong>4. Because instant client, SQL*Plus and SDK all download into different directories,</strong> I combined the SQLPlus and SDK directories into the instant client directory, making everything much more compact.</p>
+
+<br>
+
+
+<p><strong>5. Next, I moved my instantclient directory into my <code>/opt/oracle</code> directory:</strong> <code>mv instantclient /opt/oracle</code></p>
+
+<br>
+
+
+<p><strong>6. Setting up sym links to the libraries:</strong></p>
+
+<pre><code>  ln -s libclntsh.dylib.10.1 libclntsh.dylib
+  ln -s libocci.dylib.10.1 libocci.dylib
+</code></pre>
+
+<br>
+
+
+<p><strong>7. The next step is to set up <code>ORACLE_HOME</code>, <code>NLS_LANG</code> and <code>DYLD_LIBRARY_PATH</code> variables.</strong> I chose to set up my variables inside my .bash_profile:</p>
+
+<pre><code>  export ORACLE_HOME=/opt/oracle
+  #export ORACLE_HOME=/usr/local/oracle
+  export DYLD_LIBRARY_PATH=$ORACLE_HOME/instantclient
+  export LD_LIBRARY_PATH=$DYLD_LIBRARY_PATH
+  export SQLPATH=$ORACLE_HOME/instantclient
+  export ARCHFLAGS="-arch x86_64"
+  export NLS_LANG="AMERICAN_AMERICA.UTF8"
+  export TNS_ADMIN=$ORACLE_HOME/network/admin
+  export PATH=$PATH:$MAVEN_HOME/bin:$SVN_HOME/bin:$GIT_HOME/bin:$AMQ_PATH/bin:$DYLD_LIBRARY_PATH
+</code></pre>
+
+<p>Obviously, these paths will change base on your own selection for directory names.</p>
+
+<br>
+
+
+<p><strong>8. The final step is to put SQL*Plus in your $PATH.</strong> I did this by creating a symlink (I already had usr/local/bin in my $PATH)</p>
+
+<pre><code>  ln -s /opt/oracle/instantclient/sqlplus /usr/local/bin/sqlplus
+</code></pre>
+
+<p>You can test to make sure this works by running <code>which sqlplus</code>, which should return <code>/usr/local/bin/sqlplus</code></p>
+
+<p><strong>9. The final step is to test it all out! Try running <code>gem install ruby-oci8</code></strong> and Oracle instant client should be all set up!</p>
+
+<ul>__Helpful Links:__
+  <li>http://ruby-oci8.rubyforge.org/en/file.install-instant-client.html</li>
+  <li>http://www.pixellatedvisions.com/2009/03/25/rails-on-oracle-part-1-installing-the-oracle-instant-client-on-mac-os-x</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[pluck]]></title>

@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>a lesson in linked lists - Too Busy Coding...</title>
+  <title>oracle instant client - Too Busy Coding...</title>
   <meta name="author" content="Victoria Friedman">
 
   
-  <meta name="description" content="This morning, I learned what a linked list is. A linked list is a data structure that is comprised on a group of nodes. Essentially, each dataset is &hellip;">
+  <meta name="description" content="So today was my first day as a Software Engineer at Time Inc. I can already tell it&#8217;s going to be such an incredible learning experience, and &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://vicfriedman.github.com/blog/2013/04/22/a-lesson-in-linked-lists/">
+  <link rel="canonical" href="http://vicfriedman.github.com/blog/2013/06/24/oracle-instant-client/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
    <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
@@ -66,7 +66,7 @@
   
   <header>
     
-      <h1 class="entry-title">A Lesson in Linked Lists</h1>
+      <h1 class="entry-title">Oracle Instant Client</h1>
     
     
       <p class="meta">
@@ -82,36 +82,84 @@
   
 
 
-<time datetime="2013-04-22T13:43:00-04:00" pubdate data-updated="true">Apr 22<span>nd</span>, 2013</time>
+<time datetime="2013-06-24T21:00:00-04:00" pubdate data-updated="true">Jun 24<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><strong><em>This morning, I learned what a linked list is.</em></strong> A linked list is a data structure that is comprised on a group of nodes. Essentially, each dataset is made up of it&#8217;s information, and a pointer. A pointer is a link to the next node in the data sequence. In the simplest of terms, if I am a dataset, I only know about myself, and the person that comes after me.</p>
+<div class="entry-content"><p><strong><em>So today was my first day as a Software Engineer at Time Inc.</em></strong> I can already tell it&#8217;s going to be such an incredible learning experience, and all we did was environment setup today.</p>
 
-<p><strong><em>Linked lists are most commonly compared to arrays.</em></strong> They both store data, and both have their pros and cons. In compiled languages, arrays are a fixed size. If you define an array to have 100 elements, it has 100 elements. While there are methods to resize an array in compiled languages, from what I&#8217;ve read, it&#8217;s not an easy task. Linked lists allow for a significantly easier process for inserting and deleting data, without shifting entire groups of elements up or down.</p>
+<p><strong>The hardest part about all of this, was setting up the client for an Oracle database.</strong> An Oracle database is an object-relational database management system, which means that it is similar to a relational-database but uses an object-oriented model. Essential, it supports objects, classes and inheritence directly in the database schemas and query language, as well as supports custom data-types and methods.</p>
 
-<p><strong><em>So here is an example of a basic link list:</em></strong></p>
+<p>The process of installing took me roughly 4 hours, even with the help of some great blog guides. So I thought I would give it a go at simplyifying the process even further.</p>
 
-<p><img src="/images/linklist1.png"></p>
+<p><strong>1. The first step is to find your operating system in order to download the necessary components.</strong> I was using a Mac OS X Intel. Those options can be found <a href="http://www.oracle.com/technetwork/database/features/instant-client/index-097480.html">here </a>.</p>
 
-<p>This small data sequence is going to be listed in alphabetical order. All linked lists start with HEAD, which denotes the begining of the data sequence. The head contains a pointer, which points to the first object in the data set. In this case, HEAD points to &#8220;Boston&#8221;. The first dataset, contains the name of the city, and a pointer to the following dataset, here it is San Fransico. San Francisco points to the end, which is always signified by NULL. The last dataset will always point to NULL.</p>
+<br>
 
-<p>So in this case, Boston only knows that it exists, and knows about San Fransico. San Francisco only knows they exist, and that NULL exists. They don&#8217;t know anything about Boston.</p>
 
-<p>So the process for inserting another city is fairly simple. Say we wanted to insert New York. Because of the alphabetical order, you will want to insert it between Boston and San Francisco. To do so, all you need to do is make New York point to San Francisco, and change Boston to point to New York. There is no shifting of indexes, or anything like that.</p>
+<p><strong>2. Download Instant Client Basic, SDK and SQL*Plus.</strong> SDK stands for software development kit, and is a set of developer tools. SQLPlus is a command line tool for making SQL queries to an Oracle database. Those options can be found <a href="http://www.oracle.com/technetwork/topics/intel-macsoft-096467.html">here</a>. One thing I will make note of, I originally tried downloading the latest Version, 11.2.0.3.0, but ended up having to remove all those directories and start over again with Version 10.2.0.4 with the 64-bit package.</p>
 
-<p><img src="/images/linklist2.png"></p>
+<br>
 
-<p>However the process of searching a linked list is difficult. While in an array, if you were trying to find San Francisco you should simply do <code>array[2]</code> to access San Francisco, it&#8217;s a much more expensive process in linked lists. In this final example, in order to search for San Francisco, you have to start at head, move through Boston and New York, to finally arrive at the data you are searching for.</p>
 
-<ol>Resources:
-<li>http://cslibrary.stanford.edu/103/LinkedListBasics.pdf</li>
-<li>http://www.youtube.com/watch?v=LOHBGyK3Hbs</li>
-<li>www.youtube.com/watch?v=oiW79L8VYXk</li>
-</ol>
+<p><strong>3. When I downloaded the instant client, SDK and SQLPlus, they were already unzipped,</strong> so I was able to bypass that step (I was using OS X, 10.8.5). The next step was to make a directory to store instant client: <code>mkdir ~/opt/oracle</code></p>
+
+<br>
+
+
+<p><strong>4. Because instant client, SQL*Plus and SDK all download into different directories,</strong> I combined the SQLPlus and SDK directories into the instant client directory, making everything much more compact.</p>
+
+<br>
+
+
+<p><strong>5. Next, I moved my instantclient directory into my <code>/opt/oracle</code> directory:</strong> <code>mv instantclient /opt/oracle</code></p>
+
+<br>
+
+
+<p><strong>6. Setting up sym links to the libraries:</strong></p>
+
+<pre><code>  ln -s libclntsh.dylib.10.1 libclntsh.dylib
+  ln -s libocci.dylib.10.1 libocci.dylib
+</code></pre>
+
+<br>
+
+
+<p><strong>7. The next step is to set up <code>ORACLE_HOME</code>, <code>NLS_LANG</code> and <code>DYLD_LIBRARY_PATH</code> variables.</strong> I chose to set up my variables inside my .bash_profile:</p>
+
+<pre><code>  export ORACLE_HOME=/opt/oracle
+  #export ORACLE_HOME=/usr/local/oracle
+  export DYLD_LIBRARY_PATH=$ORACLE_HOME/instantclient
+  export LD_LIBRARY_PATH=$DYLD_LIBRARY_PATH
+  export SQLPATH=$ORACLE_HOME/instantclient
+  export ARCHFLAGS="-arch x86_64"
+  export NLS_LANG="AMERICAN_AMERICA.UTF8"
+  export TNS_ADMIN=$ORACLE_HOME/network/admin
+  export PATH=$PATH:$MAVEN_HOME/bin:$SVN_HOME/bin:$GIT_HOME/bin:$AMQ_PATH/bin:$DYLD_LIBRARY_PATH
+</code></pre>
+
+<p>Obviously, these paths will change base on your own selection for directory names.</p>
+
+<br>
+
+
+<p><strong>8. The final step is to put SQL*Plus in your $PATH.</strong> I did this by creating a symlink (I already had usr/local/bin in my $PATH)</p>
+
+<pre><code>  ln -s /opt/oracle/instantclient/sqlplus /usr/local/bin/sqlplus
+</code></pre>
+
+<p>You can test to make sure this works by running <code>which sqlplus</code>, which should return <code>/usr/local/bin/sqlplus</code></p>
+
+<p><strong>9. The final step is to test it all out! Try running <code>gem install ruby-oci8</code></strong> and Oracle instant client should be all set up!</p>
+
+<ul>__Helpful Links:__
+  <li>http://ruby-oci8.rubyforge.org/en/file.install-instant-client.html</li>
+  <li>http://www.pixellatedvisions.com/2009/03/25/rails-on-oracle-part-1-installing-the-oracle-instant-client-on-mac-os-x</li>
+</ul>
 
 </div>
 
@@ -135,7 +183,7 @@
   
 
 
-<time datetime="2013-04-22T13:43:00-04:00" pubdate data-updated="true">Apr 22<span>nd</span>, 2013</time>
+<time datetime="2013-06-24T21:00:00-04:00" pubdate data-updated="true">Jun 24<span>th</span>, 2013</time>
       
 
 
@@ -143,7 +191,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2013/04/22/a-lesson-in-linked-lists/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2013/04/22/a-lesson-in-linked-lists/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2013/06/24/oracle-instant-client/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2013/06/24/oracle-instant-client/" >Tweet</a>
   
   
   
@@ -152,10 +200,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/04/10/ruby-marshaling/" title="Previous Post: ruby marshaling">&laquo; ruby marshaling</a>
+        <a class="basic-alignment left" href="/blog/2013/06/05/pluck/" title="Previous Post: pluck">&laquo; pluck</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/05/06/coding-abroad/" title="Next Post: coding abroad">coding abroad &raquo;</a>
       
     </p>
   </footer>
