@@ -4,7 +4,7 @@
   <title><![CDATA[Too Busy Coding...]]></title>
   <link href="http://vicfriedman.github.com/atom.xml" rel="self"/>
   <link href="http://vicfriedman.github.com/"/>
-  <updated>2013-05-13T12:24:18-04:00</updated>
+  <updated>2013-06-06T14:30:42-04:00</updated>
   <id>http://vicfriedman.github.com/</id>
   <author>
     <name><![CDATA[Victoria Friedman]]></name>
@@ -12,6 +12,46 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[pluck]]></title>
+    <link href="http://vicfriedman.github.com/blog/2013/06/05/pluck/"/>
+    <updated>2013-06-05T09:59:00-04:00</updated>
+    <id>http://vicfriedman.github.com/blog/2013/06/05/pluck</id>
+    <content type="html"><![CDATA[<p><strong><em>Recently during a pairing session, I learned about the ActiveRecord query, <code>pluck</code>.</em></strong> Essentially, it performs a single column select and returns an array of that data.</p>
+
+<p>Say you have a Person class, and you want to select all the names for everyone in that class, all you would need to call is:</p>
+
+<pre><code>  Person.pluck(:name)
+  =&gt;["Victoria", "Nat", "Peach"]
+</code></pre>
+
+<p>Essentially, this is like calling,</p>
+
+<pre><code>  SELECT name FROM person;
+</code></pre>
+
+<p>You can also use <code>pluck</code> to replace using <code>collect</code> and <code>map</code>.</p>
+
+<pre><code>  Person.select(:name).map { |p| p.name }
+  =&gt;["Victoria", "Nat", "Peach"]
+</code></pre>
+
+<p>Instead,</p>
+
+<pre><code>  Person.pluck(:name)
+  =&gt;["Victoria", "Nat", "Peach"]
+</code></pre>
+
+<p>Using <code>pluck</code> in this case is far more efficient than using map to return the same set of results. In the example with <code>map</code>, a full ActiveRecord Person record is returned and then the map is performed. <code>pluck</code> works directly at a database level, and only queries for exactly the information requested.</p>
+
+<p><strong><em><ol>Helpful Links:</em></strong>
+  <li>http://guides.rubyonrails.org/active_record_querying.html#pluck</li>
+  <li>http://apidock.com/rails/ActiveRecord/Calculations/pluck</li>
+  <li>http://blog.hashrocket.com/posts/rails-quick-tips-activerecord-calculations-pluck</li>
+</ol></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[respond_to]]></title>
