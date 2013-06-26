@@ -9,7 +9,7 @@
   <meta name="author" content="Victoria Friedman">
 
   
-  <meta name="description" content="var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-38989132-1']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement(' &hellip;">
+  <meta name="description" content="In my last post, I explained how to create a webserver using Dediserve.com. [NB: Dediserve.com is the cloud provider]. This post will cover the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -63,6 +63,286 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/06/webserver-102/">Webserver 102</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-06T17:50:00-05:00" pubdate data-updated="true">Mar 6<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>In my last <a href="http://vicfriedman.github.com/blog/2013/03/03/webserver-101/">post</a>, I explained how to create a webserver<strong> using <a href="www.dediserve.com">Dediserve.com</a>. [NB: Dediserve.com is the cloud provider]. This post will cover the second half of the webserver setup, including installing gems, deploying with Capistrano, generating SSH keys on github, installing Passenger, and installing and configuring nginx.</p>
+
+<p>Now that you have a server that you can connect to, it&#8217;s time to set it up to run your application on it.</p>
+
+<h3>Prepping to Deploy </h3>
+
+
+<p>The first step in this process is install the <code>build-essential</code> package (which installs all the developer tools that your Ubuntu Server does not automatically come with, including <code>gcc</code> and <code>make</code>), as well as a Ruby 1.9, Rubygems and their development packages, and PostgresSQL (our database server).</p>
+
+<p>In order to install all of these, you must run <code>apt-get</code>, which is Ubuntu&#8217;s management system. This system also speeds up the download process. Instead of spending days running around to all the necessary FTP servers, and then fetch and compile their packages, <code>apt-get</code> takes mere minutes. To get the correct version of this management system, run this command in your terminal:</p>
+
+<pre><code>sudo apt-get update
+</code></pre>
+
+<p>Once the update has completed, you&#8217;ll want to install the system.</p>
+
+<pre><code>sudo apt-get upgrade
+</code></pre>
+
+<p>Press <code>enter</code> when you are prompted to confirm.</p>
+
+<p>The next step is to install the <code>build-essential</code> package.</p>
+
+<pre><code>sudo apt-get install build-essential
+</code></pre>
+
+<p>Followed by the Ruby packages</p>
+
+<pre><code>sudo apt-get install ruby1.9.3 sqlite3 libsqlite3-ruby libsqlite3-dev
+</code></pre>
+
+<p>This installs Ruby 1.9.3, SQLite3 and all of the libraries associated with SQLite3. Ruby and SQLite3 are necessary in order to get a functioning basic Rails application.</p>
+
+<p>Once all of these are installed, you&#8217;ll need to install all of the dependant gems. I used Bundle for my gem management.</p>
+
+<pre><code>sudo gem install bundler
+</code></pre>
+
+<p>Then the <code>SQLite3</code> gem.</p>
+
+<pre><code>sudo gem install sqlite3 sinatra
+</code></pre>
+
+<p>When creating this server, I was using a Sinatra application. If you are trying to use this process to set up your server for a Rails app, you would run <code>sudo gem install sqlite3 rails</code>.</p>
+
+<p>I also used <a href="https://www.phusionpassenger.com/">Passenger</a>, which is a rack app server for Ruby and Python using Nginx. It essentially handles all the heavy lifting for managing your apps processes and resources. This means it makes deploying your app as seamless as possible. Nginx is an open-source web server for HTTP, SMTP, POP3 and IMAP protocols, and is quickly approaching Apache as the most popular. Because Nginx takes an event driven approach, they can handle higher loads of requests.</p>
+
+<p>To install Passenger:</p>
+
+<pre><code>sudo gem install passenger
+</code></pre>
+
+<h3> Capistrano  </h3>
+
+
+<p>Capistrano is an open source tool which executes commands on multiple remote servers, concurrently, and is primarily used for deploying applications.</p>
+
+<pre><code>gem install capistrano
+</code></pre>
+
+<p>There are two commands available with Capistrano.<br>
+<code>capify</code>: used to prepare your application to be deployed using Capistrano<br>
+<code>cap</code>: used to actually deploy your application</p>
+
+<p>You&#8217;ll want to make sure you&#8217;re in your repository&#8217;s directory before you run any Capistrano commands. From there, enter</p>
+
+<pre><code>capify
+</code></pre>
+
+<p>This command creates a <code>capfile</code> and creates a directory called <code>config</code>. This directory contains a file called <code>deploy.rb</code>. The <code>capfile</code> is where the <code>cap</code> command accesses it&#8217;s configurations.</p>
+
+<p>Next, you&#8217;ll need to edit the <code>config/deploy.rb</code> file. These edits will enable us deploy our application.</p>
+
+<pre><code>require 'bundler/capistrano' # for bundler support
+
+set :application, "studentbody"
+set :repository,  "GITHUB_REPOSITORY"
+
+set :user, 'USERNAME'
+set :deploy_to, "/home/#{ user }/#{ application }"
+set :use_sudo, false
+
+set :scm, :git
+
+default_run_options[:pty] = true
+
+role :web, "96.8.123.64"                          # Your HTTP server, Apache/etc
+role :app, "96.8.123.64"                          # This may be the same as your `Web` server
+
+# if you want to clean up old releases on each deploy uncomment this:
+# after "deploy:restart", "deploy:cleanup"
+
+# if you're still using the script/reaper helper you will need
+# these http://github.com/rails/irs_process_scripts
+
+# If you are using Passenger mod_rails uncomment this:
+namespace :deploy do
+ task :start do ; end
+ task :stop do ; end
+ task :restart, :roles =&gt; :app, :except =&gt; { :no_release =&gt; true } do
+   run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
+ end
+end
+</code></pre>
+
+<p>This file is all written in Ruby, just with Capistrano syntax. In this file, we set these variables: <br>
+<code>application</code>: the name of our application.<br>
+<code>repository</code>: the URL for the repository on Github. This needs to be replaced with yours. <br>
+<code>deploy_to</code>: The location on the remote server where we will deploy the application.<br>
+<code>use_sudo</code>: set to false because deploying to a location we own.<br>
+<code>user</code>: the user that we created to log into our server.<br>
+<code>scm</code>: the source-code-management system we&#8217;re using (in my case, Git).<br>
+<code>default_run_options[:pty] = true.</code>: need to ensure that Capistrano interacts with our terminal correctly.<br>
+<code>role</code>: We define two roles, both the web and app roles- to manage both the database and the application.<br>
+Uncomment <code>:deploy</code> because Capistrano is task-oriented. Here we uncommented starting, stopping, and resetting our application via the Passenger interface.<br>
+<code>require 'bundler/capistrano</code>: To ensure Bundler support.</p>
+
+<p>You&#8217;ll want to make sure that both the <code>capfile</code> and  <code>config/deploy.rb</code> are committed and pushed to your github repository.</p>
+
+<h3> Generating an SSH Key </h3>
+
+
+<p>If you are deploying your application from a private Github repository, you will need to generate a SSH key to act as your &#8220;deploy key&#8221;. This gives your server authentication to access your repository, without you manually entering your github name and password.</p>
+
+<pre><code>ssh-keygen -t rsa -b 4096
+</code></pre>
+
+<p>This create a key with the type of &#8220;RSA&#8221; (a global standard for encryption) and makes the key size 4096 bits (a veryyyy strong key).</p>
+
+<p>You will be prompted for the location of the file and for a password. DO NOT set a password for this key. A password completely defeats the purpose of the key in the first place.</p>
+
+<p>This key generates two files:
+<code>~/.ssh/id_rsa</code>: your private RSA key
+<code>~/.ssh/id_rsa.pub</code>: your public RSA key. This key is ok to distribute.</p>
+
+<p>You&#8217;ll want to enter your private key into your github settings.</p>
+
+<p><img src="/images/github_setting.png"></p>
+
+<p>Once there, select the SSH Key option from the menu on the left of the page.</p>
+
+<p><img src="/images/ssh.png"></p>
+
+<p>You&#8217;ll then want to select &#8220;Add SSH Key&#8221; and copy and paste your private SSH Key there. You don&#8217;t need to title it. Github will automatically generate a title to match your server. Make sure you save!</p>
+
+<p><img src="/images/new_key.png"></p>
+
+<p>You&#8217;ll then want to add the contents of your public key to your server</p>
+
+<pre><code>cat ~/.ssh/id_rsa.pub
+</code></pre>
+
+<h3> Preparing to Deploy AND Actually Deploying!</h3>
+
+
+<p>Because Capistrano has a full deployment framework built in, the first step is to ensure that it&#8217;s file structure is in place to deploy your app. In your terminal from the repository&#8217;s directory, run</p>
+
+<pre><code>cap deploy:setup
+</code></pre>
+
+<p>This command will connect to your server, prompt you for your password, and create the necessary directory structure on your server.</p>
+
+<p>It creates a very simple file structure:</p>
+
+<pre><code>/home/USERNAME/repository/
+releases/
+shared/
+</code></pre>
+
+<p>When your application is deployed, your github repository is copied into your <code>releases/</code> directory. A symbolic link is created from that directory to the directory of your application, and names it <code>current</code>. This allows you to release updates of your code while still tracking older versions.</p>
+
+<p>Once your github repository is up to date, you can deploy in one simple command</p>
+
+<pre><code>cap deploy
+</code></pre>
+
+<h3> Nginx In&#8217;s and Out&#8217;s </h3>
+
+
+<p>Nginx is the actual webserver. It speaks HTTP and sits between the client (typically a browser) and your application. Passenger interacts with Nginx by starting up several &#8220;handlers&#8221; for your application. This means that several instances of your application will be running all at once. This allows your server to handle multiple requests to your server per second. This also ensures that each instance of your application is only handling once request at a time. Nginx speeds up and smooths out this process.</p>
+
+<p>Passenger has partly configured Nginx for us, but to finish it off, you&#8217;ll want to edit <code>/opt/nginx/conf.</code> using vim. Vim is a text editor that you can load in your terminal.</p>
+
+<pre><code>sudo vim /opt/nginx/conf/nginx.conf
+</code></pre>
+
+<p>Once this file is open, you&#8217;ll want to make the following changes:</p>
+
+<p><code>#user  nobody;</code> You will need to uncomment out this line and change it to read <code>user www-data;</code>.</p>
+
+<p>Then you&#8217;ll want to find the block that reads:</p>
+
+<pre><code>location / {
+  root   html;
+  index  index.html index.htm;
+}
+</code></pre>
+
+<p>And edit it to read:</p>
+
+<pre><code>root /home/USERNAME/APPNAME/current/public;
+passenger_enabled on;
+</code></pre>
+
+<p>Nginx can be stopped and started by running</p>
+
+<pre><code>/opt/nginx/sbin/nginx
+</code></pre>
+
+<p>But because this command is long, you can create a shorten it to <code>nginx</code> by creating a symlink (symbolic link).</p>
+
+<p>Terminal controlls Unix systems by navigating through paths. A path is a series of directories that denote a specific location. To inspect your current path, run</p>
+
+<pre><code>printenv PATH
+</code></pre>
+
+<p>You should get a response that looks like this:</p>
+
+<pre><code>/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
+</code></pre>
+
+<p>We will want to place the symlink to nginx in <code>/usr/local/sbin</code> becuase, by default, <code>/usr/local</code> is the location that administrators should put any programs that aren&#8217;t automatically installed by your package managers. To do so,</p>
+
+<pre><code>sudo ln -s /opt/nginx/sbin/nginx /usr/local/sbin/
+</code></pre>
+
+<p>Now, <code>nginx -h</code> will display all the series of arguments associated with the <code>nginx</code> command.</p>
+
+<p>To start Nginx, enter</p>
+
+<pre><code>sudo nginx
+</code></pre>
+
+<p>This should automatically return your prompt. Nginx spawns a connection in the background so that you can continue to work directly on your server. Once it&#8217;s running, you should be able to access your application by going to</p>
+
+<pre><code>http://YOUR-IP
+</code></pre>
+
+<p>To stop Nginx, enter</p>
+
+<pre><code>sudo nginx -s stop
+</code></pre>
+
+<p>And that&#8217;s it! Your application has been deployed to your very own server!
+Congratulations!!</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -429,6 +709,10 @@ But take note of the actual return value from Ruby, it is still the original arr
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/06/24/oracle-instant-client/">oracle instant client</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/06/05/pluck/">pluck</a>
       </li>
     
@@ -442,10 +726,6 @@ But take note of the actual return value from Ruby, it is still the original arr
     
       <li class="post">
         <a href="/blog/2013/05/06/coding-abroad/">coding abroad</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/22/a-lesson-in-linked-lists/">a lesson in linked lists</a>
       </li>
     
   </ul>
