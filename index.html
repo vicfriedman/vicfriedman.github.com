@@ -9,7 +9,7 @@
   <meta name="author" content="Victoria Friedman">
 
   
-  <meta name="description" content="So today was my first day as a Software Engineer at Time Inc. I can already tell it&#8217;s going to be such an incredible learning experience, and &hellip;">
+  <meta name="description" content="Today I learned, among a million other things, that I will never escape SQL statements. I think I&#8217;ve finally faced it. During week 6 at The &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -63,6 +63,76 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/25/sql-has-its-moments/">Sql Has It&#8217;s Moments</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-25T21:44:00-04:00" pubdate data-updated="true">Jun 25<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>Today I learned, among a million other things, that I will never escape SQL statements.</strong> I think I&#8217;ve finally faced it. During week 6 at <a href="http://flatironschool.com">The Flatiron School</a>, when the magic of Rails and ActiveRecord was introduced, my entire class celebrated the fact SQL statements were abstracted away. We could write RUBY and still retrieve the same data, AUTOMAGICALLY. But let&#8217;s face it&#8230; SQL will always be around.</p>
+
+<p><strong>What do you do when you have a huge app running with over 100 instances,</strong> a mega-goliath database with more migrations and data entries than I&#8217;ve ever seen, and on top of those daunting figures, project managers wanting specific data for metrics.You use a SQL GUI and you write SQL statements.</p>
+
+<p><strong>So this is how I came across a really interesting discovery.</strong> Well two actually: SQL has <code>count</code> and <code>distinct</code> keywords available with which to write queries.</p>
+
+<p>Here is an example of a table I was working on. This table is called photos:
+  <img src="/images/post_images/photos_table2.png"></p>
+
+<p><strong>I was told to write SQL queries to find the number of photos</strong> that have been uploaded by users in the last three weeks (so from after June 6), as well as the number of users that have updated photos.</p>
+
+<p><strong>1. Number of photos uploaded by users on or after June 6, 2013:</strong></p>
+
+<p><code>select count(id) from photos where user_id is not null and created_at &gt;= 6/6/2013</code></p>
+
+<p>This command is parsing through the data in our database, finding all instances where a user_id is present (in this case all of them), as well as parsing through the created_at dates to find a match and returning to us that number of photos.
+This command should return five, as there are five photos uploaded by users in the sample database.</p>
+
+<p><strong>2. Number of users who have uploaded photos on or after June 6, 2013:</strong></p>
+
+<p>The next query was a little bit more challengeing because I was unaware of the SQL <code>distinct</code> method.</p>
+
+<p>Originally, I had:</p>
+
+<p><code>select count(profile_id) from photos where profile_id is not null and created_at &gt;= 6/6/2013</code></p>
+
+<p> But this query returns five.The problem with this query wasn&#8217;t immediately obvious to me. Count doesn&#8217;t discrimate against repeated entries. There are FIVE cells with a user_id, just not five unique id&#8217;s.</p>
+
+<p>My first thought was the <code>uniq</code> method. Like when you have an array that contains duplicates, you can call <code>uniq</code> on that array to return that array with the duplicates removed. But unique is a reserved word in SQL, and is used to create unique indexes (an index can be created in a table to find data more easily and efficiently). So that&#8217;s when I was introduced to <code>distinct</code>.</p>
+
+<p>With that new knowledge, I was able to correct my first attempt at the query,</p>
+
+<p><code>select count(distinct user_id) from photos where user_id is not null and created_a &gt;= 6/6/2013</code></p>
+
+<p>And that statement returns the correct result, which is three.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -707,150 +777,6 @@ The next step is to declare your specific SMTP configurations.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/17/inheritence/">Inheritence</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-17T16:57:00-04:00" pubdate data-updated="true">Mar 17<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>One of the big differences between Ruby and other object oriented languages is that a class in Ruby can inherit from one and only one class. Essentially, each class can only have one parent, but many children.</p>
-
-<p>A great example to understand basic inheritence is to think about it in terms of animals. A cat is a mammal. And all mammals are animals. To break this down in Ruby, that inheritence would look like this:</p>
-
-<pre><code>class Animal
-end
-
-class Mammal &lt; Animal
-end
-
-class Cat &lt; Mammal
-end
-</code></pre>
-
-<p>The <code>&lt;</code> denotes inheritence. In this example, the class Cat inherits all the properties from the Mammal class, as well as the Animal class.</p>
-
-<pre><code>class Animal
-
-  def breathe
-    "inhale"
-  end
-end
-
-class Mammal &lt; Animal
-
-  def hair
-    "Mammals are the only category of animals that have true hair"
-  end
-end
-
-class Cat &lt; Mammal
-
-  def meow
-    "MEOW"
-  end
-end
-</code></pre>
-
-<p>In this case, all instances of the Cat class say &#8220;MEOW&#8221;, have true hair, and breathe. However, they only inherit directly from Mammal, and Mammal only directly inherits from Animal. No instances of Mammal say &#8220;MEOW&#8221;.</p>
-
-<p>Another great way to extend functionality to a class in Ruby is through the use of Modules.</p>
-
-<p>A Module is a collection of methods and constants.  A module is made up of resuable code that doesn&#8217;t naturally form a class. Because it is not a class, a module can&#8217;t have instance methods.</p>
-
-<p>Modules allow you to implement mixins. A mixin is a way to either include or extend the functionality of your Module to mulitple Ruby classes.</p>
-
-<p>When you Include a module in a class you are including the module methods as instance methods of that class. When you Extend a module in a class, you are adding the module methods as class methods. Essentially, when you declare <code>extend</code> in your classes, you are saying <code>self.extend</code>.</p>
-
-<p>I found a great example of this functionality in action via <a href="http://rubysource.com/ruby-mixins-2/">Ruby Source</a>.</p>
-
-<pre><code>module Logging
-  def logger
-    @logger ||= Logger.new(opts)
-  end
-end
-
-class Person
-  include Logging
-    def relocate
-      logger.debug "Relocating person..."
-        # do relocation stuff
-    end
-end
-</code></pre>
-
-<p>In this example, the Logging module provides an instance of a logger (<code>@logger</code>). Because class Person includes the Logging module, all of it&#8217;s methods are mixed-in as instances methods. The method logger is now a method that acts on all instances of the Person class.</p>
-
-<p>Another option is to extend the Logger module:</p>
-
-<pre><code>  module Logging
-
-    def logger
-      @@logger ||= Logger.new(opts)
-    end
-
-  end
-
-  class Person
-    extend Logging
-
-      def relocate
-        Person.logger.debug "Relocating person..."
-
-        # could also access it with this
-
-        self.class.logger.debug "Relocating person..."
-
-      end
-    end
-</code></pre>
-
-<p>In this example, the Logger module as a class variable <code>@@logger</code> which allows this module to be extended to multiple classes. Because the module is extended to the class Person, the method defined in the module can only be called on the class itself, here it is demonstrated in two ways:</p>
-
-<pre><code>Person.logger.debug
-</code></pre>
-
-<p>and</p>
-
-<pre><code>self.logger.debug
-</code></pre>
-
-<ol><h3>Helpful Resources:</h3>
-<li>Inheritence: <a href="http://rubylearning.com/satishtalim/ruby_inheritance.html">Ruby Learning</a></li>
-<li>Modules: <a href="http://www.ruby-doc.org/docs/ProgrammingRuby/html/tut_modules.html">The Pragmatic Programmer&#8217;s Guide</a> </li>
-<li>More Modules: <a href="http://ruby-doc.org/core-2.0/Module.html">Ruby Documentation</a></li>
-</ol>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -876,6 +802,10 @@ end
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/06/25/sql-has-its-moments/">sql has it&#8217;s moments</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/06/24/oracle-instant-client/">oracle instant client</a>
       </li>
     
@@ -889,10 +819,6 @@ end
     
       <li class="post">
         <a href="/blog/2013/05/07/method-missing/">method_missing</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/06/coding-abroad/">coding abroad</a>
       </li>
     
   </ul>
