@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "sql has it's moments"
+title: "sql has its moments"
 date: 2013-06-25 21:44
 comments: true
 categories: 
