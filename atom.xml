@@ -4,7 +4,7 @@
   <title><![CDATA[Too Busy Coding...]]></title>
   <link href="http://vicfriedman.github.com/atom.xml" rel="self"/>
   <link href="http://vicfriedman.github.com/"/>
-  <updated>2013-06-25T22:38:58-04:00</updated>
+  <updated>2013-06-25T22:39:44-04:00</updated>
   <id>http://vicfriedman.github.com/</id>
   <author>
     <name><![CDATA[Victoria Friedman]]></name>
@@ -18,8 +18,7 @@
     <link href="http://vicfriedman.github.com/blog/2013/06/25/sql-has-its-moments/"/>
     <updated>2013-06-25T21:44:00-04:00</updated>
     <id>http://vicfriedman.github.com/blog/2013/06/25/sql-has-its-moments</id>
-    <content type="html"><![CDATA[<p>IS THIS WORKING
-<strong>Today I learned, among a million other things, that I will never escape SQL statements.</strong> I think I&#8217;ve finally faced it. During week 6 at <a href="http://flatironschool.com">The Flatiron School</a>, when the magic of Rails and ActiveRecord was introduced, my entire class celebrated the fact SQL statements were abstracted away. We could write RUBY and still retrieve the same data, AUTOMAGICALLY. But let&#8217;s face it&#8230; SQL will always be around.</p>
+    <content type="html"><![CDATA[<p><strong>Today I learned, among a million other things, that I will never escape SQL statements.</strong> I think I&#8217;ve finally faced it. During week 6 at <a href="http://flatironschool.com">The Flatiron School</a>, when the magic of Rails and ActiveRecord was introduced, my entire class celebrated the fact SQL statements were abstracted away. We could write RUBY and still retrieve the same data, AUTOMAGICALLY. But let&#8217;s face it&#8230; SQL will always be around.</p>
 
 <p><strong>What do you do when you have a huge app running with over 100 instances,</strong> a mega-goliath database with more migrations and data entries than I&#8217;ve ever seen, and on top of those daunting figures, project managers wanting specific data for metrics.You use a SQL GUI and you write SQL statements.</p>
 
