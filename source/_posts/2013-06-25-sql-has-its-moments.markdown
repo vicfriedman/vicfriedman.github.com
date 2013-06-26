@@ -5,7 +5,7 @@ date: 2013-06-25 21:44
 comments: true
 categories: 
 ---
-
+IS THIS WORKING
 __Today I learned, among a million other things, that I will never escape SQL statements.__ I think I've finally faced it. During week 6 at <a href="http://flatironschool.com">The Flatiron School</a>, when the magic of Rails and ActiveRecord was introduced, my entire class celebrated the fact SQL statements were abstracted away. We could write RUBY and still retrieve the same data, AUTOMAGICALLY. But let's face it... SQL will always be around.
 
 
