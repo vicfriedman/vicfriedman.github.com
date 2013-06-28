@@ -8,9 +8,9 @@ categories:
 
 ***In my last post, I mentioned that `unique` is a reserved word in SQL because of indexes.*** But to be totally honest, that was the first time I'd even heard of indexes. So I did some more research...and they're actually pretty cool.
 
-__Basically, an index is a special lookup for tables in a database that are used__ to speed up data retrieval, aka quicker queries using `WHERE` and `SELECT` clauses. In even simpler terms, it's a pointer to specific data. Only downside istha it's slows down data inputs with `UPDATE` and `INSERT` clauses. Also, indexes can be created or dropped easily, and will have no effect on the code. 
+__Basically, an index is a special lookup for tables in a database that are used__ to speed up data retrieval, aka quicker queries using `WHERE` and `SELECT` clauses. In even simpler terms, it's a pointer to specific data. Only downside is that it slows down data inputs with `UPDATE` and `INSERT` clauses. Also, indexes can be created or dropped easily, and will have no effect on the code. 
 
-__So first things first, you want to create an index. This process is incredible simple:__
+__So first things first, you want to create an index. This process is incredibly simple:__
       CREATE INDEX index_name
       on table_name (column_name);
 
@@ -39,7 +39,7 @@ This index will allow speedy retrieval of data in both the `ingredients` column 
 
 __3. Implicit Index: this is an implied index, that is automatically__ created with the formation of a PRIMARY_KEY column, or UNIQUE_KEY column. Any time your table has an ID column, you have an implicit index on that column.
 
-Obviously, you need to know how to get rid of an index. It's also really simple and will not affect your data in any way.
+__Obviously, you need to know how to get rid of an index.__ It's also really simple and will not affect your data in any way.
       DROP INDEX index_name;
       DROP INDEX recipes;
       DROP INDEX recipe_ingredients;
@@ -47,7 +47,7 @@ Obviously, you need to know how to get rid of an index. It's also really simple 
 Now we got rid of all the indexes (except the implicit index) on my recipes table. 
 
 
-__So of course Rails has built in methods with ActiveRecord to deal with indexes.__ The declaration for indexes in rails is included in your migrations, but as the methods must become class methods....
+__So of course Rails has built in methods with ActiveRecord to deal with indexes.__ The declaration for indexes in rails is included in your migrations, but the methods must become class methods....
 
     add_index :table_name, :column_names, options
 
@@ -59,7 +59,7 @@ __So to take my same example of my recipes table from before__ and the migration
         add_index :recipes, ingredients, :name => 'recipe_ingredients'
       end  
 
-In this example, I created an index on my recipes table, on the ingredients column, and I neamed the index "recipe_ingredients". If I had used :`unique`, I would have created the same problem as before, where my cookies could have butter, but my cake couldn't. No thanks.
+In this example, I created an index on my recipes table, on the ingredients column, and I named the index "recipe_ingredients". If I had used `:unique`, I would have created the same problem as before, where my cookies could have butter, but my cake couldn't. No thanks.
 
 __Rails also makes it really simple to remove indexes,__ and there are two ways to do so:
 
