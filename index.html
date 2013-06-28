@@ -9,7 +9,7 @@
   <meta name="author" content="Victoria Friedman">
 
   
-  <meta name="description" content="Today I learned, among a million other things, that I will never escape SQL statements. I think I&#8217;ve finally faced it. During week 6 at The &hellip;">
+  <meta name="description" content="In my last post, I mentioned that unique is a reserved word in SQL because of indexes. But to be totally honest, that was the first time I&#8217;d &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -63,6 +63,121 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/27/sql-indexes/">Sql Indexes</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-27T22:10:00-04:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong><em>In my last post, I mentioned that <code>unique</code> is a reserved word in SQL because of indexes.</em></strong> But to be totally honest, that was the first time I&#8217;d even heard of indexes. So I did some more research&#8230;and they&#8217;re actually pretty cool.</p>
+
+<p><strong>Basically, an index is a special lookup for tables in a database that are used</strong> to speed up data retrieval, aka quicker queries using <code>WHERE</code> and <code>SELECT</code> clauses. In even simpler terms, it&#8217;s a pointer to specific data. Only downside istha it&#8217;s slows down data inputs with <code>UPDATE</code> and <code>INSERT</code> clauses. Also, indexes can be created or dropped easily, and will have no effect on the code.</p>
+
+<p><strong>So first things first, you want to create an index. This process is incredible simple:</strong></p>
+
+<pre><code>  CREATE INDEX index_name
+  on table_name (column_name);
+</code></pre>
+
+<p><strong>For example, I have a <code>recipes</code> table, and that table has the columns</strong> <code>name</code>, <code>ingredients</code>, and <code>preparations</code>. And say you want to be able to easily query for recipes with a specific ingredient, this would be a great time to use an index.</p>
+
+<pre><code>  CREATE INDEX recipe_ingredients
+  on recipes (ingredients);
+</code></pre>
+
+<p>Super easy.</p>
+
+<p><strong>Now, there are a few different kinds of indexes:</strong></p>
+
+<p><strong>1. Unique Index: allows no duplicate values to be inserted</strong> in the selected column in your table.</p>
+
+<pre><code>  CREATE UNIQUE INDEX recipe_ingredients
+  on recipes (ingredients);
+</code></pre>
+
+<p>It&#8217;s simple to create a unique index, but there is an appropriate moment to use it. The above example is the proper way to create a unique index, but not it&#8217;s proper use. You wouldn&#8217;t be able to include butter in more than one recipe. Or salt. Or hot sauce. Not ok.</p>
+
+<p><strong>2. Composite Index: used on two or more columns in a table.</strong></p>
+
+<pre><code>CREATE INDEX recipes
+on recipes (ingredients, preparations);
+</code></pre>
+
+<p>This index will allow speedy retrieval of data in both the <code>ingredients</code> column and the <code>preparations</code> column.</p>
+
+<p><strong>3. Implicit Index: this is an implied index, that is automatically</strong> created with the formation of a PRIMARY_KEY column, or UNIQUE_KEY column. Any time your table has an ID column, you have an implicit index on that column.</p>
+
+<p>Obviously, you need to know how to get rid of an index. It&#8217;s also really simple and will not affect your data in any way.</p>
+
+<pre><code>  DROP INDEX index_name;
+  DROP INDEX recipes;
+  DROP INDEX recipe_ingredients;
+</code></pre>
+
+<p>Now we got rid of all the indexes (except the implicit index) on my recipes table.</p>
+
+<p><strong>So of course Rails has built in methods with ActiveRecord to deal with indexes.</strong> The declaration for indexes in rails is included in your migrations, but as the methods must become class methods&#8230;.</p>
+
+<pre><code>add_index :table_name, :column_names, options
+</code></pre>
+
+<p>Your options include <code>:name</code>, <code>:unique</code>, and <code>:order</code></p>
+
+<p><strong>So to take my same example of my recipes table from before</strong> and the migration AddIndexesToRecipes:</p>
+
+<pre><code>  def self.up
+    add_index :recipes, ingredients, :name =&gt; 'recipe_ingredients'
+  end  
+</code></pre>
+
+<p>In this example, I created an index on my recipes table, on the ingredients column, and I neamed the index &#8220;recipe_ingredients&#8221;. If I had used :<code>unique</code>, I would have created the same problem as before, where my cookies could have butter, but my cake couldn&#8217;t. No thanks.</p>
+
+<p><strong>Rails also makes it really simple to remove indexes,</strong> and there are two ways to do so:</p>
+
+<ol>
+<li><p>Remove an index by column name:
+   remove_index (table_name, column: column_name)
+   remove_index (recipes, column: ingredients)</p></li>
+<li><p>Remove an index by index name:
+   remove_index (table_name, name: index_name)
+   remove_index (recipes, name: recipe_ingredients)</p></li>
+</ol>
+
+
+<ol>Helpful Resources:
+  <li>http://www.tutorialspoint.com/sql/sql-indexes.htm</li>
+  <li>http://api.rubyonrails.org/classes/ActiveRecord/Migration.html</li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -694,89 +809,6 @@ t.some_method("arbitrary argument")
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/24/action-mailer-configurations/">Action Mailer Configurations</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-24T16:26:00-04:00" pubdate data-updated="true">Mar 24<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This week, I started working on a presentation with two other girls, <a href="http://1aurabrown.github.com/">Laura Brown</a> and <a href="http://anabecker.tumblr.com/">Ana Becker</a> to present at the <a href="http://www.meetup.com/nyc-on-rails/">NYC on Rails</a> meetup this coming Thursday (March 28). Our app revolves around using <a href ="http://rubygems.org/gems/actionmailer"> ActionMailer</a>. And this was the first time I&#8217;ve tried to use the gem.</p>
-
-<p>The documentation for it is really good, and the implementation doesn&#8217;t require too many steps. <a href="http://guides.rubyonrails.org/action_mailer_basics.html">RailsGuides</a> has a great step by step breakdown of the entire process, inluding the steps for generating a Mailer.</p>
-
-<p>All of that was easy. I only wanted to render a default template in my view, and am staying away from user authentication.</p>
-
-<p>My problem fell in the configurations. I had no idea that I had to setup SMTP configurations to send my email. And then once I figured that out, where do I enter my specific configurations.</p>
-
-<p><strong>Step 1:</strong> <br>
-At first we weren&#8217;t getting any errors. It seemed as if our app was sending emails&#8230;but no one was getting any of them. The first thing we had to do was edit <code>config/evironments/development.rb</code>. That file contains the line:</p>
-
-<pre><code>  config.action_mailer.raise_delivery_errors = false
-</code></pre>
-
-<p>which needs to be changed to read:</p>
-
-<pre><code>  config.action_mailer.raise_delivery_errors = true
-</code></pre>
-
-<p>And then we started to get errors we could work from.</p>
-
-<p><strong>Step 2:</strong> <br>
-Because we&#8217;re using a Gmail account for our gem, we had to configure ActionMailer specifically for that account. The first step to that was to include the following two lines:</p>
-
-<pre><code>config.action_mailer.perform_deliveries = true
-config.action_mailer.delivery_method = :smtp
-</code></pre>
-
-<p>These lines delcares that SMTP will deliver our emails. SMTP stands for Simple Mail Transfer Protocol. This protocol also has a layer of authentication built into it&#8217;s functionality</p>
-
-<p><strong>Step 3:</strong><br>
-The next step is to declare your specific SMTP configurations.</p>
-
-<pre><code> config.action_mailer.smtp_settings = {
-  :address =&gt; 'smtp.gmail.com',
-  :port =&gt; 587,
-  :domain =&gt; 'localhost:3000',
-  :authentication =&gt; :plain,
-  :user_name =&gt; '&lt;email_address&gt;',
-  :password =&gt; '&lt;email_password&gt;',
-  :authentication =&gt; 'plain',
-  :enable_starttls_auto =&gt; true
-}
-</code></pre>
-
-<p>These configurations state that we&#8217;re using Gmail, we&#8217;re running our app on localhost:3000, and also includes the email address and password for that account that are associated with the app. The last two lines of the settings handle the authentication of the email account.</p>
-
-<p>And that&#8217;s it!</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -802,6 +834,10 @@ The next step is to declare your specific SMTP configurations.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/06/27/sql-indexes/">sql indexes</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/06/25/sql-has-its-moments/">sql has its moments</a>
       </li>
     
@@ -815,10 +851,6 @@ The next step is to declare your specific SMTP configurations.</p>
     
       <li class="post">
         <a href="/blog/2013/05/13/respond-to/">respond_to</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/07/method-missing/">method_missing</a>
       </li>
     
   </ul>

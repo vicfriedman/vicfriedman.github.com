@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>sql has its moments - Too Busy Coding...</title>
+  <title>sql indexes - Too Busy Coding...</title>
   <meta name="author" content="Victoria Friedman">
 
   
-  <meta name="description" content="Today I learned, among a million other things, that I will never escape SQL statements. I think I&#8217;ve finally faced it. During week 6 at The &hellip;">
+  <meta name="description" content="In my last post, I mentioned that unique is a reserved word in SQL because of indexes. But to be totally honest, that was the first time I&#8217;d &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://vicfriedman.github.com/blog/2013/06/25/sql-has-its-moments/">
+  <link rel="canonical" href="http://vicfriedman.github.com/blog/2013/06/27/sql-indexes/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
    <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
@@ -66,7 +66,7 @@
   
   <header>
     
-      <h1 class="entry-title">Sql Has Its Moments</h1>
+      <h1 class="entry-title">Sql Indexes</h1>
     
     
       <p class="meta">
@@ -82,48 +82,93 @@
   
 
 
-<time datetime="2013-06-25T21:44:00-04:00" pubdate data-updated="true">Jun 25<span>th</span>, 2013</time>
+<time datetime="2013-06-27T22:10:00-04:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><strong>Today I learned, among a million other things, that I will never escape SQL statements.</strong> I think I&#8217;ve finally faced it. During week 6 at <a href="http://flatironschool.com">The Flatiron School</a>, when the magic of Rails and ActiveRecord was introduced, my entire class celebrated the fact SQL statements were abstracted away. We could write RUBY and still retrieve the same data, AUTOMAGICALLY. But let&#8217;s face it&#8230; SQL will always be around.</p>
+<div class="entry-content"><p><strong><em>In my last post, I mentioned that <code>unique</code> is a reserved word in SQL because of indexes.</em></strong> But to be totally honest, that was the first time I&#8217;d even heard of indexes. So I did some more research&#8230;and they&#8217;re actually pretty cool.</p>
 
-<p><strong>What do you do when you have a huge app running with over 100 instances,</strong> a mega-goliath database with more migrations and data entries than I&#8217;ve ever seen, and on top of those daunting figures, project managers wanting specific data for metrics.You use a SQL GUI and you write SQL statements.</p>
+<p><strong>Basically, an index is a special lookup for tables in a database that are used</strong> to speed up data retrieval, aka quicker queries using <code>WHERE</code> and <code>SELECT</code> clauses. In even simpler terms, it&#8217;s a pointer to specific data. Only downside istha it&#8217;s slows down data inputs with <code>UPDATE</code> and <code>INSERT</code> clauses. Also, indexes can be created or dropped easily, and will have no effect on the code.</p>
 
-<p><strong>So this is how I came across a really interesting discovery.</strong> Well two actually: SQL has <code>count</code> and <code>distinct</code> keywords available with which to write queries.</p>
+<p><strong>So first things first, you want to create an index. This process is incredible simple:</strong></p>
 
-<p>Here is an example of a table I was working on. This table is called photos:
-  <img src="/images/post_images/photos_table2.png"></p>
+<pre><code>  CREATE INDEX index_name
+  on table_name (column_name);
+</code></pre>
 
-<p><strong>I was told to write SQL queries to find the number of photos</strong> that have been uploaded by users in the last three weeks (so from after June 6), as well as the number of users that have updated photos.</p>
+<p><strong>For example, I have a <code>recipes</code> table, and that table has the columns</strong> <code>name</code>, <code>ingredients</code>, and <code>preparations</code>. And say you want to be able to easily query for recipes with a specific ingredient, this would be a great time to use an index.</p>
 
-<p><strong>1. Number of photos uploaded by users on or after June 6, 2013:</strong></p>
+<pre><code>  CREATE INDEX recipe_ingredients
+  on recipes (ingredients);
+</code></pre>
 
-<p><code>select count(id) from photos where user_id is not null and created_at &gt;= 6/6/2013</code></p>
+<p>Super easy.</p>
 
-<p>This command is parsing through the data in our database, finding all instances where a user_id is present (in this case all of them), as well as parsing through the created_at dates to find a match and returning to us that number of photos.
-This command should return five, as there are five photos uploaded by users in the sample database.</p>
+<p><strong>Now, there are a few different kinds of indexes:</strong></p>
 
-<p><strong>2. Number of users who have uploaded photos on or after June 6, 2013:</strong></p>
+<p><strong>1. Unique Index: allows no duplicate values to be inserted</strong> in the selected column in your table.</p>
 
-<p>The next query was a little bit more challengeing because I was unaware of the SQL <code>distinct</code> method.</p>
+<pre><code>  CREATE UNIQUE INDEX recipe_ingredients
+  on recipes (ingredients);
+</code></pre>
 
-<p>Originally, I had:</p>
+<p>It&#8217;s simple to create a unique index, but there is an appropriate moment to use it. The above example is the proper way to create a unique index, but not it&#8217;s proper use. You wouldn&#8217;t be able to include butter in more than one recipe. Or salt. Or hot sauce. Not ok.</p>
 
-<p><code>select count(profile_id) from photos where profile_id is not null and created_at &gt;= 6/6/2013</code></p>
+<p><strong>2. Composite Index: used on two or more columns in a table.</strong></p>
 
-<p> But this query returns five.The problem with this query wasn&#8217;t immediately obvious to me. Count doesn&#8217;t discrimate against repeated entries. There are FIVE cells with a user_id, just not five unique id&#8217;s.</p>
+<pre><code>CREATE INDEX recipes
+on recipes (ingredients, preparations);
+</code></pre>
 
-<p>My first thought was the <code>uniq</code> method. Like when you have an array that contains duplicates, you can call <code>uniq</code> on that array to return that array with the duplicates removed. But unique is a reserved word in SQL, and is used to create unique indexes (an index can be created in a table to find data more easily and efficiently). So that&#8217;s when I was introduced to <code>distinct</code>.</p>
+<p>This index will allow speedy retrieval of data in both the <code>ingredients</code> column and the <code>preparations</code> column.</p>
 
-<p>With that new knowledge, I was able to correct my first attempt at the query,</p>
+<p><strong>3. Implicit Index: this is an implied index, that is automatically</strong> created with the formation of a PRIMARY_KEY column, or UNIQUE_KEY column. Any time your table has an ID column, you have an implicit index on that column.</p>
 
-<p><code>select count(distinct user_id) from photos where user_id is not null and created_a &gt;= 6/6/2013</code></p>
+<p>Obviously, you need to know how to get rid of an index. It&#8217;s also really simple and will not affect your data in any way.</p>
 
-<p>And that statement returns the correct result, which is three.</p>
+<pre><code>  DROP INDEX index_name;
+  DROP INDEX recipes;
+  DROP INDEX recipe_ingredients;
+</code></pre>
+
+<p>Now we got rid of all the indexes (except the implicit index) on my recipes table.</p>
+
+<p><strong>So of course Rails has built in methods with ActiveRecord to deal with indexes.</strong> The declaration for indexes in rails is included in your migrations, but as the methods must become class methods&#8230;.</p>
+
+<pre><code>add_index :table_name, :column_names, options
+</code></pre>
+
+<p>Your options include <code>:name</code>, <code>:unique</code>, and <code>:order</code></p>
+
+<p><strong>So to take my same example of my recipes table from before</strong> and the migration AddIndexesToRecipes:</p>
+
+<pre><code>  def self.up
+    add_index :recipes, ingredients, :name =&gt; 'recipe_ingredients'
+  end  
+</code></pre>
+
+<p>In this example, I created an index on my recipes table, on the ingredients column, and I neamed the index &#8220;recipe_ingredients&#8221;. If I had used :<code>unique</code>, I would have created the same problem as before, where my cookies could have butter, but my cake couldn&#8217;t. No thanks.</p>
+
+<p><strong>Rails also makes it really simple to remove indexes,</strong> and there are two ways to do so:</p>
+
+<ol>
+<li><p>Remove an index by column name:
+   remove_index (table_name, column: column_name)
+   remove_index (recipes, column: ingredients)</p></li>
+<li><p>Remove an index by index name:
+   remove_index (table_name, name: index_name)
+   remove_index (recipes, name: recipe_ingredients)</p></li>
+</ol>
+
+
+<ol>Helpful Resources:
+  <li>http://www.tutorialspoint.com/sql/sql-indexes.htm</li>
+  <li>http://api.rubyonrails.org/classes/ActiveRecord/Migration.html</li>
+</ol>
+
 </div>
 
 
@@ -146,7 +191,7 @@ This command should return five, as there are five photos uploaded by users in t
   
 
 
-<time datetime="2013-06-25T21:44:00-04:00" pubdate data-updated="true">Jun 25<span>th</span>, 2013</time>
+<time datetime="2013-06-27T22:10:00-04:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
       
 
 
@@ -154,7 +199,7 @@ This command should return five, as there are five photos uploaded by users in t
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2013/06/25/sql-has-its-moments/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2013/06/25/sql-has-its-moments/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2013/06/27/sql-indexes/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2013/06/27/sql-indexes/" >Tweet</a>
   
   
   
@@ -163,10 +208,8 @@ This command should return five, as there are five photos uploaded by users in t
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/06/24/oracle-instant-client/" title="Previous Post: oracle instant client">&laquo; oracle instant client</a>
+        <a class="basic-alignment left" href="/blog/2013/06/25/sql-has-its-moments/" title="Previous Post: sql has its moments">&laquo; sql has its moments</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/06/27/sql-indexes/" title="Next Post: sql indexes">sql indexes &raquo;</a>
       
     </p>
   </footer>
