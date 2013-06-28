@@ -4,7 +4,7 @@
   <title><![CDATA[Too Busy Coding...]]></title>
   <link href="http://vicfriedman.github.com/atom.xml" rel="self"/>
   <link href="http://vicfriedman.github.com/"/>
-  <updated>2013-06-27T22:17:28-04:00</updated>
+  <updated>2013-06-27T22:39:11-04:00</updated>
   <id>http://vicfriedman.github.com/</id>
   <author>
     <name><![CDATA[Victoria Friedman]]></name>
@@ -20,9 +20,9 @@
     <id>http://vicfriedman.github.com/blog/2013/06/27/sql-indexes</id>
     <content type="html"><![CDATA[<p><strong><em>In my last post, I mentioned that <code>unique</code> is a reserved word in SQL because of indexes.</em></strong> But to be totally honest, that was the first time I&#8217;d even heard of indexes. So I did some more research&#8230;and they&#8217;re actually pretty cool.</p>
 
-<p><strong>Basically, an index is a special lookup for tables in a database that are used</strong> to speed up data retrieval, aka quicker queries using <code>WHERE</code> and <code>SELECT</code> clauses. In even simpler terms, it&#8217;s a pointer to specific data. Only downside istha it&#8217;s slows down data inputs with <code>UPDATE</code> and <code>INSERT</code> clauses. Also, indexes can be created or dropped easily, and will have no effect on the code.</p>
+<p><strong>Basically, an index is a special lookup for tables in a database that are used</strong> to speed up data retrieval, aka quicker queries using <code>WHERE</code> and <code>SELECT</code> clauses. In even simpler terms, it&#8217;s a pointer to specific data. Only downside is that it slows down data inputs with <code>UPDATE</code> and <code>INSERT</code> clauses. Also, indexes can be created or dropped easily, and will have no effect on the code.</p>
 
-<p><strong>So first things first, you want to create an index. This process is incredible simple:</strong></p>
+<p><strong>So first things first, you want to create an index. This process is incredibly simple:</strong></p>
 
 <pre><code>  CREATE INDEX index_name
   on table_name (column_name);
@@ -56,7 +56,7 @@ on recipes (ingredients, preparations);
 
 <p><strong>3. Implicit Index: this is an implied index, that is automatically</strong> created with the formation of a PRIMARY_KEY column, or UNIQUE_KEY column. Any time your table has an ID column, you have an implicit index on that column.</p>
 
-<p>Obviously, you need to know how to get rid of an index. It&#8217;s also really simple and will not affect your data in any way.</p>
+<p><strong>Obviously, you need to know how to get rid of an index.</strong> It&#8217;s also really simple and will not affect your data in any way.</p>
 
 <pre><code>  DROP INDEX index_name;
   DROP INDEX recipes;
@@ -65,7 +65,7 @@ on recipes (ingredients, preparations);
 
 <p>Now we got rid of all the indexes (except the implicit index) on my recipes table.</p>
 
-<p><strong>So of course Rails has built in methods with ActiveRecord to deal with indexes.</strong> The declaration for indexes in rails is included in your migrations, but as the methods must become class methods&#8230;.</p>
+<p><strong>So of course Rails has built in methods with ActiveRecord to deal with indexes.</strong> The declaration for indexes in rails is included in your migrations, but the methods must become class methods&#8230;.</p>
 
 <pre><code>add_index :table_name, :column_names, options
 </code></pre>
@@ -79,7 +79,7 @@ on recipes (ingredients, preparations);
   end  
 </code></pre>
 
-<p>In this example, I created an index on my recipes table, on the ingredients column, and I neamed the index &#8220;recipe_ingredients&#8221;. If I had used :<code>unique</code>, I would have created the same problem as before, where my cookies could have butter, but my cake couldn&#8217;t. No thanks.</p>
+<p>In this example, I created an index on my recipes table, on the ingredients column, and I named the index &#8220;recipe_ingredients&#8221;. If I had used <code>:unique</code>, I would have created the same problem as before, where my cookies could have butter, but my cake couldn&#8217;t. No thanks.</p>
 
 <p><strong>Rails also makes it really simple to remove indexes,</strong> and there are two ways to do so:</p>
 
