@@ -4,7 +4,7 @@
   <title><![CDATA[Too Busy Coding...]]></title>
   <link href="http://vicfriedman.github.com/atom.xml" rel="self"/>
   <link href="http://vicfriedman.github.com/"/>
-  <updated>2013-06-25T00:01:06-04:00</updated>
+  <updated>2013-06-25T22:39:44-04:00</updated>
   <id>http://vicfriedman.github.com/</id>
   <author>
     <name><![CDATA[Victoria Friedman]]></name>
@@ -12,6 +12,49 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[sql has its moments]]></title>
+    <link href="http://vicfriedman.github.com/blog/2013/06/25/sql-has-its-moments/"/>
+    <updated>2013-06-25T21:44:00-04:00</updated>
+    <id>http://vicfriedman.github.com/blog/2013/06/25/sql-has-its-moments</id>
+    <content type="html"><![CDATA[<p><strong>Today I learned, among a million other things, that I will never escape SQL statements.</strong> I think I&#8217;ve finally faced it. During week 6 at <a href="http://flatironschool.com">The Flatiron School</a>, when the magic of Rails and ActiveRecord was introduced, my entire class celebrated the fact SQL statements were abstracted away. We could write RUBY and still retrieve the same data, AUTOMAGICALLY. But let&#8217;s face it&#8230; SQL will always be around.</p>
+
+<p><strong>What do you do when you have a huge app running with over 100 instances,</strong> a mega-goliath database with more migrations and data entries than I&#8217;ve ever seen, and on top of those daunting figures, project managers wanting specific data for metrics.You use a SQL GUI and you write SQL statements.</p>
+
+<p><strong>So this is how I came across a really interesting discovery.</strong> Well two actually: SQL has <code>count</code> and <code>distinct</code> keywords available with which to write queries.</p>
+
+<p>Here is an example of a table I was working on. This table is called photos:
+  <img src="http://vicfriedman.github.com/images/post_images/photos_table2.png"></p>
+
+<p><strong>I was told to write SQL queries to find the number of photos</strong> that have been uploaded by users in the last three weeks (so from after June 6), as well as the number of users that have updated photos.</p>
+
+<p><strong>1. Number of photos uploaded by users on or after June 6, 2013:</strong></p>
+
+<p><code>select count(id) from photos where user_id is not null and created_at &gt;= 6/6/2013</code></p>
+
+<p>This command is parsing through the data in our database, finding all instances where a user_id is present (in this case all of them), as well as parsing through the created_at dates to find a match and returning to us that number of photos.
+This command should return five, as there are five photos uploaded by users in the sample database.</p>
+
+<p><strong>2. Number of users who have uploaded photos on or after June 6, 2013:</strong></p>
+
+<p>The next query was a little bit more challengeing because I was unaware of the SQL <code>distinct</code> method.</p>
+
+<p>Originally, I had:</p>
+
+<p><code>select count(profile_id) from photos where profile_id is not null and created_at &gt;= 6/6/2013</code></p>
+
+<p> But this query returns five.The problem with this query wasn&#8217;t immediately obvious to me. Count doesn&#8217;t discrimate against repeated entries. There are FIVE cells with a user_id, just not five unique id&#8217;s.</p>
+
+<p>My first thought was the <code>uniq</code> method. Like when you have an array that contains duplicates, you can call <code>uniq</code> on that array to return that array with the duplicates removed. But unique is a reserved word in SQL, and is used to create unique indexes (an index can be created in a table to find data more easily and efficiently). So that&#8217;s when I was introduced to <code>distinct</code>.</p>
+
+<p>With that new knowledge, I was able to correct my first attempt at the query,</p>
+
+<p><code>select count(distinct user_id) from photos where user_id is not null and created_a &gt;= 6/6/2013</code></p>
+
+<p>And that statement returns the correct result, which is three.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[oracle instant client]]></title>
