@@ -5,7 +5,19 @@ date: 2013-03-24 16:26
 comments: true
 categories: 
 ---
+<script type="text/javascript">
 
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 This week, I started working on a presentation with two other girls, <a href="http://1aurabrown.github.com/">Laura Brown</a> and <a href="http://anabecker.tumblr.com/">Ana Becker</a> to present at the <a href="http://www.meetup.com/nyc-on-rails/">NYC on Rails</a> meetup this coming Thursday (March 28). Our app revolves around using <a href ="http://rubygems.org/gems/actionmailer"> ActionMailer</a>. And this was the first time I've tried to use the gem. 
 
 The documentation for it is really good, and the implementation doesn't require too many steps. <a href="http://guides.rubyonrails.org/action_mailer_basics.html">RailsGuides</a> has a great step by step breakdown of the entire process, inluding the steps for generating a Mailer.

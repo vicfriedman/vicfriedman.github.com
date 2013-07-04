@@ -5,6 +5,19 @@ date: 2013-06-24 21:00
 comments: true
 categories: 
 ---
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 
 ***So today was my first day as a Software Engineer at Time Inc.*** I can already tell it's going to be such an incredible learning experience, and all we did was environment setup today.
 

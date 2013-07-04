@@ -5,6 +5,19 @@ date: 2013-04-01 21:17
 comments: true
 categories: 
 ---
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 
 ***Last week, I presented an app to <a href="http://www.meetup.com/nyc-on-rails/">NYC on Rails</a>.*** The main focus was to learn about ActionMailer, paired with cron jobs and the <a href="https://github.com/javan/whenever">Whenever gem</a>.
 

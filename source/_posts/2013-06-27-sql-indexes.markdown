@@ -5,6 +5,19 @@ date: 2013-06-27 22:10
 comments: true
 categories: 
 ---
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 
 ***In my last post, I mentioned that `unique` is a reserved word in SQL because of indexes.*** But to be totally honest, that was the first time I'd even heard of indexes. So I did some more research...and they're actually pretty cool.
 

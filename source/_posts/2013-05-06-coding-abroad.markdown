@@ -5,6 +5,19 @@ date: 2013-05-06 11:06
 comments: true
 categories: 
 ---
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 
 ***I just got back from a week vacation in Paris.*** The highlight of my trip was the day I spent with two different Ruby developers. Through some twitter introductions, I was able to schedule a morning at <a href="http://www.verseauparis.com/">Verseau Paris</a> with founder<a href="http://twitter.com/tracyloisel">Tracy Loisel</a> and an afternoon with <a href="http://twitter.com/tibastral">Thibaut Assus</a>, founder of <a href="http://meetup.rubyparis.org/">Paris.rb</a>.
 

@@ -6,7 +6,19 @@ comments: true
 categories: 
 ---
 
+<script type="text/javascript">
 
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 <strong>In my last <a href="http://vicfriedman.github.com/blog/2013/03/03/webserver-101/">post</a>, I explained how to create a webserver<strong> using <a href="www.dediserve.com">Dediserve.com</a>. [NB: Dediserve.com is the cloud provider]. This post will cover the second half of the webserver setup, including installing gems, deploying with Capistrano, generating SSH keys on github, installing Passenger, and installing and configuring nginx. 
 
 Now that you have a server that you can connect to, it's time to set it up to run your application on it.

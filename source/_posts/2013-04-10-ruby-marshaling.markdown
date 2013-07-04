@@ -5,6 +5,19 @@ date: 2013-04-10 14:11
 comments: true
 categories: 
 ---
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 
 ***As my semester at <a href="http://flatironschool.com/">The Flatiron School</a> winds down,*** we've been spending our time building our final projects. My group, <a href="tmd.io">Tyler Davis</a>, <a href="dolin.github.com">Danny Olinsky</a>, and <a href="http://jlarusso.github.io/">Jesse La Russo</a>, is building a modern-take on an old fashioned gold star board. Aka, you write a blog post? You get a gold star. You finish a Code School course? You get a gold star. We've built in a lot of other functionality (our own authentication and authorization, the ability for users to give each other stars, background cron jobs, etc. etc.), but that's the gist of it.
 

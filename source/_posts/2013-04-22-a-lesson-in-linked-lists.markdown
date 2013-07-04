@@ -6,6 +6,19 @@ comments: true
 categories: 
 ---
 
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 ***This morning, I learned what a linked list is.*** A linked list is a data structure that is comprised on a group of nodes. Essentially, each dataset is made up of it's information, and a pointer. A pointer is a link to the next node in the data sequence. In the simplest of terms, if I am a dataset, I only know about myself, and the person that comes after me. 
 
 ***Linked lists are most commonly compared to arrays.*** They both store data, and both have their pros and cons. In compiled languages, arrays are a fixed size. If you define an array to have 100 elements, it has 100 elements. While there are methods to resize an array in compiled languages, from what I've read, it's not an easy task. Linked lists allow for a significantly easier process for inserting and deleting data, without shifting entire groups of elements up or down. 
