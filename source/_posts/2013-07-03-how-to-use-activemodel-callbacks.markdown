@@ -20,11 +20,11 @@ categories:
 </script>
 ***My first big task at work has been to fix all the broken tests in our test suite.*** It's actually a great assignment. I'll learn all the intricacies and relationships of the code, without the risk of breaking something major...the tests are already broken.
 
-__While reviewing one of the model specs today,__ I came something that I was not familiar with: ActiveModel::Callbacks 
+__While reviewing one of the model specs today,__ I came across something that I was not familiar with: ActiveModel::Callbacks 
 
 __A callback is a method that acts as a hook into the life cycle of an object.__ Callbacks allow you to trigger logic before or after the alteration of an ActiveRecord object. 
 
-__ActiveModel callbacks are an interface for any class to have ActiveRecord-like callbacks, used especially in the case of databaseless models. In <a href="http://railscasts.com/episodes/219-active-model?view=comments">this</a> Rails Cast, Ryan Bates gives a great intro to ActiveModel and how to get it up and running in your app. In the example of my code, we are just using the callbacks module. ActiveModel also provides a bunch of other modules, including but not limited to: naming, serialization, validations, etc. You can find the entire list <a href="http://api.rubyonrails.org/classes/ActiveModel.html">here</a>.
+__ActiveModel callbacks are an interface for any class to have ActiveRecord-like callbacks__, used especially in the case of databaseless models. In <a href="http://railscasts.com/episodes/219-active-model?view=comments">this</a> Rails Cast, Ryan Bates gives a great intro to ActiveModel and how to get it up and running in your app. In the example of my code, we are just using the callbacks module. ActiveModel also provides a bunch of other modules, including but not limited to: naming, serialization, validations, etc. You can find the entire list <a href="http://api.rubyonrails.org/classes/ActiveModel.html">here</a>.
 
 __The first step to use any of the modules is to `include` or `extend` the module in your class.__ See my <a href="http://vicfriedman.github.io/blog/2013/03/17/inheritence/">previous post</a> for an explanation on the difference between those options to mix in a modules functionality.
 
