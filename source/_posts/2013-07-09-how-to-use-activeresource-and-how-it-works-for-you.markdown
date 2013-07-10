@@ -61,7 +61,7 @@ __So lastly, let's delete a resource. ActiveResource sends a DELETE request to t
 This DELETE request sends an empty 200 HTTP status code as response.
 
 __And voila, ActiveResource!__<br>
-(NB: ActiveResource is not supported in Rails 4 but works well with Rails 2 and 3.)
+
 
 __Resources:__<br>
 1. http://apidock.com/rails/ActiveResource/Base<br>
