@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "When To Use A Struct"
+title: "How--and when--To Use A Struct"
 date: 2013-07-24 20:04
 comments: true
 categories: 
@@ -23,7 +23,7 @@ __We can easily create new instances of this struct:__
       Struct::Person.new("Victoria", 24, "1835 University Circle")
       victoria = Person.new("Victoria", 24, "1835 University Circle")
 
-__So how do we access the attribtues of this new instance of the struct?__
+__So how do we access the attribtues of this new instance of the struct?__  
       victoria["name"] #=> "Victoria"
       victoria["age"] #=> 24
       victoria["address"] #=> "1835 University Circle"
