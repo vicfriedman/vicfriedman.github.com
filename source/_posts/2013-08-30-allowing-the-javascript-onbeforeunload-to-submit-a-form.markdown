@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Allowing The Javascript onbeforeunload to Submit A Form"
+title: "Allowing The Javascript onbeforeunload Function To Submit A Form"
 date: 2013-08-30 16:53
 comments: true
 categories: 
