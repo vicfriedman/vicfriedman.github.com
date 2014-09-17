@@ -6,7 +6,6 @@ comments: true
 categories: 
 ---
 
-
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -58,7 +57,6 @@ Here are some points I've tried to emphasize:
 **4.** `rm -rf ` is THE MOST DANGEROUS. But it also make you feel super powerful that you can destroy a computer with four letters and a hyphen. 
 
 **5.*** ALL THE TOYS. Just try typing `brew install cmatrix`. Once it installs enter `cmatrix` and install feel like the coolest.
-
 
 ***Aside*** You can even incorporate the `say` command into ruby code. Which is SUPER AWESOME.
 ```RUBY
