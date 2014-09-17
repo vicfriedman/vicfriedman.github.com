@@ -37,12 +37,12 @@ Our students have never coded before. Never even knew that terminal existed on t
 
 The single most frequently asked question in every class by most every student is "Why are we learning this? What's the point?"
 
-***What Is The Point?!** 
+***What Is The Point?!*** 
 
 Command Line provides an incredibly easy interface to your computer. You don't spend seconds looking for your lost mouse, clicking icons, waiting for finder to load, waiting for files to load. Typing `open Desktop/Development/my_file.rb` takes milliseconds! As a developer, your time is expensive, and those seconds you waste navigating through finder add up to minutes and then hours that you waste trying to find and open files. That's why we claim the best developers never have to touch a mouse.
 
 
-***So How Do You Make It Interesting??**
+***So How Do You Make It Interesting??***
 
 First and foremost, terminal can't be treated as the boring thing. It has to be cool in and of itself.
 
