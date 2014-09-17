@@ -1,0 +1,335 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>How--and when--To Use A Struct - Too Busy Coding...</title>
+  <meta name="author" content="Victoria Friedman">
+
+  
+  <meta name="description" content="Recently I&#8217;ve been going through my ever growing (and then shrinking, and then growing again) list of new things/situations I&#8217;ve been &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vicfriedman.github.com/blog/2013/07/24/when-to-use-a-struct/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Too Busy Coding..." type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+</hgroup>
+
+</header>
+  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vicfriedman.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav> -->
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">How--and when--To Use a Struct</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-24T20:04:00-04:00" pubdate data-updated="true">Jul 24<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><strong><em>Recently I&#8217;ve been going through my ever growing (and then shrinking, and then growing again)</em></strong> list of new things/situations I&#8217;ve been introduced to via my code base at work. Which lead me to dig a little deeper into Ruby structs.</p>
+
+<p><strong>A struct is a simple way to bundle attributes together</strong> without having to explicitly define a class, all the while giving you accessor methods for those attributes. You can read the Ruby Docs about structs <a href="http://www.ruby-doc.org/core-1.9.3/Struct.html">here</a>.</p>
+
+<p><strong>We&#8217;ll use the example of creating people.</strong></p>
+
+<p><strong>A struct can be created very easily in two different ways:</strong></p>
+
+<pre><code>  Struct.new("Person", :name, :age, :address)
+  Person = Struct.new(:name, :age, :address)
+</code></pre>
+
+<p>So now we have our Person struct, <code>Struct::Person</code>. This gives us really easy accessor methods for all three attributes of the struct that we defined.</p>
+
+<p><strong>We can easily create new instances of this struct:</strong></p>
+
+<pre><code>  Struct::Person.new("Victoria", 24, "1835 University Circle")
+  victoria = Person.new("Victoria", 24, "1835 University Circle")
+</code></pre>
+
+<p><strong>So how do we access the attribtues of this new instance of the struct?</strong></p>
+
+<pre><code>  victoria["name"] #=&gt; "Victoria"
+  victoria["age"] #=&gt; 24
+  victoria["address"] #=&gt; "1835 University Circle"
+</code></pre>
+
+<p><strong>You can also change the values of an instance of the struct:</strong></p>
+
+<pre><code>  victoria["name"] = "Vic"
+  victoria["name"] #=&gt; "Vic"
+</code></pre>
+
+<p><strong>So what&#8217;s the difference between Struct and OpenStruct?</strong> OpenStruct doesn&#8217;t require explicitly defined attributes. You can create them on the fly.</p>
+
+<pre><code>person = OpenStruct.new
+person.name = "Victoria"
+person.age = 24
+person.date_of_birth = "June 1, 1988"
+</code></pre>
+
+<p>Notice when we created the OpenStruct, we didn&#8217;t define any attribute fields, just the name.</p>
+
+<p><strong>Both Struct and OpenStruct closely resemble a hash, so why not just use that?</strong>
+You should think of a Struct as a convience class when you just want to store attributes and read/write to them with regular methods. A hash is a possibility, but a hash isn&#8217;t fixed. There can be an infinite and varying number of key-value pairs. A Struct is the way to go when modeling out more complex objects with a known set of attributes.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Victoria Friedman</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-24T20:04:00-04:00" pubdate data-updated="true">Jul 24<span>th</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2013/07/24/when-to-use-a-struct/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2013/07/24/when-to-use-a-struct/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/07/16/how-to-use-state-machine/" title="Previous Post: How To Use State Machine">&laquo; How To Use State Machine</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/08/01/5-things-i-learned-about-encryption/" title="Next Post: 5 Things I Learned About Encryption">5 Things I Learned About Encryption &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <ul id="recent_posts">
+      <li class="post">
+      <a href="http://vicfriedman.github.com" alt="Home"><img src="/images/Home.png"></a>
+      <a href="http://vicfriedman.github.com/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
+      <a href="mailto:" alt="E-Mail"><img src="/images/Envelope.png"></a>
+      <a href="http://vicfriedman.github.com/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
+      </li>
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/09/16/teaching-cli/">Teaching CLI</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/16/keeping-confidence-in-the-face-of-something-new/">Keeping Confidence in the Face of Something New</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/14/the-difference-between-url-for-and-polymorphic-url/">The Difference between url_for and polymorphic_url</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/13/the-difference-between-url-for-and-polymorphic-url/">The Difference Between url_for and polymorphic_url</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/18/dev-bootcamps-are-not-a-scam-a-hackers-perspective/">Dev Bootcamps Are NOT a Scam. A Hacker's Perspective</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/vicfriedman">@vicfriedman</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'vicfriedman',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("vicfriedman", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/vicfriedman" class="twitter-follow-button" data-show-count="false">Follow @vicfriedman</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Victoria Friedman -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'vicfriedmangithubio';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://vicfriedman.github.com/blog/2013/07/24/when-to-use-a-struct/';
+        var disqus_url = 'http://vicfriedman.github.com/blog/2013/07/24/when-to-use-a-struct/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

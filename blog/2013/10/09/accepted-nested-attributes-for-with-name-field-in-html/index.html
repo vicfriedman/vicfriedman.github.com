@@ -1,0 +1,357 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>accepts_nested_attributes_for with name field in HTML - Too Busy Coding...</title>
+  <meta name="author" content="Victoria Friedman">
+
+  
+  <meta name="description" content="var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-38989132-1']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement(' &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vicfriedman.github.com/blog/2013/10/09/accepted-nested-attributes-for-with-name-field-in-html/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Too Busy Coding..." type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+</hgroup>
+
+</header>
+  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vicfriedman.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav> -->
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Accepts_nested_attributes_for With Name Field in HTML</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-09T20:34:00-04:00" pubdate data-updated="true">Oct 9<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+<p>My project at work is interesting because all the teams are very modularized. Yes, we all attend the same standup and have a general idea of what each individual is working on, but that being said the only time I&#8217;m really affected by what our front-end team does is when I have to include new markup on the rails side. I never even see the global.js or global.css files.</p>
+
+<p>This week, I spent a lot of time working with one of our front-end developers. We split the work based on our specific abilities in an attempt to finish this sprint as quickly as possible. So this means she&#8217;s controling the front end of one of our rails forms. I don&#8217;t even have the html for the form in my code base.</p>
+
+<p>So this means in order to make this a form and have the user&#8217;s input save to our database as objects, I had to coordinate the implementation of logic, including knowing what to pass in to the name field of the html for the part of the form the front-end developer controls.</p>
+
+<p>I have three classes:</p>
+
+<pre><code>  class Gift
+    has_many :gift_recipients
+    has_many :recipients, :through =&gt; :gift_recipients
+
+    accepts_nested_attributes_for :recipients
+  end
+
+  class Recipient
+    has_many :gift_recipients
+    belongs_to :gifts, :through =&gt; :gift_recipients
+  end
+
+  class Gift_Recipient
+    belongs_to :gifts
+    belongs_to :recipients
+  end
+</code></pre>
+
+<p>My form in my views is used to be create a gift, and part of that form is also creating recipients for that gift. Essentially, a user checks a box and mini form appends to the page by javascript, allowing them to enter in a recipient&#8217;s email and a message.</p>
+
+<p><code>accepts_nested_attributes_for</code> allows the creation of a related object along with the main object. So in my example, I&#8217;m creating an instance of my <code>Gift</code> class while simultaneously creating an instance of my <code>Recipient</code> class. There is good documentation on this <a href="http://api.rubyonrails.org/classes/ActiveRecord/NestedAttributes/ClassMethods.html#method-i-accepts_nested_attributes_for">here</a>.</p>
+
+<p>So now what? I don&#8217;t have the html for the recipients section of the form in my code, so I have to use the HMTL <code>name</code> field to pass the user&#8217;s input back to rails to save it in the database. I was familiar how to do this with just an attribute of an object. For an attribute of the gift, it would look like this:</p>
+
+<pre><code>  &lt;input type="text" name="gift[name]" &gt;
+</code></pre>
+
+<p>But how does that change with <code>accepts_nested_attributes_for</code> ?</p>
+
+<pre><code>It's actually fairly simple:
+
+&lt;input type="text" name="gift[recipients_attributes][0][email]"&gt;
+&lt;input type="text" name="gift[recipients_attributes][0][message]"&gt;
+</code></pre>
+
+<p>This would be the input field for an email address for the first instance of <code>Recipient</code>. It follows the typical Rails convention of keeping the associated table name pluralized. The only thing to be aware of, is that the indexing changes based on how many instances of recipients you are creating.</p>
+
+<p>So say my user pushes the button again and wants to create two recipients? The HTML would look a little something like this:</p>
+
+<pre><code>  &lt;input type="text" name="gift[recipients_attributes][1][email]"&gt;
+  &lt;input type="text" name="gift[recipients_attributes][1][message]"&gt;
+</code></pre>
+
+<p>And voila, on submit, rails understands to create one instance of a gift, as well as two instances of recipients. The through relationship is what attaches my recipients to the gift, so there is naturally an association with that gift to those users.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Victoria Friedman</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-09T20:34:00-04:00" pubdate data-updated="true">Oct 9<span>th</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2013/10/09/accepted-nested-attributes-for-with-name-field-in-html/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2013/10/09/accepted-nested-attributes-for-with-name-field-in-html/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/09/15/the-difference-between-javascript-primitive-data-types-and-objects/" title="Previous Post: The difference between Javascript Primitive Data Types and Objects">&laquo; The difference between Javascript Primitive Data Types and Objects</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/10/18/dev-bootcamps-are-not-a-scam-a-hackers-perspective/" title="Next Post: Dev Bootcamps Are NOT a Scam. A Hacker's Perspective">Dev Bootcamps Are NOT a Scam. A Hacker's Perspective &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <ul id="recent_posts">
+      <li class="post">
+      <a href="http://vicfriedman.github.com" alt="Home"><img src="/images/Home.png"></a>
+      <a href="http://vicfriedman.github.com/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
+      <a href="mailto:" alt="E-Mail"><img src="/images/Envelope.png"></a>
+      <a href="http://vicfriedman.github.com/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
+      </li>
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/09/16/teaching-cli/">Teaching CLI</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/16/keeping-confidence-in-the-face-of-something-new/">Keeping Confidence in the Face of Something New</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/14/the-difference-between-url-for-and-polymorphic-url/">The Difference between url_for and polymorphic_url</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/13/the-difference-between-url-for-and-polymorphic-url/">The Difference Between url_for and polymorphic_url</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/18/dev-bootcamps-are-not-a-scam-a-hackers-perspective/">Dev Bootcamps Are NOT a Scam. A Hacker's Perspective</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/vicfriedman">@vicfriedman</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'vicfriedman',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("vicfriedman", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/vicfriedman" class="twitter-follow-button" data-show-count="false">Follow @vicfriedman</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Victoria Friedman -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'vicfriedmangithubio';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://vicfriedman.github.com/blog/2013/10/09/accepted-nested-attributes-for-with-name-field-in-html/';
+        var disqus_url = 'http://vicfriedman.github.com/blog/2013/10/09/accepted-nested-attributes-for-with-name-field-in-html/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

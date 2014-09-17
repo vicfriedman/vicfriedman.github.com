@@ -1,0 +1,339 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>respond_to - Too Busy Coding...</title>
+  <meta name="author" content="Victoria Friedman">
+
+  
+  <meta name="description" content="var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-38989132-1']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement(' &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vicfriedman.github.com/blog/2013/05/13/respond-to/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Too Busy Coding..." type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+</hgroup>
+
+</header>
+  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vicfriedman.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav> -->
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Respond_to</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-13T12:01:00-04:00" pubdate data-updated="true">May 13<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+<p>My last post was about <code>method_missing</code>. Since that post, I&#8217;ve gotten to play around with <code>method_missing</code> a lot, and think I&#8217;ve begun to grasp its power. It&#8217;s a crazy tool, and one that can be dangerous if not used wisely.</p>
+
+<p>One thing I learned while rewriting the functionality of <code>method_missing</code> is that you must reopen and rewrite <code>respond_to</code> as well. <code>respond_to</code> is used to determine if an object responds to a method, i.e. allows the object to know a method is being called on it.</p>
+
+<p>Becase <code>method_missing</code> allows you to call undefined methods, the object needs to know in some capicty what those are.
+In the below example, I have written <code>method_missing</code> to be able to use <code>.get_*</code> and <code>.set_*</code> in order to access object in my database. The method name gets passed as a symbol to method missing, so it must be turned into a string before being used.</p>
+
+<pre><code>def self.method_missing(method_name, *args, &amp;block)
+  method_string = method_name.to_s
+  if method_string.start_with?("get_")
+    #do xyz
+  elsif method_string.start)with?("set_")
+    #do xyz
+  else
+    super
+  end
+end
+
+def self.respond_to?(method_sym, include_private = false)
+  if method_sym.to_s =~ /^get_(.*)$/ || method_sym.to_s =~ /^set_(.*)$/
+    true
+  else
+    super
+  end
+end
+</code></pre>
+
+<p>Here, <code>respond_to</code> now responds to my version of <code>method_missing</code>. I am essentially searching if the string version of my method includes <code>get_*</code> or <code>set_*</code> and if it does, it is a method that can be called on an object.</p>
+
+<p>The <code>include_private = false</code> is necessary because by default, <code>respond_to</code> must be passed additional parameters to search for private methods. Methods are private for a reason, they don&#8217;t need to be accessed everywhere and by every object.</p>
+
+<p>Also in both <code>method_missing</code> and <code>respond_to</code> my if/else clause ends by calling <code>super</code>. Essentially, if none of the above returns true, go back to your normal functionality and deliver me an error message.</p>
+
+<p>Also note I am using class methods here. My practice with <code>method_missing</code> and <code>respond_to</code> was geared towards reading and writing objects to my database.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Victoria Friedman</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-13T12:01:00-04:00" pubdate data-updated="true">May 13<span>th</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2013/05/13/respond-to/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2013/05/13/respond-to/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/05/07/method-missing/" title="Previous Post: method_missing">&laquo; method_missing</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/06/05/pluck/" title="Next Post: pluck">pluck &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <ul id="recent_posts">
+      <li class="post">
+      <a href="http://vicfriedman.github.com" alt="Home"><img src="/images/Home.png"></a>
+      <a href="http://vicfriedman.github.com/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
+      <a href="mailto:" alt="E-Mail"><img src="/images/Envelope.png"></a>
+      <a href="http://vicfriedman.github.com/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
+      </li>
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/09/16/teaching-cli/">Teaching CLI</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/16/keeping-confidence-in-the-face-of-something-new/">Keeping Confidence in the Face of Something New</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/14/the-difference-between-url-for-and-polymorphic-url/">The Difference between url_for and polymorphic_url</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/13/the-difference-between-url-for-and-polymorphic-url/">The Difference Between url_for and polymorphic_url</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/18/dev-bootcamps-are-not-a-scam-a-hackers-perspective/">Dev Bootcamps Are NOT a Scam. A Hacker's Perspective</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/vicfriedman">@vicfriedman</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'vicfriedman',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("vicfriedman", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/vicfriedman" class="twitter-follow-button" data-show-count="false">Follow @vicfriedman</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Victoria Friedman -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'vicfriedmangithubio';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://vicfriedman.github.com/blog/2013/05/13/respond-to/';
+        var disqus_url = 'http://vicfriedman.github.com/blog/2013/05/13/respond-to/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

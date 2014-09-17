@@ -1,0 +1,390 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>webserver 101 - Too Busy Coding...</title>
+  <meta name="author" content="Victoria Friedman">
+
+  
+  <meta name="description" content="var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-38989132-1']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement(' &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vicfriedman.github.com/blog/2013/03/03/webserver-101/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Too Busy Coding..." type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+</hgroup>
+
+</header>
+  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vicfriedman.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav> -->
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Webserver 101</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-03T13:38:00-05:00" pubdate data-updated="true">Mar 3<span>rd</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+<p><strong>I can&#8217;t believe how much I&#8217;ve learned in 19 days of class.<strong> My last blog post was about understanding iterations, and now it&#8217;s hard to image a time when that didn&#8217;t make sense to me.</p>
+
+<p> <ul> Highlights of the last few weeks include:
+  <li> Hearing <a href="http://steveklabnik.com/"> Steve Klabnik </a> speak about contributing to open source projects and his work on Rails. </li>
+  <li> Building my own webserver on <a href="www.dediserve.com"> Dediserve.com </a> with the help of <a href="http://spike.grobste.in/"> Spike Grobstein </a> </li>
+  <li> Understanding the breakdown of a MVC. I will never complain about my facebook page taking an extra 2 seconds to load ever again, especially on my mobile device. It really is like magic. </li>
+  <li> Learning rails week 1. and my first rails app. </li>
+</ul></p>
+
+<p>  While everything I&#8217;ve learned has been absolutely mind blowing, the thing that really hit home for me was how intricate a process it is just to log into facebook, twitter or online banking and have my information load in miliseconds. Along with appreciating how much work just goes into the design and coding to create the page, I also have a deep appreciate for Sysadmins, who&#8217;s sole role is to keep your site up and running on a live server. Building a web server and grasping the complexity of the call and response that goes on behind the spaces was eye-opening. This post will cover setting up your server, connecting to it for the first time, creating your own user, as well as disabling your insecure root user. [NB: Stay tuned for follow ups about installing gems, deploying with Capistrano, generating SSH keys on github, installing Passenger, and installing and configuring nginx].</p>
+
+<p>  <strong>So what is a web server? A web server </strong> is a combination of both hardware and software that acts as a host to content, and delivers that content in the form of HTML through HTTP to the client, which in most cases is the browser.</p>
+
+<h3> Creating your Server </h3>
+
+
+<p>  <p>We used <a href="www.dediserve.com" alt="Dediserve's Website"> Dediserve.com </a> as our cloud provider. They offer extensive Linux based distributions. In specific, we used Linxu&#8217;s Ubuntu distribution, which is one of the most popular in use today. </p></p>
+
+<p>  <p>Once you create an account on Dediserve.com, you&#8217;ll want to select &#8220;Cloud Nodes&#8221; in the Client Area. </p></p>
+
+<p>  <p> Once there, you&#8217;ll be prompted to select a server hostname, a password for your server, what OS templace you would like (in this case, we used Ubuntu 12.04 x64), as well as bandwidth, disk space, memory, and CPU cores.</p></p>
+
+<p>  <p>Once finished, Dediserve will automate an IP address for you. </p></p>
+
+<p>  <img src="/images/Dediserve.png"></p>
+
+<p>  <p><strong> An IP address is a unique set of numbers </strong> that represents a location for your server in the cloud. Every server has an IP address and every computer has an IP address. The IP addresses are what the server and computers use to find each other and communicate back and forth. </p></p>
+
+<p>  <p> Dediserve will automatically generate your selected password as the password for the root user (or default administrator) for your server. This user has no restrictions in terms of access. Because of this, it&#8217;s considered bad practice to use this as your regular log-on. In terms of security of your server, this user is considerd insecure because it provides the easiest path for someone to hack on to your server. (Keep reading to learn how to disable the root user). </p></p>
+
+<h3> Connecting to Your Server </h3>
+
+
+<p>  </p>The next step is to create a connection to your server, using SSH. SSH stands for Secure SHell and is a way to conenct remotely to your server via commandline: </p></p>
+
+<pre><code>`ssh root@XXX.XXX.XXX.XXX`
+</code></pre>
+
+<p> replace the XXX.XXX.XXX.XXX with your server&#8217;s IP address.</p>
+
+<p>You should get a prompt delcaring that the &#8216;authenticity of host can&#8217;t be established&#8217;. Type <code>yes</code> and you will be prompted for password for your server. Once you submit the password, you&#8217;re connected!!</p>
+
+<h3> Creating Your Own User </h3>
+
+
+<p>The next step is to create your own user admin, which will override the root user. To do so, you will use the <code>useradd</code> command.
+<code>useradd --help</code> will bring up a list of options, including <code>s &lt;shell&gt;</code>, <code>-G &lt;groups&gt;</code>, and  <code>m</code>. The <code>--help</code> argument provides a list of argument options, as well as instructions for how to use them.</p>
+
+<p>We will want to run <code>useradd -s /bin/bash -G sudo -m USERNAME</code>. This command adds a user to your server, selects Bash as your commandline interface, adds <code>sudo</code> (or Super User Do) to your group giving your new admin full access, and then finally your new username is added to the home directory.</p>
+
+<p>You&#8217;ll want to make sure and replace <code>USERNAME</code> with the username that you would like to use.
+Then you&#8217;ll need to create a password for your user by entering <code>passwd USERNAME</code>.</p>
+
+<p><code>exit</code> will allow you to disconnect from your server. Then, relog in with you IP address, but this time prefixing it with your new username.</p>
+
+<pre><code>ssh USERNAME@XXX.XXX.XXX.XXX
+</code></pre>
+
+<h3> Disconnecting/Disabling Root User Login </h3>
+
+
+<p>Now, you&#8217;ll need to disconnect your root user&#8217;s ability to SSH into your server. The first step in this process is to edit your <code>ssh_config</code> file.</p>
+
+<p>You&#8217;ll open this file by entering:</p>
+
+<pre><code>sudo vim /etc/ssh/sshd_config
+</code></pre>
+
+<p><code>sudo</code> calls the super-powers to override security, <code>vim</code> is a text editor that runs within commmandline, and <code>etc/ssh/sshd_config</code> is the path to the configuration file.</p>
+
+<p>Once the file is open, you&#8217;ll need to locate the line,
+  <code>PermitRootLogin yes</code></p>
+
+<p>and change it to read
+  <code>PermitRootLogin no</code></p>
+
+<p>To save and quit the file enter <code>:wq</code>. This will both write to the file (and save it) as well as quit vim.</p>
+
+<p>The final step to disable the root user is to restart the <code>sshd</code> process</p>
+
+<p>  <code>sudo /etc/init.d/ssh restart</code></p>
+
+<p>Now if you try to login as <code>root</code>, you will be denied access to the server. You should get an incorrect password error. This will delay anyone trying to hack onto your server by simply wasting their time.</p>
+
+<p>Stay tune for Part Two, deploying to your server!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Victoria Friedman</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-03T13:38:00-05:00" pubdate data-updated="true">Mar 3<span>rd</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2013/03/03/webserver-101/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2013/03/03/webserver-101/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/02/15/the-each-method/" title="Previous Post: The Each Method">&laquo; The Each Method</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/03/06/webserver-102/" title="Next Post: webserver 102">webserver 102 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <ul id="recent_posts">
+      <li class="post">
+      <a href="http://vicfriedman.github.com" alt="Home"><img src="/images/Home.png"></a>
+      <a href="http://vicfriedman.github.com/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
+      <a href="mailto:" alt="E-Mail"><img src="/images/Envelope.png"></a>
+      <a href="http://vicfriedman.github.com/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
+      </li>
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/09/16/teaching-cli/">Teaching CLI</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/16/keeping-confidence-in-the-face-of-something-new/">Keeping Confidence in the Face of Something New</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/14/the-difference-between-url-for-and-polymorphic-url/">The Difference between url_for and polymorphic_url</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/13/the-difference-between-url-for-and-polymorphic-url/">The Difference Between url_for and polymorphic_url</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/18/dev-bootcamps-are-not-a-scam-a-hackers-perspective/">Dev Bootcamps Are NOT a Scam. A Hacker's Perspective</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/vicfriedman">@vicfriedman</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'vicfriedman',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("vicfriedman", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/vicfriedman" class="twitter-follow-button" data-show-count="false">Follow @vicfriedman</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Victoria Friedman -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'vicfriedmangithubio';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://vicfriedman.github.com/blog/2013/03/03/webserver-101/';
+        var disqus_url = 'http://vicfriedman.github.com/blog/2013/03/03/webserver-101/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

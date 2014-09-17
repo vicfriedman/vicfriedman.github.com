@@ -1,0 +1,376 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>How To Use ActiveResource (and how it works for you) - Too Busy Coding...</title>
+  <meta name="author" content="Victoria Friedman">
+
+  
+  <meta name="description" content="ActiveResource provides an interface for communication between Rails applications. I came across ActiveResource in my databaseless classes at work &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vicfriedman.github.com/blog/2013/07/09/how-to-use-activeresource-and-how-it-works-for-you/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Too Busy Coding..." type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+</hgroup>
+
+</header>
+  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vicfriedman.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav> -->
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">How to Use ActiveResource (and How It Works for You)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-09T20:22:00-04:00" pubdate data-updated="true">Jul 9<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><strong><em>ActiveResource provides an interface for communication between Rails applications.</em></strong> I came across ActiveResource in my databaseless classes at work that I mentioned <a href="http://vicfriedman.github.io/blog/2013/07/03/how-to-use-activemodel-callbacks/">in my previous post</a>. Essentially, all of our user functionality (logging in, creating a profile with attributes, etc.) is handled by one application and the meat of the site by another.</p>
+
+<p><strong>And this is where ActiveResource comes in handly.</strong> In the simplest of terms, ActiveResource::Base is the main class, which maps RESTful resources as models in a rails application. This boils down to your RESTful resources becoming mutable Ruby objects. ActiveResource acts just like ActiveRecord, so it&#8217;s very easy to understand at a first look. The only difference is that ActiveResource deals with HTTP resources that are built on standard JSON or XML request formatting as opposed to dealing with a database. In fact, if I hadn&#8217;t noticed the: <code>class Profile &lt; ActiveResource::Base</code>, I might have thought I was dealing with ActiveRecord objects.</p>
+
+<p><strong>So let&#8217;s take the example of this Profile class.</strong></p>
+
+<p><strong>The first step is to create a model class (one that does not have a migration)</strong> that inherits from  <code>ActiveResource::Base</code> and that provides a site class variable.</p>
+
+<pre><code>class Profile &lt; ActiveResource::Base 
+  self.site = "http://api/profiles:3000"
+end
+</code></pre>
+
+<p>My Profile class will be using ActiveResource to talk back and forth with <code>"http://api/profiles:3000"</code></p>
+
+<p><strong>Object manipulation in ActiveResource uses standard RESTful requests:</strong><br>
+  1. GET requests for finding and retrieving resources<br>
+  2. POST requests for creating new resources<br>
+  3. PUT requests for updating resources<br>
+  4. DELETE requests for destroying resources</p>
+
+<p><strong>Creating an object will come from sending a POST request to the api.</strong>
+Using methods available to ActiveResource, this will look like:</p>
+
+<pre><code>  Victoria = Person.new(:first_name =&gt; "Victoria")
+</code></pre>
+
+<p>Looks a lot like ActiveResource huh? So what is ActiveResource actually doing here?</p>
+
+<pre><code>  POST http://api/profiles/localhost:3000/profiles.json
+</code></pre>
+
+<p>It&#8217;s sending a POST` request to the JSON of the profiles application. The body of the request looks something like this:</p>
+
+<pre><code>  {"Profile": {"first_name": "Victoria", "last_name": "Friedman"} }
+</code></pre>
+
+<p>The response you should get back is a 201 HTTP status code, which means the request has been fulfilled, as well as notification that your Ruby object was created.</p>
+
+<p><strong>So now that we have an instance of my Profile class, how about we try and retrieve it.</strong> Finding an object with ActiveResource uses a GET request. With ActiveResource methods, this looks like:</p>
+
+<pre><code>  Victoria = Profile.find(1)
+</code></pre>
+
+<p>Again, the exact same thing as ActiveRecord. So how does this GET request come into play? A GET request is sent to http://api/profiles:3000/profiles/1.json. That&#8217;s the JSON to Victoria Friedman&#8217;s profile. Each JSON element becomes an attribute of an instance of my Profile class. I can also find all people by calling:</p>
+
+<pre><code>  profiles = Profile.all
+</code></pre>
+
+<p>This will return an array of JSON that looks something like this:</p>
+
+<pre><code>  [ {"id": 1, "first_name": "Victoria", "last_name": "Friedman"},
+    {"id": 2, "first_name": "Megan", "last_name": "Smith"},
+    {"id": 3, "first_name": "Catherine", "last_name": "Brooks"},
+  ]
+</code></pre>
+
+<p><strong>So now we want to update an instance of our Profile class.</strong> This works the same in ActiveResource as ActiveRecord but uses a PUT request:</p>
+
+<pre><code>  Victoria = Profile.find(1)
+  Victoria.first_name =&gt; 'Victoria'
+  Victoria.first_name = 'Vic'
+  Victoria.save
+</code></pre>
+
+<p>Now my name is saved as Vic. This submits a PUT request with a body that looks like this:</p>
+
+<pre><code>  {"person": {"first_name": "Vic"}}
+</code></pre>
+
+<p>This request returns an empty response with a 204 HTTP status code.</p>
+
+<p><strong>So lastly, let&#8217;s delete a resource. ActiveResource sends a DELETE request to the api.</strong></p>
+
+<pre><code>  Vic = Person.find(1)
+  Vic.destroy
+  Vic.exists? =&gt; false
+</code></pre>
+
+<p>This DELETE request sends an empty 200 HTTP status code as response.</p>
+
+<p><strong>And voila, ActiveResource!</strong><br></p>
+
+<p><strong>Resources:</strong><br>
+1. http://apidock.com/rails/ActiveResource/Base<br>
+2. http://railscasts.com/episodes/94-activeresource-basics</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Victoria Friedman</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-09T20:22:00-04:00" pubdate data-updated="true">Jul 9<span>th</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2013/07/09/how-to-use-activeresource-and-how-it-works-for-you/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2013/07/09/how-to-use-activeresource-and-how-it-works-for-you/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/07/03/how-to-use-activemodel-callbacks/" title="Previous Post: How To Use ActiveModel::Callbacks">&laquo; How To Use ActiveModel::Callbacks</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/07/11/how-to-use-git-with-svn/" title="Next Post: How To Use Git With SVN">How To Use Git With SVN &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <ul id="recent_posts">
+      <li class="post">
+      <a href="http://vicfriedman.github.com" alt="Home"><img src="/images/Home.png"></a>
+      <a href="http://vicfriedman.github.com/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
+      <a href="mailto:" alt="E-Mail"><img src="/images/Envelope.png"></a>
+      <a href="http://vicfriedman.github.com/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
+      </li>
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/09/16/teaching-cli/">Teaching CLI</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/16/keeping-confidence-in-the-face-of-something-new/">Keeping Confidence in the Face of Something New</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/14/the-difference-between-url-for-and-polymorphic-url/">The Difference between url_for and polymorphic_url</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/13/the-difference-between-url-for-and-polymorphic-url/">The Difference Between url_for and polymorphic_url</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/18/dev-bootcamps-are-not-a-scam-a-hackers-perspective/">Dev Bootcamps Are NOT a Scam. A Hacker's Perspective</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/vicfriedman">@vicfriedman</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'vicfriedman',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("vicfriedman", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/vicfriedman" class="twitter-follow-button" data-show-count="false">Follow @vicfriedman</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Victoria Friedman -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'vicfriedmangithubio';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://vicfriedman.github.com/blog/2013/07/09/how-to-use-activeresource-and-how-it-works-for-you/';
+        var disqus_url = 'http://vicfriedman.github.com/blog/2013/07/09/how-to-use-activeresource-and-how-it-works-for-you/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

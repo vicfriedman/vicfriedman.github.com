@@ -1,0 +1,439 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>How To Use ActiveModel::Callbacks - Too Busy Coding...</title>
+  <meta name="author" content="Victoria Friedman">
+
+  
+  <meta name="description" content="var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-38989132-1']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement(' &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vicfriedman.github.com/blog/2013/07/03/how-to-use-activemodel-callbacks/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Too Busy Coding..." type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+</hgroup>
+
+</header>
+  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vicfriedman.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav> -->
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">How to Use ActiveModel::Callbacks</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-03T07:53:00-04:00" pubdate data-updated="true">Jul 3<span>rd</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+<p><strong><em>My first big task at work has been to fix all the broken tests in our test suite.</em></strong> It&#8217;s actually a great assignment. I&#8217;ll learn all the intricacies and relationships of the code, without the risk of breaking something major&#8230;the tests are already broken.</p>
+
+<p><strong>While reviewing one of the model specs today,</strong> I came across something that I was not familiar with: ActiveModel::Callbacks</p>
+
+<p><strong>A callback is a method that acts as a hook into the life cycle of an object.</strong> Callbacks allow you to trigger logic before or after the alteration of an ActiveRecord object.</p>
+
+<p><strong>ActiveModel callbacks are an interface for any class to have ActiveRecord-like callbacks</strong>, used especially in the case of databaseless models. In <a href="http://railscasts.com/episodes/219-active-model?view=comments">this</a> Rails Cast, Ryan Bates gives a great intro to ActiveModel and how to get it up and running in your app. In the example of my code, we are just using the callbacks module. ActiveModel also provides a bunch of other modules, including but not limited to: naming, serialization, validations, etc. You can find the entire list <a href="http://api.rubyonrails.org/classes/ActiveModel.html">here</a>.</p>
+
+<p><strong>The first step to use any of the modules is to <code>include</code> or <code>extend</code> the module in your class.</strong> See my <a href="http://vicfriedman.github.io/blog/2013/03/17/inheritence/">previous post</a> for an explanation on the difference between those options to mix in a modules functionality.</p>
+
+<pre><code>  class Pet
+    extend ActiveModel::Callbacks
+  end
+</code></pre>
+
+<p>Here, I chose to <code>extend</code> the module because I want the methods to become class methods.</p>
+
+<p><strong>The next step is to define a list of methods to which you would like to attach the callbacks:</strong></p>
+
+<pre><code>  class Pet
+    extend ActiveModel::Callbacks
+
+    define_model_callbacks :create, :destroy, :update
+  end
+</code></pre>
+
+<p>For example purposes, I chose to include three common callbacks. Once you defined the methods that are attached to callbacks, they now have access to all three standard callbacks <code>before</code>, <code>after</code>, and <code>around</code>.
+To take <code>create</code> as an example, I now have <code>before_create</code>, <code>after_create</code>, and <code>around_create</code> accessible to me.</p>
+
+<p><strong>The next thing is to actually define the <code>create</code>, <code>destroy</code>, and <code>update methods</code>.</strong></p>
+
+<pre><code>  class Pet
+    extend ActiveModel::Callbacks
+
+    define_model_callbacks :create, :destroy, :update
+
+    def create
+      _run_create_callbacks do
+        ##CODE TO EXECUTE HERE
+      end
+    end
+
+
+    def update
+      _run_update_callbacks do
+        ##CODE TO EXECUTE HERE
+      end
+    end
+
+
+    def destroy
+      _run_destroy_callbacks do
+        ##CODE TO EXECUTE HERE
+      end
+    end
+
+  end
+</code></pre>
+
+<p>You can also shorthand this:</p>
+
+<pre><code>def create; _run_create_callback { #CODE_HERE }; end
+def update; _run_update_callback { #CODE_HERE }; end
+def destroy; _run_destroy_callback { #CODE_HERE }; end
+</code></pre>
+
+<p><strong>And finally, now you can use your callbacks!</strong></p>
+
+<pre><code>  class MyClass
+    extend ActiveModel::Callbacks
+
+    define_model_callbacks :create, :destroy, :update
+
+    before_update :my_method
+
+    def create
+      _run_create_callbacks do
+        ##CODE TO EXECUTE HERE
+      end
+    end
+
+
+    def update
+      _run_update_callbacks do
+        ##CODE TO EXECUTE HERE
+      end
+    end
+
+
+    def destroy
+      _run_destroy_callbacks do
+        ##CODE TO EXECUTE HERE
+      end
+    end
+
+    def my_method
+      puts "This is my method"
+    end
+
+  end
+</code></pre>
+
+<p>I have used mine here, so before any instance of <code>MyClass</code> is updated, <code>my_method</code> is run, which will just print the string &#8220;This is my method&#8221;.</p>
+
+<p>Also, in playing around, I discovered that you can literally name your callbacks whatever you want. I tried with <code>fun</code>, which would look something like this:</p>
+
+<pre><code>  class Pet
+    extend ActiveModel::Callbacks
+
+    define_model_callbacks :fun
+
+    before_fun :my_method
+
+    def fun
+      _run_fun_callbacks do
+        ##CODE TO EXECUTE HERE
+      end
+    end
+
+    def my_method
+      puts "This is my method"
+    end
+
+  end
+</code></pre>
+
+<p>The possibilities are ENDLESS. Literally.</p>
+
+<ol>Great Resources:
+  <li>http://api.rubyonrails.org/classes/ActiveModel/Callbacks.html</li>
+  <li>http://jeffgardner.org/2011/05/26/adding-activerecord-style-callbacks-to-activeresource-models/</li>
+  <li>http://railscasts.com/episodes/219-active-model</li>
+</ol>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Victoria Friedman</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-03T07:53:00-04:00" pubdate data-updated="true">Jul 3<span>rd</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2013/07/03/how-to-use-activemodel-callbacks/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2013/07/03/how-to-use-activemodel-callbacks/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/06/27/sql-indexes/" title="Previous Post: sql indexes">&laquo; sql indexes</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/07/09/how-to-use-activeresource-and-how-it-works-for-you/" title="Next Post: How To Use ActiveResource (and how it works for you)">How To Use ActiveResource (and how it works for you) &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <ul id="recent_posts">
+      <li class="post">
+      <a href="http://vicfriedman.github.com" alt="Home"><img src="/images/Home.png"></a>
+      <a href="http://vicfriedman.github.com/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
+      <a href="mailto:" alt="E-Mail"><img src="/images/Envelope.png"></a>
+      <a href="http://vicfriedman.github.com/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
+      </li>
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/09/16/teaching-cli/">Teaching CLI</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/16/keeping-confidence-in-the-face-of-something-new/">Keeping Confidence in the Face of Something New</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/14/the-difference-between-url-for-and-polymorphic-url/">The Difference between url_for and polymorphic_url</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/13/the-difference-between-url-for-and-polymorphic-url/">The Difference Between url_for and polymorphic_url</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/18/dev-bootcamps-are-not-a-scam-a-hackers-perspective/">Dev Bootcamps Are NOT a Scam. A Hacker's Perspective</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/vicfriedman">@vicfriedman</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'vicfriedman',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("vicfriedman", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/vicfriedman" class="twitter-follow-button" data-show-count="false">Follow @vicfriedman</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Victoria Friedman -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'vicfriedmangithubio';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://vicfriedman.github.com/blog/2013/07/03/how-to-use-activemodel-callbacks/';
+        var disqus_url = 'http://vicfriedman.github.com/blog/2013/07/03/how-to-use-activemodel-callbacks/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

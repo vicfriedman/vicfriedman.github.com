@@ -1,0 +1,350 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Teaching CLI - Too Busy Coding...</title>
+  <meta name="author" content="Victoria Friedman">
+
+  
+  <meta name="description" content="var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-38989132-1']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement(' &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vicfriedman.github.com/blog/2014/09/16/teaching-cli/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Too Busy Coding..." type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+</hgroup>
+
+</header>
+  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vicfriedman.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav> -->
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Teaching CLI</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-09-16T11:04:00-04:00" pubdate data-updated="true">Sep 16<span>th</span>, 2014</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+<p><strong><em>The Nuts and Bolts:</em></strong>
+<strong>About six months ago</strong> I joined <a href="https://flatironschool.com">Flatiron School</a> to start something really awesome&#8230;a program to teach high school students to code. After teaching over 100 students this summer during six two-week camps and the preparations for our <a href="https://after.flatironschool.com/">after school programs</a> I&#8217;ve learned a lot about teaching and coding.</p>
+
+<p><strong><em>CLI:</em></strong></p>
+
+<p>When I learned command line, it felt like a necessary evil. This thing I had to learn in order to get to the cool stuff. I wanted to build web apps that people would use and think were awesome. But before that, I had to learn CLI and git and sql and all this <em>stuff</em>. That&#8217;s like 3 languages before you even get to the good stuff.</p>
+
+<p>At Flatiron School, we don&#8217;t teach coding in contrived environments. Not for our adult immersives, and definitely not for our high school programs. We want give our students the ability to use real tools to build real things. Which means, again&#8230;teaching our students to use terminal like the pros. But it sort of seems to suck.</p>
+
+<p><strong><em>How It&#8217;s Taught Now</em></strong></p>
+
+<p>The best guide available online is Zed Shaw&#8217;s <a href="http://cli.learncodethehardway.org/book/">Learn CLI the Hard Way</a>.It&#8217;s actually a great tutorial to master the commands. It&#8217;s how I learned. But let&#8217;s think about it for a second. A class of 20 fifteen-year-olds will eat you alive if you hand them that and say &#8220;type &#8216;mkdir director_name&#8217; 10 times, followed by &#8216;rm -r directory_name&#8217;&#8221;. Especially on day one!</p>
+
+<p>Our students have never coded before. Never even knew that terminal existed on their computer. Didn&#8217;t know that that was life before the GUI. Didn&#8217;t even know what a GUI was. So you can&#8217;t just give them meaningless exercises to learn this potentially really boring thing.</p>
+
+<p>The single most frequently asked question in every class by most every student is &#8220;Why are we learning this? What&#8217;s the point?&#8221;</p>
+
+<p><strong><em>What Is The Point?!</em></strong></p>
+
+<p>Command Line provides an incredibly easy interface to your computer. You don&#8217;t spend seconds looking for your lost mouse, clicking icons, waiting for finder to load, waiting for files to load. Typing <code>open Desktop/Development/my_file.rb</code> takes milliseconds! As a developer, your time is expensive, and those seconds you waste navigating through finder add up to minutes and then hours that you waste trying to find and open files. That&#8217;s why we claim the best developers never have to touch a mouse.</p>
+
+<p><strong><em>So How Do You Make It Interesting??</em></strong></p>
+
+<p>First and foremost, terminal can&#8217;t be treated as the boring thing. It has to be cool in and of itself.</p>
+
+<p>Here are some points I&#8217;ve tried to emphasize:</p>
+
+<p><strong>1.</strong> IT&#8217;S NOT SCARY!! You cannot explode your computer into a million pieces just by typing in a bad command. Just bang on the keyboard and press enter. It&#8217;ll be ok I promise.</p>
+
+<p><strong>2.</strong> A themed story makes a world of difference. I&#8217;ve used the story of saving a princess from a tower. You have to move through the territory ruled by the castle by creating the directories that make up the different areas of the territory as well as create files for the different people and creatures you meet along the way. This story allows students to repeat the commands over and over and over again, but not bore them to death with random pointless files. This way, they&#8217;re on a mission.</p>
+
+<p><strong>3.</strong> <code>Say</code> command packs a big punch. You can even have the <code>say</code> command read from a file <code>say -f file_name</code>. You can change voices by passing the <code>-v</code> flag with an argument. It would look something like this <code>say -f file-name -v voice_name</code>. Apple provides Bruce, Kathy, Alex, Fred, Victoria, and Vicki as potential different voices.</p>
+
+<p><strong>4.</strong> <code>rm -rf</code> is THE MOST DANGEROUS. But it also make you feel super powerful that you can destroy a computer with four letters and a hyphen.</p>
+
+<p><strong>5.</strong>* ALL THE TOYS. Just try typing <code>brew install cmatrix</code>. Once it installs enter <code>cmatrix</code> and install feel like the coolest.</p>
+
+<p><strong><em>Aside</em></strong> You can even incorporate the <code>say</code> command into ruby code. Which is SUPER AWESOME.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">say_hi</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>  <span class="sb">`say &quot;hi </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="sb">&quot;`</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Victoria Friedman</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-09-16T11:04:00-04:00" pubdate data-updated="true">Sep 16<span>th</span>, 2014</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2014/09/16/teaching-cli/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2014/09/16/teaching-cli/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/11/16/keeping-confidence-in-the-face-of-something-new/" title="Previous Post: Keeping Confidence in the Face of Something New">&laquo; Keeping Confidence in the Face of Something New</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <ul id="recent_posts">
+      <li class="post">
+      <a href="http://vicfriedman.github.com" alt="Home"><img src="/images/Home.png"></a>
+      <a href="http://vicfriedman.github.com/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
+      <a href="mailto:" alt="E-Mail"><img src="/images/Envelope.png"></a>
+      <a href="http://vicfriedman.github.com/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
+      </li>
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/09/16/teaching-cli/">Teaching CLI</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/16/keeping-confidence-in-the-face-of-something-new/">Keeping Confidence in the Face of Something New</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/14/the-difference-between-url-for-and-polymorphic-url/">The Difference between url_for and polymorphic_url</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/13/the-difference-between-url-for-and-polymorphic-url/">The Difference Between url_for and polymorphic_url</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/18/dev-bootcamps-are-not-a-scam-a-hackers-perspective/">Dev Bootcamps Are NOT a Scam. A Hacker's Perspective</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/vicfriedman">@vicfriedman</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'vicfriedman',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("vicfriedman", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/vicfriedman" class="twitter-follow-button" data-show-count="false">Follow @vicfriedman</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Victoria Friedman -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'vicfriedmangithubio';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://vicfriedman.github.com/blog/2014/09/16/teaching-cli/';
+        var disqus_url = 'http://vicfriedman.github.com/blog/2014/09/16/teaching-cli/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

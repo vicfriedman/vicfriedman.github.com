@@ -1,0 +1,385 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>sql indexes - Too Busy Coding...</title>
+  <meta name="author" content="Victoria Friedman">
+
+  
+  <meta name="description" content="var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-38989132-1']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement(' &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vicfriedman.github.com/blog/2013/06/27/sql-indexes/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Too Busy Coding..." type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+</hgroup>
+
+</header>
+  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vicfriedman.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav> -->
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Sql Indexes</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-27T22:10:00-04:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+<p><strong><em>In my last post, I mentioned that <code>unique</code> is a reserved word in SQL because of indexes.</em></strong> But to be totally honest, that was the first time I&#8217;d even heard of indexes. So I did some more research&#8230;and they&#8217;re actually pretty cool.</p>
+
+<p><strong>Basically, an index is a special lookup for tables in a database that are used</strong> to speed up data retrieval, aka quicker queries using <code>WHERE</code> and <code>SELECT</code> clauses. In even simpler terms, it&#8217;s a pointer to specific data. Only downside is that it slows down data inputs with <code>UPDATE</code> and <code>INSERT</code> clauses. Also, indexes can be created or dropped easily, and will have no effect on the code.</p>
+
+<p><strong>So first things first, you want to create an index. This process is incredibly simple:</strong></p>
+
+<pre><code>  CREATE INDEX index_name
+  on table_name (column_name);
+</code></pre>
+
+<p><strong>For example, I have a <code>recipes</code> table, and that table has the columns</strong> <code>name</code>, <code>ingredients</code>, and <code>preparations</code>. And say you want to be able to easily query for recipes with a specific ingredient, this would be a great time to use an index.</p>
+
+<pre><code>  CREATE INDEX recipe_ingredients
+  on recipes (ingredients);
+</code></pre>
+
+<p>Super easy.</p>
+
+<p><strong>Now, there are a few different kinds of indexes:</strong></p>
+
+<p><strong>1. Unique Index: allows no duplicate values to be inserted</strong> in the selected column in your table.</p>
+
+<pre><code>  CREATE UNIQUE INDEX recipe_ingredients
+  on recipes (ingredients);
+</code></pre>
+
+<p>It&#8217;s simple to create a unique index, but there is an appropriate moment to use it. The above example is the proper way to create a unique index, but not it&#8217;s proper use. You wouldn&#8217;t be able to include butter in more than one recipe. Or salt. Or hot sauce. Not ok.</p>
+
+<p><strong>2. Composite Index: used on two or more columns in a table.</strong></p>
+
+<pre><code>CREATE INDEX recipes
+on recipes (ingredients, preparations);
+</code></pre>
+
+<p>This index will allow speedy retrieval of data in both the <code>ingredients</code> column and the <code>preparations</code> column.</p>
+
+<p><strong>3. Implicit Index: this is an implied index, that is automatically</strong> created with the formation of a PRIMARY_KEY column, or UNIQUE_KEY column. Any time your table has an ID column, you have an implicit index on that column.</p>
+
+<p><strong>Obviously, you need to know how to get rid of an index.</strong> It&#8217;s also really simple and will not affect your data in any way.</p>
+
+<pre><code>  DROP INDEX index_name;
+  DROP INDEX recipes;
+  DROP INDEX recipe_ingredients;
+</code></pre>
+
+<p>Now we got rid of all the indexes (except the implicit index) on my recipes table.</p>
+
+<p><strong>So of course Rails has built in methods with ActiveRecord to deal with indexes.</strong> The declaration for indexes in rails is included in your migrations, but the methods must become class methods&#8230;.</p>
+
+<pre><code>add_index :table_name, :column_names, options
+</code></pre>
+
+<p>Your options include <code>:name</code>, <code>:unique</code>, and <code>:order</code></p>
+
+<p><strong>So to take my same example of my recipes table from before</strong> and the migration AddIndexesToRecipes:</p>
+
+<pre><code>  def self.up
+    add_index :recipes, ingredients, :name =&gt; 'recipe_ingredients'
+  end  
+</code></pre>
+
+<p>In this example, I created an index on my recipes table, on the ingredients column, and I named the index &#8220;recipe_ingredients&#8221;. If I had used <code>:unique</code>, I would have created the same problem as before, where my cookies could have butter, but my cake couldn&#8217;t. No thanks.</p>
+
+<p><strong>Rails also makes it really simple to remove indexes,</strong> and there are two ways to do so:</p>
+
+<ol>
+<li><p>Remove an index by column name:
+   remove_index (table_name, column: column_name)
+   remove_index (recipes, column: ingredients)</p></li>
+<li><p>Remove an index by index name:
+   remove_index (table_name, name: index_name)
+   remove_index (recipes, name: recipe_ingredients)</p></li>
+</ol>
+
+
+<ol>Helpful Resources:
+  <li>http://www.tutorialspoint.com/sql/sql-indexes.htm</li>
+  <li>http://api.rubyonrails.org/classes/ActiveRecord/Migration.html</li>
+</ol>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Victoria Friedman</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-27T22:10:00-04:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2013/06/27/sql-indexes/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2013/06/27/sql-indexes/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/06/25/sql-has-its-moments/" title="Previous Post: sql has its moments">&laquo; sql has its moments</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/07/03/how-to-use-activemodel-callbacks/" title="Next Post: How To Use ActiveModel::Callbacks">How To Use ActiveModel::Callbacks &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <ul id="recent_posts">
+      <li class="post">
+      <a href="http://vicfriedman.github.com" alt="Home"><img src="/images/Home.png"></a>
+      <a href="http://vicfriedman.github.com/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
+      <a href="mailto:" alt="E-Mail"><img src="/images/Envelope.png"></a>
+      <a href="http://vicfriedman.github.com/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
+      </li>
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/09/16/teaching-cli/">Teaching CLI</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/16/keeping-confidence-in-the-face-of-something-new/">Keeping Confidence in the Face of Something New</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/14/the-difference-between-url-for-and-polymorphic-url/">The Difference between url_for and polymorphic_url</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/13/the-difference-between-url-for-and-polymorphic-url/">The Difference Between url_for and polymorphic_url</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/18/dev-bootcamps-are-not-a-scam-a-hackers-perspective/">Dev Bootcamps Are NOT a Scam. A Hacker's Perspective</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/vicfriedman">@vicfriedman</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'vicfriedman',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("vicfriedman", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/vicfriedman" class="twitter-follow-button" data-show-count="false">Follow @vicfriedman</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Victoria Friedman -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'vicfriedmangithubio';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://vicfriedman.github.com/blog/2013/06/27/sql-indexes/';
+        var disqus_url = 'http://vicfriedman.github.com/blog/2013/06/27/sql-indexes/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

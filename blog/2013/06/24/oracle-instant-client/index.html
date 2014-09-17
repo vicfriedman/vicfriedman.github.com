@@ -1,0 +1,377 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>oracle instant client - Too Busy Coding...</title>
+  <meta name="author" content="Victoria Friedman">
+
+  
+  <meta name="description" content="var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-38989132-1']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement(' &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vicfriedman.github.com/blog/2013/06/24/oracle-instant-client/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Too Busy Coding..." type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+</hgroup>
+
+</header>
+  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vicfriedman.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav> -->
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Oracle Instant Client</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-24T21:00:00-04:00" pubdate data-updated="true">Jun 24<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+<p><strong><em>So today was my first day as a Software Engineer at Time Inc.</em></strong> I can already tell it&#8217;s going to be such an incredible learning experience, and all we did was environment setup today.</p>
+
+<p><strong>The hardest part about all of this, was setting up the client for an Oracle database.</strong> An Oracle database is an object-relational database management system, which means that it is similar to a relational-database but uses an object-oriented model. Essential, it supports objects, classes and inheritence directly in the database schemas and query language, as well as supports custom data-types and methods.</p>
+
+<p>The process of installing took me roughly 4 hours, even with the help of some great blog guides. So I thought I would give it a go at simplyifying the process even further.</p>
+
+<p><strong>1. The first step is to find your operating system in order to download the necessary components.</strong> I was using a Mac OS X Intel. Those options can be found <a href="http://www.oracle.com/technetwork/database/features/instant-client/index-097480.html">here </a>.</p>
+
+<br>
+
+
+<p><strong>2. Download Instant Client Basic, SDK and SQL*Plus.</strong> SDK stands for software development kit, and is a set of developer tools. SQLPlus is a command line tool for making SQL queries to an Oracle database. Those options can be found <a href="http://www.oracle.com/technetwork/topics/intel-macsoft-096467.html">here</a>. One thing I will make note of, I originally tried downloading the latest Version, 11.2.0.3.0, but ended up having to remove all those directories and start over again with Version 10.2.0.4 with the 64-bit package.</p>
+
+<br>
+
+
+<p><strong>3. When I downloaded the instant client, SDK and SQLPlus, they were already unzipped,</strong> so I was able to bypass that step (I was using OS X, 10.8.5). The next step was to make a directory to store instant client: <code>mkdir ~/opt/oracle</code></p>
+
+<br>
+
+
+<p><strong>4. Because instant client, SQL*Plus and SDK all download into different directories,</strong> I combined the SQLPlus and SDK directories into the instant client directory, making everything much more compact.</p>
+
+<br>
+
+
+<p><strong>5. Next, I moved my instantclient directory into my <code>/opt/oracle</code> directory:</strong> <code>mv instantclient /opt/oracle</code></p>
+
+<br>
+
+
+<p><strong>6. Setting up sym links to the libraries:</strong></p>
+
+<pre><code>  ln -s libclntsh.dylib.10.1 libclntsh.dylib
+  ln -s libocci.dylib.10.1 libocci.dylib
+</code></pre>
+
+<br>
+
+
+<p><strong>7. The next step is to set up <code>ORACLE_HOME</code>, <code>NLS_LANG</code> and <code>DYLD_LIBRARY_PATH</code> variables.</strong> I chose to set up my variables inside my .bash_profile:</p>
+
+<pre><code>  export ORACLE_HOME=/opt/oracle
+  #export ORACLE_HOME=/usr/local/oracle
+  export DYLD_LIBRARY_PATH=$ORACLE_HOME/instantclient
+  export LD_LIBRARY_PATH=$DYLD_LIBRARY_PATH
+  export SQLPATH=$ORACLE_HOME/instantclient
+  export ARCHFLAGS="-arch x86_64"
+  export NLS_LANG="AMERICAN_AMERICA.UTF8"
+  export TNS_ADMIN=$ORACLE_HOME/network/admin
+  export PATH=$PATH:$MAVEN_HOME/bin:$SVN_HOME/bin:$GIT_HOME/bin:$AMQ_PATH/bin:$DYLD_LIBRARY_PATH
+</code></pre>
+
+<p>Obviously, these paths will change base on your own selection for directory names.</p>
+
+<br>
+
+
+<p><strong>8. The final step is to put SQL*Plus in your $PATH.</strong> I did this by creating a symlink (I already had usr/local/bin in my $PATH)</p>
+
+<pre><code>  ln -s /opt/oracle/instantclient/sqlplus /usr/local/bin/sqlplus
+</code></pre>
+
+<p>You can test to make sure this works by running <code>which sqlplus</code>, which should return <code>/usr/local/bin/sqlplus</code></p>
+
+<p><strong>9. The final step is to test it all out! Try running <code>gem install ruby-oci8</code></strong> and Oracle instant client should be all set up!</p>
+
+<ul>__Helpful Links:__
+  <li>http://ruby-oci8.rubyforge.org/en/file.install-instant-client.html</li>
+  <li>http://www.pixellatedvisions.com/2009/03/25/rails-on-oracle-part-1-installing-the-oracle-instant-client-on-mac-os-x</li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Victoria Friedman</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-24T21:00:00-04:00" pubdate data-updated="true">Jun 24<span>th</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2013/06/24/oracle-instant-client/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2013/06/24/oracle-instant-client/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/06/05/pluck/" title="Previous Post: pluck">&laquo; pluck</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/06/25/sql-has-its-moments/" title="Next Post: sql has its moments">sql has its moments &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <ul id="recent_posts">
+      <li class="post">
+      <a href="http://vicfriedman.github.com" alt="Home"><img src="/images/Home.png"></a>
+      <a href="http://vicfriedman.github.com/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
+      <a href="mailto:" alt="E-Mail"><img src="/images/Envelope.png"></a>
+      <a href="http://vicfriedman.github.com/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
+      </li>
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/09/16/teaching-cli/">Teaching CLI</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/16/keeping-confidence-in-the-face-of-something-new/">Keeping Confidence in the Face of Something New</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/14/the-difference-between-url-for-and-polymorphic-url/">The Difference between url_for and polymorphic_url</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/13/the-difference-between-url-for-and-polymorphic-url/">The Difference Between url_for and polymorphic_url</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/18/dev-bootcamps-are-not-a-scam-a-hackers-perspective/">Dev Bootcamps Are NOT a Scam. A Hacker's Perspective</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/vicfriedman">@vicfriedman</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'vicfriedman',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("vicfriedman", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/vicfriedman" class="twitter-follow-button" data-show-count="false">Follow @vicfriedman</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Victoria Friedman -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'vicfriedmangithubio';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://vicfriedman.github.com/blog/2013/06/24/oracle-instant-client/';
+        var disqus_url = 'http://vicfriedman.github.com/blog/2013/06/24/oracle-instant-client/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

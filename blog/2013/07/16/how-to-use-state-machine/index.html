@@ -1,0 +1,467 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>How To Use State Machine - Too Busy Coding...</title>
+  <meta name="author" content="Victoria Friedman">
+
+  
+  <meta name="description" content="A few weeks ago, I was introduced to an incredible gem called State Machine (you can read their docs here). The gem keeps track of the status of a &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vicfriedman.github.com/blog/2013/07/16/how-to-use-state-machine/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Too Busy Coding..." type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+</hgroup>
+
+</header>
+  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vicfriedman.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav> -->
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">How to Use State Machine</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-16T20:11:00-04:00" pubdate data-updated="true">Jul 16<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><strong>A few weeks ago, I was introduced to an incredible gem called State Machine</strong> (you can read their docs <a href="http://slagyr.github.io/statemachine/documentation.html">here</a>). The gem keeps track of the status of a specific object and respeonds to different inputs to alter that state. The example that I&#8217;ve understood the most is in purchasing something (I&#8217;m going to use a pack of gum in this post).</p>
+
+<p><strong>The gem breaks down into four different parts:</strong></p>
+
+<ol>
+<li><p>State- the status of the object.
+All states are predefined in the class. All objects start in the initial state. The first step to buying a pack of gum is to select it. So the pack of gum would move from initial to selected.<br></p></li>
+<li><p>Transition- the movement from one state to another.
+A pack of gum would transition from the initial state to the selected, and then again transition to the queued state when the user is in line to purchase it.</p></li>
+<li><p>Event- The invocation of a state.
+A pack of gum would transition from the initial state to the selected, by way of an event. Another event would trigger the queued state.</p></li>
+<li><p>Action- State Machine can trigger different methods before, during, and after transitions.</p></li>
+</ol>
+
+
+<p><strong>So let&#8217;s further elaborate on this example of buying a pack of gum.</strong></p>
+
+<p><strong>What states would there be?</strong><br>
+<li>Selected - I deciced I want zebra gum, so now I&#8217;m holding it</li>
+<li>Queued - waiting in line to purchase</li>
+<li>Purchased - handing money to cashier</li>
+<li>Owned - I own and can do whatever I want with the gum</li>
+<li>Trash- After I chew the gum, it&#8217;s garbage</li></p>
+
+<p><strong>Here is an example of a class set up with State Machine,</strong> and then I&#8217;ll go through and explain each step.</p>
+
+<pre><code>  class Gum
+    attr_accessor :flavor, :price, :state
+
+    state_machine :initial =&gt; :selected do
+
+      before_transition :on =&gt; purchased :do =&gt; :demand_money
+      after_transition :on =&gt; owned, :do =&gt; :be_chewed
+
+
+      event :queue do
+        transition :selected  =&gt; :queued_for_purchasing
+      end
+
+      event :purchase
+        transition :queued_for_purchasing =&gt; :purchased
+      end
+
+      event :ownership
+        transition :purchased =&gt; :owned
+      end
+
+      event :trash do
+        transition :owned =&gt; :trash
+      end
+
+
+      state :queued do
+        def is_queued?
+          return true
+        end
+      end
+
+      state :purchased do
+        def is_purchased?
+          return true
+        end
+      end
+
+      state :owned do
+        def is_owned?
+          return true
+        end
+      end
+
+      state :trash do
+        validate { |gum| gum.trash? }
+        def is_trash?
+          return true
+        end
+      end
+
+    end
+
+    def demand_money
+      #demand money here
+    end
+
+    def be_chewed
+      # method to prepare piece of gum to be chewed
+    end
+
+
+  end
+</code></pre>
+
+<p><strong>So how does this work?</strong></p>
+
+<p>State Machine first gets included in your Gemfile.</p>
+
+<p>From there, the set up is all done from inside the class where the objects change states. All objects start in the <code>initial</code> state, which is defined with when State Machine is invoked:</p>
+
+<pre><code>  state_machine :initial =&gt; :selected do
+</code></pre>
+
+<p><strong>Next, the states must be defined:</strong></p>
+
+<pre><code>  state :queued do
+    def is_queued?
+      return true
+    end
+  end
+
+  state :purchased do
+    def is_purchased?
+      return true
+    end
+  end
+
+  state :owned do
+    def is_owned?
+      return true
+    end
+  end
+
+  state :trash do
+    validate { |gum| gum.trash? }
+    def is_trash?
+      return true
+    end
+  end
+</code></pre>
+
+<p><strong>Following, the events must be defined:</strong></p>
+
+<pre><code>  event :queue do
+    transition :selected  =&gt; :queued_for_purchasing
+  end
+
+  event :purchase
+    transition :queued_for_purchasing =&gt; :purchased
+  end
+
+  event :ownership
+    transition :purchased =&gt; :owned
+  end
+
+  event :trash do
+    transition :owned =&gt; :trash
+  end
+</code></pre>
+
+<p>Here, the events specify transitions between states. These events can be triggered in the command line as well, which would trigger new states. The state is saved as an attribute of an instance of the class.</p>
+
+<p><strong>Then, the actions to be called must be defined:</strong></p>
+
+<pre><code>   def demand_money
+      #demand money here
+    end
+
+  def be_chewed
+    # method to prepare piece of gum to be chewed
+  end
+</code></pre>
+
+<p><strong>Finally, the actions must know to be called during transitions:</strong></p>
+
+<pre><code>  before_transition :on =&gt; purchased :do =&gt; :demand_money
+  after_transition :on =&gt; owned, :do =&gt; :be_chewed
+</code></pre>
+
+<p><strong>So, to test the flow of all of this in command line,</strong> there is a handy method <code>fire_events</code>. That method looks like this:</p>
+
+<pre><code>  gum = Gum.first
+  gum.state #=&gt; selected
+  gum.fire_events(:queue) #this transitions the gum from selected to queued_for_purchase
+  gum.state #=&gt; queued_for_purchase
+</code></pre>
+
+<p>The only thing to know is that you cannot rollback states through triggering events. You can however explictitely redefine the state (<code>gum.state = "selected"</code>) and from there retrigger the events.</p>
+
+<p>Enjoy!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Victoria Friedman</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-16T20:11:00-04:00" pubdate data-updated="true">Jul 16<span>th</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2013/07/16/how-to-use-state-machine/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2013/07/16/how-to-use-state-machine/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/07/11/an-introduction-to-say-with-time/" title="Previous Post: An Introduction to say_with_time">&laquo; An Introduction to say_with_time</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/07/24/when-to-use-a-struct/" title="Next Post: How--and when--To Use A Struct">How--and when--To Use A Struct &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <ul id="recent_posts">
+      <li class="post">
+      <a href="http://vicfriedman.github.com" alt="Home"><img src="/images/Home.png"></a>
+      <a href="http://vicfriedman.github.com/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
+      <a href="mailto:" alt="E-Mail"><img src="/images/Envelope.png"></a>
+      <a href="http://vicfriedman.github.com/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
+      </li>
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/09/16/teaching-cli/">Teaching CLI</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/16/keeping-confidence-in-the-face-of-something-new/">Keeping Confidence in the Face of Something New</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/14/the-difference-between-url-for-and-polymorphic-url/">The Difference between url_for and polymorphic_url</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/13/the-difference-between-url-for-and-polymorphic-url/">The Difference Between url_for and polymorphic_url</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/18/dev-bootcamps-are-not-a-scam-a-hackers-perspective/">Dev Bootcamps Are NOT a Scam. A Hacker's Perspective</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/vicfriedman">@vicfriedman</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'vicfriedman',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("vicfriedman", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/vicfriedman" class="twitter-follow-button" data-show-count="false">Follow @vicfriedman</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Victoria Friedman -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'vicfriedmangithubio';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://vicfriedman.github.com/blog/2013/07/16/how-to-use-state-machine/';
+        var disqus_url = 'http://vicfriedman.github.com/blog/2013/07/16/how-to-use-state-machine/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
