@@ -22,7 +22,7 @@ comments: true
 __About six months ago__ I joined <a href="https://flatironschool.com">Flatiron School</a> to start something really awesome...a program to teach high school students to code. After teaching over 100 students this summer during six two-week camps and the preparations for our [after school programs](https://after.flatironschool.com/) I've learned a lot about teaching and coding.
 
 
-***##CLI:***
+##***CLI:***
 
 When I learned command line, it felt like a necessary evil. This thing I had to learn in order to get to the cool stuff. I wanted to build web apps that people would use and think were awesome. But before that, I had to learn CLI and git and sql and all this *stuff*. That's like 3 languages before you even get to the good stuff.
 
