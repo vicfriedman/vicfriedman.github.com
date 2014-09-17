@@ -22,13 +22,13 @@ comments: true
 __About six months ago__ I joined <a href="https://flatironschool.com">Flatiron School</a> to start something really awesome...a program to teach high school students to code. After teaching over 100 students this summer during six two-week camps and the preparations for our [after school programs](https://after.flatironschool.com/) I've learned a lot about teaching and coding.
 
 
-***CLI:***
+***##CLI:***
 
 When I learned command line, it felt like a necessary evil. This thing I had to learn in order to get to the cool stuff. I wanted to build web apps that people would use and think were awesome. But before that, I had to learn CLI and git and sql and all this *stuff*. That's like 3 languages before you even get to the good stuff.
 
 At Flatiron School, we don't teach coding in contrived environments. Not for our adult immersives, and definitely not for our high school programs. We want give our students the ability to use real tools to build real things. Which means, again...teaching our students to use terminal like the pros. But it sort of seems to suck.
 
-***How It's Taught Now***
+***###How It's Taught Now***
 
 The best guide available online is Zed Shaw's [Learn CLI the Hard Way](http://cli.learncodethehardway.org/book/).It's actually a great tutorial to master the commands. It's how I learned. But let's think about it for a second. A class of 20 fifteen-year-olds will eat you alive if you hand them that and say "type 'mkdir director_name' 10 times, followed by 'rm -r directory_name'". Especially on day one! 
 
@@ -36,12 +36,12 @@ Our students have never coded before. Never even knew that terminal existed on t
 
 The single most frequently asked question in every class by most every student is "Why are we learning this? What's the point?"
 
-***What Is The Point?!*** 
+***###What Is The Point?!*** 
 
 Command Line provides an incredibly easy interface to your computer. You don't spend seconds looking for your lost mouse, clicking icons, waiting for finder to load, waiting for files to load. Typing `open Desktop/Development/my_file.rb` takes milliseconds! As a developer, your time is expensive, and those seconds you waste navigating through finder add up to minutes and then hours that you waste trying to find and open files. That's why we claim the best developers never have to touch a mouse.
 
 
-***So How Do You Make It Interesting??***
+***###So How Do You Make It Interesting??***
 
 First and foremost, terminal can't be treated as the boring thing. It has to be cool in and of itself.
 
