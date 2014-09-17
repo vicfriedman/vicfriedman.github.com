@@ -4,7 +4,7 @@
   <title><![CDATA[Too Busy Coding...]]></title>
   <link href="http://vicfriedman.github.com/atom.xml" rel="self"/>
   <link href="http://vicfriedman.github.com/"/>
-  <updated>2014-09-17T15:32:08-04:00</updated>
+  <updated>2014-09-17T15:35:14-04:00</updated>
   <id>http://vicfriedman.github.com/</id>
   <author>
     <name><![CDATA[Victoria Friedman]]></name>
@@ -36,13 +36,13 @@
 <p><strong><em>The Nuts and Bolts:</em></strong>
 <strong>About six months ago</strong> I joined <a href="https://flatironschool.com">Flatiron School</a> to start something really awesome&#8230;a program to teach high school students to code. After teaching over 100 students this summer during six two-week camps and the preparations for our <a href="https://after.flatironschool.com/">after school programs</a> I&#8217;ve learned a lot about teaching and coding.</p>
 
-<p><strong><em>CLI:</em></strong></p>
+<p><strong><em>##CLI:</em></strong></p>
 
 <p>When I learned command line, it felt like a necessary evil. This thing I had to learn in order to get to the cool stuff. I wanted to build web apps that people would use and think were awesome. But before that, I had to learn CLI and git and sql and all this <em>stuff</em>. That&#8217;s like 3 languages before you even get to the good stuff.</p>
 
 <p>At Flatiron School, we don&#8217;t teach coding in contrived environments. Not for our adult immersives, and definitely not for our high school programs. We want give our students the ability to use real tools to build real things. Which means, again&#8230;teaching our students to use terminal like the pros. But it sort of seems to suck.</p>
 
-<p><strong><em>How It&#8217;s Taught Now</em></strong></p>
+<p><strong><em>###How It&#8217;s Taught Now</em></strong></p>
 
 <p>The best guide available online is Zed Shaw&#8217;s <a href="http://cli.learncodethehardway.org/book/">Learn CLI the Hard Way</a>.It&#8217;s actually a great tutorial to master the commands. It&#8217;s how I learned. But let&#8217;s think about it for a second. A class of 20 fifteen-year-olds will eat you alive if you hand them that and say &#8220;type &#8216;mkdir director_name&#8217; 10 times, followed by &#8216;rm -r directory_name&#8217;&#8221;. Especially on day one!</p>
 
@@ -50,11 +50,11 @@
 
 <p>The single most frequently asked question in every class by most every student is &#8220;Why are we learning this? What&#8217;s the point?&#8221;</p>
 
-<p><strong><em>What Is The Point?!</em></strong></p>
+<p><strong><em>###What Is The Point?!</em></strong></p>
 
 <p>Command Line provides an incredibly easy interface to your computer. You don&#8217;t spend seconds looking for your lost mouse, clicking icons, waiting for finder to load, waiting for files to load. Typing <code>open Desktop/Development/my_file.rb</code> takes milliseconds! As a developer, your time is expensive, and those seconds you waste navigating through finder add up to minutes and then hours that you waste trying to find and open files. That&#8217;s why we claim the best developers never have to touch a mouse.</p>
 
-<p><strong><em>So How Do You Make It Interesting??</em></strong></p>
+<p><strong><em>###So How Do You Make It Interesting??</em></strong></p>
 
 <p>First and foremost, terminal can&#8217;t be treated as the boring thing. It has to be cool in and of itself.</p>
 
