@@ -3,7 +3,6 @@ layout: post
 title: "Teaching CLI"
 date: 2014-09-16 11:04
 comments: true
-categories: 
 ---
 
 <script type="text/javascript">
@@ -59,7 +58,7 @@ Here are some points I've tried to emphasize:
 **5.*** ALL THE TOYS. Just try typing `brew install cmatrix`. Once it installs enter `cmatrix` and install feel like the coolest.
 
 ***Aside*** You can even incorporate the `say` command into ruby code. Which is SUPER AWESOME.
-```RUBY
+```ruby
 def say_hi(name)
   `say "hi #{name}"`
 end
