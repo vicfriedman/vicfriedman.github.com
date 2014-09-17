@@ -4,7 +4,7 @@
   <title><![CDATA[Too Busy Coding...]]></title>
   <link href="http://vicfriedman.github.com/atom.xml" rel="self"/>
   <link href="http://vicfriedman.github.com/"/>
-  <updated>2014-09-17T15:35:58-04:00</updated>
+  <updated>2014-09-17T15:36:37-04:00</updated>
   <id>http://vicfriedman.github.com/</id>
   <author>
     <name><![CDATA[Victoria Friedman]]></name>
@@ -42,7 +42,7 @@
 
 <p>At Flatiron School, we don&#8217;t teach coding in contrived environments. Not for our adult immersives, and definitely not for our high school programs. We want give our students the ability to use real tools to build real things. Which means, again&#8230;teaching our students to use terminal like the pros. But it sort of seems to suck.</p>
 
-<p><strong><em>###How It&#8217;s Taught Now</em></strong></p>
+<h3><strong><em>How It&#8217;s Taught Now</em></strong></h3>
 
 <p>The best guide available online is Zed Shaw&#8217;s <a href="http://cli.learncodethehardway.org/book/">Learn CLI the Hard Way</a>.It&#8217;s actually a great tutorial to master the commands. It&#8217;s how I learned. But let&#8217;s think about it for a second. A class of 20 fifteen-year-olds will eat you alive if you hand them that and say &#8220;type &#8216;mkdir director_name&#8217; 10 times, followed by &#8216;rm -r directory_name&#8217;&#8221;. Especially on day one!</p>
 
@@ -50,11 +50,11 @@
 
 <p>The single most frequently asked question in every class by most every student is &#8220;Why are we learning this? What&#8217;s the point?&#8221;</p>
 
-<p><strong><em>###What Is The Point?!</em></strong></p>
+<h3><strong><em>What Is The Point?!</em></strong></h3>
 
 <p>Command Line provides an incredibly easy interface to your computer. You don&#8217;t spend seconds looking for your lost mouse, clicking icons, waiting for finder to load, waiting for files to load. Typing <code>open Desktop/Development/my_file.rb</code> takes milliseconds! As a developer, your time is expensive, and those seconds you waste navigating through finder add up to minutes and then hours that you waste trying to find and open files. That&#8217;s why we claim the best developers never have to touch a mouse.</p>
 
-<p><strong><em>###So How Do You Make It Interesting??</em></strong></p>
+<h3><strong><em>So How Do You Make It Interesting??</em></strong></h3>
 
 <p>First and foremost, terminal can&#8217;t be treated as the boring thing. It has to be cool in and of itself.</p>
 
