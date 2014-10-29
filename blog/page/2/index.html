@@ -9,7 +9,7 @@
   <meta name="author" content="Victoria Friedman">
 
   
-  <meta name="description" content="Recently I&#8217;ve been going through my ever growing (and then shrinking, and then growing again) list of new things/situations I&#8217;ve been &hellip;">
+  <meta name="description" content="So I was recently asked to encrypt an id, and then somehow take that encryption and display it as part of a URL. Essentially, it was a mock form of &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -63,6 +63,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/01/5-things-i-learned-about-encryption/">5 Things I Learned About Encryption</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-01T19:49:00-04:00" pubdate data-updated="true">Aug 1<span>st</span>, 2013</time>
+        
+         | <a href="/blog/2013/08/01/5-things-i-learned-about-encryption/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong><em>So I was recently asked to encrypt an id</em></strong>, and then somehow take that encryption and display it as part of a URL. Essentially, it was a mock form of security for a new feature at work, so that a user couldn&#8217;t just change an id in a url and move around things that should remain private.</p>
+
+<p>_Encryption is an entirely new concept to me.__ I didn&#8217;t even know what it really meant. So it was a really big learning exercise for me. Ps. Encryption means to convert data into cipher. Oh and cipher is &#8220;diguised way of writing code&#8221; (thanks <a href="https://www.google.com/search?q=cipher+definition&oq=cipher+definition&aqs=chrome.0.0l4.1710j0&sourceid=chrome&ie=UTF-8"> Google </a>).</p>
+
+<p><strong>1. Ruby has an OpenSSL library used for encryption.</strong>
+This library has greate documention <a href="http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL.html"> here </a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1136,90 +1179,6 @@ This command should return five, as there are five photos uploaded by users in t
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/06/05/pluck/">Pluck</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-06-05T09:59:00-04:00" pubdate data-updated="true">Jun 5<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/06/05/pluck/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-38989132-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-
-
-<p><strong><em>Recently during a pairing session, I learned about the ActiveRecord query, <code>pluck</code>.</em></strong> Essentially, it performs a single column select and returns an array of that data.</p>
-
-<p>Say you have a Person class, and you want to select all the names for everyone in that class, all you would need to call is:</p>
-
-<pre><code>  Person.pluck(:name)
-  =&gt;["Victoria", "Nat", "Peach"]
-</code></pre>
-
-<p>Essentially, this is like calling,</p>
-
-<pre><code>  SELECT name FROM person;
-</code></pre>
-
-<p>You can also use <code>pluck</code> to replace using <code>collect</code> and <code>map</code>.</p>
-
-<pre><code>  Person.select(:name).map { |p| p.name }
-  =&gt;["Victoria", "Nat", "Peach"]
-</code></pre>
-
-<p>Instead,</p>
-
-<pre><code>  Person.pluck(:name)
-  =&gt;["Victoria", "Nat", "Peach"]
-</code></pre>
-
-<p>Using <code>pluck</code> in this case is far more efficient than using map to return the same set of results. In the example with <code>map</code>, a full ActiveRecord Person record is returned and then the map is performed. <code>pluck</code> works directly at a database level, and only queries for exactly the information requested.</p>
-
-<p><strong><em><ol>Helpful Links:</em></strong>
-  <li>http://guides.rubyonrails.org/active_record_querying.html#pluck</li>
-  <li>http://apidock.com/rails/ActiveRecord/Calculations/pluck</li>
-  <li>http://blog.hashrocket.com/posts/rails-quick-tips-activerecord-calculations-pluck</li>
-</ol></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1247,6 +1206,10 @@ This command should return five, as there are five photos uploaded by users in t
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/28/writing-a-binary-search-in-c/">How to Write a Binary Search in C</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/09/16/teaching-cli/">Teaching CLI</a>
       </li>
     
@@ -1260,10 +1223,6 @@ This command should return five, as there are five photos uploaded by users in t
     
       <li class="post">
         <a href="/blog/2013/11/13/the-difference-between-url-for-and-polymorphic-url/">The Difference Between url_for and polymorphic_url</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/18/dev-bootcamps-are-not-a-scam-a-hackers-perspective/">Dev Bootcamps Are NOT a Scam. A Hacker&#8217;s Perspective</a>
       </li>
     
   </ul>

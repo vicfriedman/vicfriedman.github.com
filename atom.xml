@@ -4,7 +4,7 @@
   <title><![CDATA[Too Busy Coding...]]></title>
   <link href="http://vicfriedman.github.com/atom.xml" rel="self"/>
   <link href="http://vicfriedman.github.com/"/>
-  <updated>2014-09-17T15:39:39-04:00</updated>
+  <updated>2014-10-29T17:16:19-04:00</updated>
   <id>http://vicfriedman.github.com/</id>
   <author>
     <name><![CDATA[Victoria Friedman]]></name>
@@ -12,6 +12,381 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[How to Write a Binary Search in C]]></title>
+    <link href="http://vicfriedman.github.com/blog/2014/10/28/writing-a-binary-search-in-c/"/>
+    <updated>2014-10-28T10:33:00-04:00</updated>
+    <id>http://vicfriedman.github.com/blog/2014/10/28/writing-a-binary-search-in-c</id>
+    <content type="html"><![CDATA[<p><strong><em>First off, what is a binary search?</em></strong> A binary search, also known as a half-interval search, is an algorithm that finds a target number in a sorted sequence of numbers by comparing the target number to the middle number in the sequence. If the target number is smaller than the middle number, the entire top half of the sequence is ignored.</p>
+
+<p>Let&#8217;s break this down with an example. Let&#8217;s say we&#8217;re looking for the number 51 in this range of numbers</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>0 7 21 34 47 51 89 100 121 151 191 203 500 876 981 1000</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There are 16 numbers in this sequence, and in computer programming, we begin counting sequences of numbers at 0, which makes the middle number in this sequence <code>121</code>. In this case, 51 is less than 121, so every number greater than 121, and 121 itself is ignored, making the sequence of numbers look like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>0 7 21 34 47 51 89 100</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now that we have 8 numbers in the sequence, the middle number is <code>47</code>. Since 51 is a larger number, we can ignore all the numbers 47 on down, leaving us with <code>151 89 100</code>. Once again we take the middle number, <code>89</code>. 51 is smaller, so we ignore 89 and 100, leaving us with just 151. If our target number is 151, we have officially found our target.</p>
+
+<h2>So how do we write this in C?</h2>
+
+<p>First things first, we need an array that holds all 16 numbers:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">int</span> <span class="n">numbers</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">47</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">89</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">121</span><span class="p">,</span> <span class="mi">151</span><span class="p">,</span> <span class="mi">191</span><span class="p">,</span> <span class="mi">203</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">876</span><span class="p">,</span> <span class="mi">981</span><span class="p">,</span> <span class="mi">1000</span><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Next we need to define our own search function:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">bool</span> <span class="nf">search</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">,</span> <span class="kt">int</span> <span class="n">values</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This function, called <code>search</code> takes in 3 arguments, the target number that you&#8217;re looking for, <code>value</code>, the array that you&#8217;re searching through, <code>values</code>, and the length of the array, <code>n</code>. This method also returns false (or zero) in the case of success.</p>
+
+<p>Now that we have the function set up, some pseudo-code to get us thinking in the right way:</p>
+
+<ol>
+<li>Set up a base case (if there is only 1 item in the array) so that the recursive loop will quit appropriately</li>
+<li>Create a variable to store the index of the middle number in the array</li>
+<li>Instantiate a new array from the correct half of the original array to search through</li>
+<li>Compare the target number to the middle number</li>
+<li>If the target number is greater than the middle number, ignore everything from the middle number down and store the larger numbers in a new array and vice versa</li>
+<li>Call search function to find the middle again&#8230;.</li>
+</ol>
+
+
+<h3>Set up a base case</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">bool</span> <span class="nf">search</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">,</span> <span class="kt">int</span> <span class="n">values</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">==</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In this base case, the first if statement is checking to see if the size of the array <code>n</code>, is less than one, meaning is there only one item in this array? If that statement evaluates to true, the nested if/else statement will kick in. The nested if statement is checking to see if the target number <code>value</code> is the number in the array. If it is, the function will return false, if it isn&#8217;t it will return true.</p>
+
+<h3>Create a variable to store the index of the middle number in the array</h3>
+
+<p>The middle number in the array is going to be <code>n/2</code>. If <code>n</code> is 16, the middle number would be 8. If <code>n</code> is 15, the middle number would be 7.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">bool</span> <span class="nf">search</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">,</span> <span class="kt">int</span> <span class="n">values</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">==</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">middle</span> <span class="o">=</span> <span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>On line 15, we set up a variable <code>middle</code> to store the middle value.</p>
+
+<h3>Instantiate a new array from the correct half of the original array to search through</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">bool</span> <span class="nf">search</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">,</span> <span class="kt">int</span> <span class="n">values</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">==</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">middle</span> <span class="o">=</span> <span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">const</span> <span class="kt">int</span> <span class="n">MAX</span> <span class="o">=</span> <span class="mi">65536</span><span class="p">;</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">half</span><span class="p">[</span><span class="n">MAX</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>On lines 16 we create a new constant, which stores the number 65536. This massive number will be useful to gaurantee that the search function can handle incredibly large arrays. On line 17 we create a new array called <code>half</code>, declare that it will store up to 65536 integers.</p>
+
+<h3>Compare the target number to the middle number</h3>
+
+<p>We&#8217;re going to need to set up more flow control based on the results of comparing <code>value</code> to the middle number in the array.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">bool</span> <span class="nf">search</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">,</span> <span class="kt">int</span> <span class="n">values</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">==</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">middle</span> <span class="o">=</span> <span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">const</span> <span class="kt">int</span> <span class="n">MAX</span> <span class="o">=</span> <span class="mi">65536</span><span class="p">;</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">half</span><span class="p">[</span><span class="n">MAX</span><span class="p">];</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">&gt;</span> <span class="n">values</span><span class="p">[</span><span class="n">middle</span><span class="p">])</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">&lt;</span> <span class="n">values</span><span class="p">[</span><span class="n">middle</span><span class="p">])</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">==</span> <span class="n">values</span><span class="p">[</span><span class="n">middle</span><span class="p">])</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we have our logic set up for either situation, if <code>value</code> (the number we&#8217;re searching for) is either less than or greater than or equal to <code>values[middle]</code>, which is the number at the middle index of the <code>values</code> array.</p>
+
+<h3>If the target number is greater than the middle number, ignore everything from the middle number down and store the larger numbers in a new array and vice versa</h3>
+
+<p>Once we&#8217;re inside our if statements, we need to be able to select just half of the original array, by storing it in the new array we instatiated previously.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">bool</span> <span class="nf">search</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">,</span> <span class="kt">int</span> <span class="n">values</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">==</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">middle</span> <span class="o">=</span> <span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">const</span> <span class="kt">int</span> <span class="n">MAX</span> <span class="o">=</span> <span class="mi">65536</span><span class="p">;</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">half</span><span class="p">[</span><span class="n">MAX</span><span class="p">];</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">&gt;</span> <span class="n">values</span><span class="p">[</span><span class="n">middle</span><span class="p">])</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">new_size</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">middle</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">&gt;</span> <span class="n">values</span><span class="p">[</span><span class="n">middle</span><span class="p">])</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="kt">int</span> <span class="n">new_size</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">middle</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="n">middle</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">new_size</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">,</span> <span class="n">m</span><span class="o">++</span><span class="p">)</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>        <span class="n">new_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">m</span><span class="p">];</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">search</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">new_array</span><span class="p">,</span> <span class="n">new_size</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">&lt;</span> <span class="n">values</span><span class="p">[</span><span class="n">middle</span><span class="p">])</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">new_size</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">middle</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">middle</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">,</span> <span class="n">m</span><span class="o">++</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="n">new_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">m</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">search</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">new_array</span><span class="p">,</span> <span class="n">new_size</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">==</span> <span class="n">values</span><span class="p">[</span><span class="n">middle</span><span class="p">])</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>LINES 20-29
+In the case that <code>value</code> is greater than <code>values[middle]</code>, we want to take the top half of the <code>values</code> array. We first create a <code>new_size</code> variable which stores the size of the top half of the array (n - middle -1). Then we iterate over the top half of the <code>values</code> array place the value of each index in the <code>half</code> array. This for-loop needs to incrementors, <code>i</code> which will iterate through <code>half</code>, and <code>m</code> which stores the index of the middle item in the array and iterates through <code>values</code>. Once we have our new array, we need to call our search function again. This is recursive implementation of a binary search, which means we&#8217;re calling a function inside the definition of that function. Our function with return out when it hits the base case, aka when there is only one index left in the array.</p>
+
+<p>And when <code>value</code> is less than <code>values[middle]</code>? We need to take the bottom half of the <code>values</code> array and place those values in an empty <code>half</code> array. Again, we have to call our search function.</p>
+
+<p>An important part here is how we call the search function recursively on lines 29 and 37, <code>return search(value, new_array, new_size);</code>. We need to explicitly return the return value of those recursive calls so that they can move up the tree and the original search function can return the result.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Teaching CLI]]></title>
@@ -1363,61 +1738,6 @@ This command should return five, as there are five photos uploaded by users in t
   <li>http://www.pixellatedvisions.com/2009/03/25/rails-on-oracle-part-1-installing-the-oracle-instant-client-on-mac-os-x</li>
 </ul>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[pluck]]></title>
-    <link href="http://vicfriedman.github.com/blog/2013/06/05/pluck/"/>
-    <updated>2013-06-05T09:59:00-04:00</updated>
-    <id>http://vicfriedman.github.com/blog/2013/06/05/pluck</id>
-    <content type="html"><![CDATA[<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-38989132-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-
-
-<p><strong><em>Recently during a pairing session, I learned about the ActiveRecord query, <code>pluck</code>.</em></strong> Essentially, it performs a single column select and returns an array of that data.</p>
-
-<p>Say you have a Person class, and you want to select all the names for everyone in that class, all you would need to call is:</p>
-
-<pre><code>  Person.pluck(:name)
-  =&gt;["Victoria", "Nat", "Peach"]
-</code></pre>
-
-<p>Essentially, this is like calling,</p>
-
-<pre><code>  SELECT name FROM person;
-</code></pre>
-
-<p>You can also use <code>pluck</code> to replace using <code>collect</code> and <code>map</code>.</p>
-
-<pre><code>  Person.select(:name).map { |p| p.name }
-  =&gt;["Victoria", "Nat", "Peach"]
-</code></pre>
-
-<p>Instead,</p>
-
-<pre><code>  Person.pluck(:name)
-  =&gt;["Victoria", "Nat", "Peach"]
-</code></pre>
-
-<p>Using <code>pluck</code> in this case is far more efficient than using map to return the same set of results. In the example with <code>map</code>, a full ActiveRecord Person record is returned and then the map is performed. <code>pluck</code> works directly at a database level, and only queries for exactly the information requested.</p>
-
-<p><strong><em><ol>Helpful Links:</em></strong>
-  <li>http://guides.rubyonrails.org/active_record_querying.html#pluck</li>
-  <li>http://apidock.com/rails/ActiveRecord/Calculations/pluck</li>
-  <li>http://blog.hashrocket.com/posts/rails-quick-tips-activerecord-calculations-pluck</li>
-</ol></p>
 ]]></content>
   </entry>
   
