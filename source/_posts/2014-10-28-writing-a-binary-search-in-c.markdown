@@ -20,7 +20,7 @@ There are 16 numbers in this sequence, and in computer programming, we begin cou
 0 7 21 34 47 51 89 100
 ```
 
-Now that we have 8 numbers in the sequence, the middle number is `47`. Since 51 is a larger number, we can ignore all the numbers 47 on down, leaving us with `151 89 100`. Once again we take the middle number, `89`. 51 is smaller, so we ignore 89 and 100, leaving us with just 151. If our target number is 151, we have officially found our target.
+Now that we have 8 numbers in the sequence, the middle number is `47`. Since 51 is a larger number, we can ignore all the numbers 47 on down, leaving us with `15 89 100`. Once again we take the middle number, `89`. 51 is smaller, so we ignore 89 and 100, leaving us with just 15. If our target number is 15, we have officially found our target.
 
 ##So how do we write this in C?
 
