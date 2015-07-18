@@ -4,7 +4,7 @@
   <title><![CDATA[Too Busy Coding...]]></title>
   <link href="http://vicfriedman.github.com/atom.xml" rel="self"/>
   <link href="http://vicfriedman.github.com/"/>
-  <updated>2014-10-30T09:22:38-04:00</updated>
+  <updated>2015-07-18T16:45:21-04:00</updated>
   <id>http://vicfriedman.github.com/</id>
   <author>
     <name><![CDATA[Victoria Friedman]]></name>
@@ -12,6 +12,221 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Create Multiple Objects From Single Form in Rails]]></title>
+    <link href="http://vicfriedman.github.com/blog/2015/07/18/create-multiple-objects-from-single-form-in-rails/"/>
+    <updated>2015-07-18T15:57:00-04:00</updated>
+    <id>http://vicfriedman.github.com/blog/2015/07/18/create-multiple-objects-from-single-form-in-rails</id>
+    <content type="html"><![CDATA[<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+<p><strong>I recently wanted to to create at least 10 Answer objects from a single form.</strong> Essentially, I was building a quiz app and wanted people to be able to take a quiz. I finally figured it out, but had to back out to a much simpler sample to fully understand what was going on. So I made an app to create a bunch of puppies.</p>
+
+<p>I generated a new rails app with a single model,<code>Puppy</code>. To start, I knew I wanted to create a form that would eventually look like this:</p>
+
+<p><img src="http://vicfriedman.github.com/images/new_puppy_form.png"></p>
+
+<h2>Step 1:</h2>
+
+<p>First, I needed to change my <code>new</code> controller action to create 5 new puppies, instead of just one.</p>
+
+<p><strong> puppies_controller.rb </strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">new</span>
+</span><span class='line'>    <span class="vi">@kennel</span> <span class="o">=</span> <span class="o">[]</span>
+</span><span class='line'>    <span class="mi">5</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
+</span><span class='line'>      <span class="vi">@kennel</span> <span class="o">&lt;&lt;</span> <span class="no">Puppy</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Each new puppy that I create <code>Puppy.new</code> is stored in an array  named <code>@kennel</code>. This way, later in my create action, I can iterate over <code>@kennel</code> to save each puppy to the database.</p>
+
+<h2>Step 2:</h2>
+
+<p>This also meant that my form needed to be structured slightly differently. I need the params to contain an array of each individual puppy information. I wanted to structure my form such that the params hash looked like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="s2">&quot;puppies&quot;</span> <span class="o">=</span> <span class="o">[</span>
+</span><span class='line'>      <span class="p">{</span><span class="s2">&quot;name&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;Joe&quot;</span><span class="p">,</span> <span class="s2">&quot;breed&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;Pomeranian&quot;</span><span class="p">},</span>
+</span><span class='line'>      <span class="p">{</span><span class="s2">&quot;name&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;Victoria&quot;</span><span class="p">,</span> <span class="s2">&quot;breed&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;Mastif&quot;</span><span class="p">}</span>
+</span><span class='line'>    <span class="o">]</span>
+</span><span class='line'>  <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong> views/puppies/new.html.erb </strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="err">&lt;</span>%= form_tag puppies_path do %&gt;
+</span><span class='line'><span class="err">&lt;</span>% @kennel.each do |puppy| %&gt;
+</span><span class='line'>  <span class="err">&lt;</span>% end %&gt;
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;actions&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="err">&lt;</span>%= submit_tag %&gt;
+</span><span class='line'>  <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="err">&lt;</span>% end %&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I started out with a form tag, that submits a POST request to the Puppy <code>create</code> action. Next, I need to take my array of puppies, which I named <code>@kennel</code> in my <code>new</code> controller action and iterate over that array to generate a form for each specific puppy in that array.</p>
+
+<p>Now that I have a way to access each instance of the Puppy class that I&#8217;m creating, I need to start generating form fields for each attribute. In this case, I only have two attributes, name and breed.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="err">&lt;</span>%= form_tag puppies_path do %&gt;
+</span><span class='line'>  <span class="err">&lt;</span>% @kennel.each do |puppy| %&gt;
+</span><span class='line'>    <span class="err">&lt;</span>%= fields_for &#39;puppies[]&#39;, puppy do |p| %&gt;
+</span><span class='line'>
+</span><span class='line'>      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;field&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="err">&lt;</span>%= p.label :name %&gt;<span class="nt">&lt;br&gt;</span>
+</span><span class='line'>        <span class="err">&lt;</span>%= p.text_field :name %&gt;
+</span><span class='line'>      <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;field&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="err">&lt;</span>%= p.label :breed %&gt;<span class="nt">&lt;br&gt;</span>
+</span><span class='line'>        <span class="err">&lt;</span>%= p.text_field :breed %&gt;
+</span><span class='line'>      <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="err">&lt;</span>% end %&gt;
+</span><span class='line'>  <span class="err">&lt;</span>% end %&gt;
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;actions&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="err">&lt;</span>%= submit_tag %&gt;
+</span><span class='line'>  <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="err">&lt;</span>% end %&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I set up <code>&lt;%= fields_for 'puppies[]', puppy do |p| %&gt;</code> so that I can set up the params hash to contain an array of puppies. Basically I&#8217;m setting that there will be a key in the params hash called <code>puppies</code>. From there, I set up the text_fields for name and breed.</p>
+
+<h2>Step 3:</h2>
+
+<p>But this means that I can&#8217;t use strong parameters as they are normally used. strong parameters would expect a key called <code>name</code> and a key called <code>breed</code>. Instead, it would find those keys inside of an array called <code>puppies</code>.</p>
+
+<p><strong> puppies_controller.rb </strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">puppy_params</span><span class="p">(</span><span class="n">my_params</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">my_params</span><span class="o">.</span><span class="n">permit</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:breed</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I set up my <code>puppy_params</code> method to accept an argument, which would be some hash containing the parameters by which I would want to create each instance of my puppy class. Inside the method, I use the <code>my_params</code> variable and permit those keys (name and breed) to pass through to the Puppy model.</p>
+
+<h2>Step 4:</h2>
+
+<p>This means I can&#8217;t simply call <code>Puppy.create(puppy_params)</code> anymore&#8230;</p>
+
+<p><strong> puppies_controller.rb</strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">create</span>
+</span><span class='line'>  <span class="n">params</span><span class="o">[</span><span class="s2">&quot;puppies&quot;</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">puppy</span><span class="o">|</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">puppy</span><span class="o">[</span><span class="s2">&quot;name&quot;</span><span class="o">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="o">||</span> <span class="n">puppy</span><span class="o">[</span><span class="s2">&quot;breed&quot;</span><span class="o">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span>
+</span><span class='line'>      <span class="no">Puppy</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">puppy_params</span><span class="p">(</span><span class="n">puppy</span><span class="p">))</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Instead, I have to iterate over the value of the key <code>puppies</code> in the params hash. From there, I have the specific hash for each individual puppy. To create a puppy now, I have to call <code>Puppy.create(puppy_params(puppy))</code>. I also had to set up a check to make sure the <code>name</code> and <code>breed</code> keys are not storing empty strings (in the event that someone wanted to only make 3 puppies and not 5).</p>
+
+<h2>Step 5:</h2>
+
+<p>But this also means that my app breaks if I have a form to just create one single puppy.</p>
+
+<p><strong> application_controller.rb </strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">create</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">has_key?</span><span class="p">(</span><span class="s2">&quot;puppy&quot;</span><span class="p">)</span>
+</span><span class='line'>      <span class="no">Puppy</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">puppy_params</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="s2">&quot;puppy&quot;</span><span class="o">]</span><span class="p">))</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="n">params</span><span class="o">[</span><span class="s2">&quot;puppies&quot;</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">puppy</span><span class="o">|</span>
+</span><span class='line'>        <span class="k">if</span> <span class="n">puppy</span><span class="o">[</span><span class="s2">&quot;name&quot;</span><span class="o">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="o">||</span> <span class="n">puppy</span><span class="o">[</span><span class="s2">&quot;breed&quot;</span><span class="o">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span>
+</span><span class='line'>          <span class="no">Puppy</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">puppy_params</span><span class="p">(</span><span class="n">puppy</span><span class="p">))</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I had to set up an if statement to check if the params has the key <code>"puppy"</code>, which is how information is passed back to the controller from the form to create a single instance of the puppy class. If params did in fact have that key, then I have to create an instance of the puppy class by calling <code>Puppy.create(puppy_params(params["puppy"]))</code>.Remember, I set up the <code>puppy_params</code> method to accept an argument. I couldn&#8217;t just pass params because I took the <code>.require(:puppy)</code> out of the strong params. This method no longer knows how to look inside a hash to find the desired data, it needs to be passed the specific hash. I passed in <code>params["puppy"]</code> as the argument to the puppy_params method.</p>
+
+<p>And finally, I can create 1 puppy, 10 puppies, or 1 billion puppies.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[How to Write a Binary Search in C]]></title>
@@ -32,7 +247,7 @@
 </pre></td><td class='code'><pre><code class=''><span class='line'>0 7 21 34 47 51 89 100</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Now that we have 8 numbers in the sequence, the middle number is <code>47</code>. Since 51 is a larger number, we can ignore all the numbers 47 on down, leaving us with <code>151 89 100</code>. Once again we take the middle number, <code>89</code>. 51 is smaller, so we ignore 89 and 100, leaving us with just 151. If our target number is 151, we have officially found our target.</p>
+<p>Now that we have 8 numbers in the sequence, the middle number is <code>47</code>. Since 51 is a larger number, we can ignore all the numbers 47 on down, leaving us with <code>15 89 100</code>. Once again we take the middle number, <code>89</code>. 51 is smaller, so we ignore 89 and 100, leaving us with just 15. If our target number is 15, we have officially found our target.</p>
 
 <h2>So how do we write this in C?</h2>
 
@@ -572,20 +787,6 @@ In the case that <code>value</code> is greater than <code>values[middle]</code>,
 <p><strong>Additional Resources</strong> <br>
 1. <a href="http://apidock.com/rails/ActionController/Base/url_for">The Docs for url_for</a>.<br>
 2.  <a href="http://apidock.com/rails/ActionController/PolymorphicRoutes/polymorphic_url">The Docs for polymorphic_url</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[The Difference Between url_for and polymorphic_url]]></title>
-    <link href="http://vicfriedman.github.com/blog/2013/11/13/the-difference-between-url-for-and-polymorphic-url/"/>
-    <updated>2013-11-13T20:02:00-05:00</updated>
-    <id>http://vicfriedman.github.com/blog/2013/11/13/the-difference-between-url-for-and-polymorphic-url</id>
-    <content type="html"><![CDATA[<p><strong><code>url_for</code> is a great Rails helper that returns a URL</strong> that has been rewritten according to the options hash passed to it and defined routes. Rails passes all the keys in the options hash to the routing module. There are a few exceptions, including (but not limited to) <code>:only_path</code>, <code>:trailing_slash</code>, and <code>:host</code>. For a full list please see the docs <a href="http://apidock.com/rails/ActionController/Base/url_for">here</a>.       &lt;%= url_for :controller => &#8220;recipes&#8221;, :action => &#8220;show&#8221;, :id => 1 %><strong>This would generate a url</strong> that looks like this: &#8216;http://domain.com/recipes/show/10&#8217;<strong>But let&#8217;s say you were trying to generate a URL for a polymorphic object,</strong> or a nested object, or you just want the absolute path. Let&#8217;s take an image object. My image class is polymorphic, and thus belongs to every model as imageable.      &lt;%= url_for @image :only_path => false %><strong>Setting <code>:only_path</code> to false generates the full url instead of just the relative path.</strong> <code>url_for</code> is really like <code>path_for</code>. You have to pass it an additional argument to return the full URL. But that example returns an error: Wrong number of arguments(2 for 1). Essentially in the example above, you&#8217;re passing two arguments&#8211; an object and a hash. <strong>But, if you only pass one argument, the object…</strong>      &lt;%=url_for @image %><strong>This produces a relative path to the image.</strong> When you pass an ActiveRecord object to url_for, it causes a lookup on the image class, essentially calling @image.to_params, and use image_path to generate the path.<strong>So how then do you get the full URL with the domain name without</strong> doing some hackey <code>"http://mydomain.com" + &lt;my_query_string_generated_from_url_for&gt;</code> ?<strong>This is where <code>polymorphic_url</code> comes in.</strong> <code>polymorphic_url</code> is a Rails helper method for calling a named route. It also provides support for nested resources. This helper method is designed to return a full URL, instead of just the relative path, without passing any arguments. If you did want the relative path, <code>polymorphic_path</code> does just that.<strong>So let&#8217;s say we&#8217;re on an image record</strong>      &lt;%= polymorphic_url(@image) %><strong>That would be the same as calling image_url(@image).</strong> Rails would return &#8220;http://mydomain.com/images/1&#8221;<strong>So now say you want to access the images from the recipes.</strong> This is where the nested support of polymorphic_url comes into play.      &lt;%= polymorphic_url([recipe, image])%>This would return &#8220;http://mydomain.com/recipes/1/images/1&#8221;<strong>So when do you use these handy helpers?</strong> A path should always be used unless you&#8217;re doing a full redirect.</p>
-
-<p>Additional Resources <br>
-1. <a href="http://apidock.com/rails/ActionController/Base/url_for">The Docs for url_for</a>.
-2.  <a href="http://apidock.com/rails/ActionController/PolymorphicRoutes/polymorphic_url">The Docs for polymorphic_url</a>
-3.</p>
 ]]></content>
   </entry>
   
