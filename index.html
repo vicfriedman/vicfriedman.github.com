@@ -140,7 +140,7 @@
 
 <h2>Step 2:</h2>
 
-<p>This also meant that my form needed to be structured slightly differently. I need the params to contain an array of each individual puppy information. I wanted to structure my form such that the params hash looked like this:</p>
+<p>This also meant that my form needed to be structured slightly differently. I need the <code>params</code> to contain an array of each individual puppy information. I wanted to structure my form such that the <code>params</code> hash looked like this:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -176,9 +176,9 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>I started out with a form tag, that submits a POST request to the Puppy <code>create</code> action. Next, I need to take my array of puppies, which I named <code>@kennel</code> in my <code>new</code> controller action and iterate over that array to generate a form for each specific puppy in that array.</p>
+<p>I started out with a form tag, that submits a <code>POST</code> request to the Puppy <code>create</code> action. Next, I need to take my array of puppies, which I named <code>@kennel</code> in my <code>new</code> controller action and iterate over that array to generate fields for each specific puppy in that array. This way I have one single form with many sets of fields.</p>
 
-<p>Now that I have a way to access each instance of the Puppy class that I&#8217;m creating, I need to start generating form fields for each attribute. In this case, I only have two attributes, name and breed.</p>
+<p>Now that I have a way to access each instance of the <code>Puppy</code> class that I&#8217;m creating, I need to start generating form fields for each attribute. In this case, I only have two attributes, name and breed.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -225,7 +225,39 @@
 
 <h2>Step 3:</h2>
 
-<p>But this means that I can&#8217;t use strong parameters as they are normally used. strong parameters would expect a key called <code>name</code> and a key called <code>breed</code>. Instead, it would find those keys inside of an array called <code>puppies</code>.</p>
+<p>But this means that I can&#8217;t use strong parameters as they are normally used. Strong parameters would expect a key called <code>name</code> and a key called <code>breed</code> inside of a key named <code>puppy</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="s2">&quot;puppy&quot;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>      <span class="s2">&quot;name&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;Joe&quot;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s2">&quot;breed&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;pomeranian&quot;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Instead, it would find those keys inside of a hash, inside of an array, which is the value of the key <code>puppies</code>, which is exactly how I started out trying to design the <code>params</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="s2">&quot;puppies&quot;</span> <span class="o">=</span> <span class="o">[</span>
+</span><span class='line'>      <span class="p">{</span><span class="s2">&quot;name&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;Joe&quot;</span><span class="p">,</span> <span class="s2">&quot;breed&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;Pomeranian&quot;</span><span class="p">},</span>
+</span><span class='line'>      <span class="p">{</span><span class="s2">&quot;name&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;Victoria&quot;</span><span class="p">,</span> <span class="s2">&quot;breed&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;Mastif&quot;</span><span class="p">}</span>
+</span><span class='line'>    <span class="o">]</span>
+</span><span class='line'>  <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p><strong> puppies_controller.rb </strong></p>
 
@@ -238,7 +270,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>I set up my <code>puppy_params</code> method to accept an argument, which would be some hash containing the parameters by which I would want to create each instance of my puppy class. Inside the method, I use the <code>my_params</code> variable and permit those keys (name and breed) to pass through to the Puppy model.</p>
+<p>I set up my <code>puppy_params</code> method to accept an argument, which would be some hash containing the parameters by which I would want to create each instance of my <code>Puppy</code> class. Inside the method, I use the <code>my_params</code> argument and permit those keys (name and breed) to pass through to the <code>Puppy</code> model.</p>
 
 <h2>Step 4:</h2>
 
