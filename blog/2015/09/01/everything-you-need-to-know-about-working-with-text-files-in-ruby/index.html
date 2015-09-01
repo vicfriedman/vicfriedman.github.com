@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Dev Bootcamps Are NOT a Scam. A Hacker's Perspective - Too Busy Coding...</title>
+  <title>Everything You Need To Know About Working With Text Files in Ruby - Too Busy Coding...</title>
   <meta name="author" content="Victoria Friedman">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://vicfriedman.github.com/2013-10-18-dev-bootcamps-are-not-a-scam-a-hackers-perspective.html">
+  <link rel="canonical" href="http://vicfriedman.github.com/blog/2015/09/01/everything-you-need-to-know-about-working-with-text-files-in-ruby/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
    <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
@@ -66,7 +66,7 @@
   
   <header>
     
-      <h1 class="entry-title">Dev Bootcamps Are NOT a Scam. A Hacker's Perspective</h1>
+      <h1 class="entry-title">Everything You Need to Know About Working With Text Files in Ruby</h1>
     
     
       <p class="meta">
@@ -82,7 +82,7 @@
   
 
 
-<time datetime="2013-10-18T12:20:00-04:00" pubdate data-updated="true">Oct 18<span>th</span>, 2013</time>
+<time datetime="2015-09-01T13:37:00-04:00" pubdate data-updated="true">Sep 1<span>st</span>, 2015</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -106,24 +106,72 @@
 </script>
 
 
-<p><strong><em>This is my response to <a href=http://www.techendo.co/posts/are-dev-bootcamps-a-scam-a-hacker-s-perspective>this</a> horrible article arguing against the validity of hacker schools.</em></strong> And I am a huge supporter, because without the Flatiron School, I literally couldn&#8217;t even tell you what I&#8217;d be doing with my life. I wrote a really long response to his article in the comments on that post, and it got removed somehow&#8230;so I decided to re-write it and put it on my blog. So here goes&#8230;</p>
+<p> <img src="images/confused.gif" width="300" align="right" hspace="10"></p>
 
-<p><strong>My name is Victoria Friedman and I am</strong> a graduate of the second semester of students from the Flatiron School. Prior to my semester I had absolutely ZERO technical background. I graduated from a liberal arts college and was an English Literature major and a French Literature minor. I love to read and write and play sports and do other creative work (like bake and do crafts projects). I wanted to work in the world of publishing, but editorial work is nearly impossible to get involved with. So I spent two months learning some basic HTML and CSS so that I could apply to online magazines and do more than be able to just write content. And that&#8217;s when I learned about the Flatiron School. I had never been in terminal until this past January. I didn&#8217;t know my elbow from my foot, my left from right. Java? That&#8217;s short for Javascript right? Seriously. That&#8217;s what I thought.</p>
+<p><strong>When working with text files in my apps, I never seem to know when to read a file or when to just open it.</strong> And once it&#8217;s open how to I modify it from Ruby? I generally read through multiple different versions of docs, and end up going with my best bet (all while feeling equally as confused as Jennifer Lawrence). I figured there have to be rules around this..So here it is, consider this your cheat sheet to working with text files in Ruby.</p>
 
-<p><strong>I pretty much dropped everything</strong> the two weeks leading up to the start of the semester and spent around 10 hours a day at school doing the prework, all with the support of Avi and the graduates from the first class. And then the semester started. I should also point out that I was given a scholarship to attend the Flatiron School. I paid NOTHING for three months of learning. which I believe goes against your point of 90k tuitions. Also the Flatiron School&#8217;s tuition is nowhere near there to begin with.</p>
+<h2>Opening A File</h2>
 
-<p><strong>And then the semester started.</strong> I kissed my social life goodbye and buckled down. I struggled immensely with some basic programming concepts. You can read my blog post about understanding iterations and the each method <a href="http://bit.ly/1aVW6M0">here</a>and all my other blog posts that document my learning during the Flatiron School since I&#8217;ve graduated. Two of which have been included in issues of Ruby Weekly.</p>
+<p><strong>In order to do anything with a file, you have to open it first.</strong> Think about an document you receive in your email. Can you read or edit the document without opening it first? Nada.</p>
 
-<p><strong>As far as only having the ability to produce shitty web apps</strong> at the end, I built <a href="starboard.flatironschool.com"> Starboard</a> with three other students in three weeks. And none of us knew Rails prior. Also, here are some other amazing projects that have come out of the school. Actually, just check out <a href="built.flatironschool.com">Built</a> which is a CMS for all Flatiron student projects THAT WAS ALSO BUILT BY FLATIRON STUDENTS.</p>
+<p>Let&#8217;s say my app file structure looks something like this:</p>
 
-<p><strong>At the end of my interview process,</strong> I had more than one job offer. I spent six weeks interviewing and was faced with up to four rounds of interviews with companies, all of which involved technical questions. I was asked to explain the internet, write the reverse method for a string without using .reverse on a whiteboard, construct a multiplayer chess game with thousands of users and describe the caching involved, what a Ruby singleton was, and how inheritence works in javascript. If those are bullshit interview questions, please give me examples of real ones. And I&#8217;m really not sure you can fake answering those questions. I just don&#8217;t think it&#8217;s posssible.</p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>|── app
+</span><span class='line'>    ├── lib
+</span><span class='line'>    │    └── my_code.rb
+</span><span class='line'>    |── fixtures
+</span><span class='line'>      ├── info.txt
+</span><span class='line'>      │── my_contents.txt</span></code></pre></td></tr></table></div></figure>
 
-<p><strong>I am now a developer at Time Inc</strong> on their Internet Application Development Team. If you want to see some of my work since I&#8217;ve graduated, please go buy an ecbookbook on <a href=myrecipes.com>Myrecipes.com</a>. I built that. I don&#8217;t think you can call the 806th most popular website in the world a shitty web app, and my bosses seem to think I&#8217;m qualified enough to lead development for the site. I single handedly run our rails production deployments, manage project timelines and workflow, attend meetings with the sites stakeholders, all while working in collaboration with a team of 20+ people.
-<strong>Yes I make mistakes.</strong> But I also learn from them and never make the same mistake twice. Yes things are hard for me sometimes. But I also know I have an abundance of resources (both inside and outside my company) and a brain to figure it all out. Please show me a programmer who knows everything about every programming language. You can&#8217;t. It&#8217;s impossible. That&#8217;s the beauty of the tech industry, there is always something new to learn.</p>
 
-<p><strong>I&#8217;ve always told people</strong> that my biggest takeaway from my time at the Flatiron School was the ability to learn the things I don&#8217;t know. Because no one will ever know it all.</p>
+<p><code>lib/my_code.rb</code> is my ruby file where I will be writing my code to read from <code>fixtures/info.txt</code> and <code>fixtures/my_contents.txt</code>.</p>
 
-<p><strong>So please do let me know if you would like to speak with any of my bosses. I can easily put you in touch.</strong></p>
+<p>So let&#8217;s say from inside of <code>lib/my_code.rb</code>, I wanted to open the contents of <code>fixtures/info.txt</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">file</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;../fixtures/info.txt&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>I now have the contents of the <code>info.txt</code> stored in a variable called <code>file</code>. It&#8217;s important to note that the <code>file</code> variable is storing an instance of the <code>File</code> class. It&#8217;s storing an actual File object. You can see what instance methods are available on this file by entering <code>file.methods</code>.</p>
+
+<h2>Reading A File</h2>
+
+<p><strong>Now that I have my file open, it&#8217;s time to read it.</strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">file</span><span class="o">.</span><span class="n">read</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Calling the <code>read</code> method on my File object will display the entire contents of the file as a single string. If the file were a CSV, you&#8217;d need to split the string based on a comma.</p>
+
+<h2>Writing To A File</h2>
+
+<p><strong>In order to write to a file, you actually need to change the way in which you open it in the first place.</strong> Let&#8217;s say I&#8217;m going to write to <code>fixtures/my_contents.txt</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;../fixtures/my_contents.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">file</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;I am writing to a file from my program&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">file</span><span class="o">.</span><span class="n">close</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This time, you have the pass the argument <code>'w'</code>, which is the flag to write to a file. Without this additional argument to the <code>open</code> method, you can&#8217;t write to your file.</p>
+
+<p>Next, inside the <code>do</code> block, you use the method <code>write</code> method. This method accepts an argument: the string you wish to write to your file. Finally, we call the <code>close</code> method, to close the opened file. And lastly, and <code>end</code> to close our block.</p>
 </div>
 
 
@@ -146,7 +194,7 @@
   
 
 
-<time datetime="2013-10-18T12:20:00-04:00" pubdate data-updated="true">Oct 18<span>th</span>, 2013</time>
+<time datetime="2015-09-01T13:37:00-04:00" pubdate data-updated="true">Sep 1<span>st</span>, 2015</time>
       
 
 
@@ -154,7 +202,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/2013-10-18-dev-bootcamps-are-not-a-scam-a-hackers-perspective.html" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/2013-10-18-dev-bootcamps-are-not-a-scam-a-hackers-perspective.html" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://vicfriedman.github.com/blog/2015/09/01/everything-you-need-to-know-about-working-with-text-files-in-ruby/" data-via="vicfriedman" data-counturl="http://vicfriedman.github.com/blog/2015/09/01/everything-you-need-to-know-about-working-with-text-files-in-ruby/" >Tweet</a>
   
   
   
@@ -162,6 +210,8 @@
 
     
     <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/07/18/create-multiple-objects-from-single-form-in-rails/" title="Previous Post: Create Multiple Objects From Single Form in Rails">&laquo; Create Multiple Objects From Single Form in Rails</a>
       
       
     </p>
@@ -284,8 +334,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://vicfriedman.github.com/2013-10-18-dev-bootcamps-are-not-a-scam-a-hackers-perspective.html';
-        var disqus_url = 'http://vicfriedman.github.com/2013-10-18-dev-bootcamps-are-not-a-scam-a-hackers-perspective.html';
+        var disqus_identifier = 'http://vicfriedman.github.com/blog/2015/09/01/everything-you-need-to-know-about-working-with-text-files-in-ruby/';
+        var disqus_url = 'http://vicfriedman.github.com/blog/2015/09/01/everything-you-need-to-know-about-working-with-text-files-in-ruby/';
         var disqus_script = 'embed.js';
       
     (function () {

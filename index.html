@@ -69,6 +69,124 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2015/09/01/everything-you-need-to-know-about-working-with-text-files-in-ruby/">Everything You Need to Know About Working With Text Files in Ruby</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-09-01T13:37:00-04:00" pubdate data-updated="true">Sep 1<span>st</span>, 2015</time>
+        
+         | <a href="/blog/2015/09/01/everything-you-need-to-know-about-working-with-text-files-in-ruby/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38989132-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+<p> <img src="images/confused.gif" width="300" align="right" hspace="10"></p>
+
+<p><strong>When working with text files in my apps, I never seem to know when to read a file or when to just open it.</strong> And once it&#8217;s open how to I modify it from Ruby? I generally read through multiple different versions of docs, and end up going with my best bet (all while feeling equally as confused as Jennifer Lawrence). I figured there have to be rules around this..So here it is, consider this your cheat sheet to working with text files in Ruby.</p>
+
+<h2>Opening A File</h2>
+
+<p><strong>In order to do anything with a file, you have to open it first.</strong> Think about an document you receive in your email. Can you read or edit the document without opening it first? Nada.</p>
+
+<p>Let&#8217;s say my app file structure looks something like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>|── app
+</span><span class='line'>    ├── lib
+</span><span class='line'>    │    └── my_code.rb
+</span><span class='line'>    |── fixtures
+</span><span class='line'>      ├── info.txt
+</span><span class='line'>      │── my_contents.txt</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>lib/my_code.rb</code> is my ruby file where I will be writing my code to read from <code>fixtures/info.txt</code> and <code>fixtures/my_contents.txt</code>.</p>
+
+<p>So let&#8217;s say from inside of <code>lib/my_code.rb</code>, I wanted to open the contents of <code>fixtures/info.txt</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">file</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;../fixtures/info.txt&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>I now have the contents of the <code>info.txt</code> stored in a variable called <code>file</code>. It&#8217;s important to note that the <code>file</code> variable is storing an instance of the <code>File</code> class. It&#8217;s storing an actual File object. You can see what instance methods are available on this file by entering <code>file.methods</code>.</p>
+
+<h2>Reading A File</h2>
+
+<p><strong>Now that I have my file open, it&#8217;s time to read it.</strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">file</span><span class="o">.</span><span class="n">read</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Calling the <code>read</code> method on my File object will display the entire contents of the file as a single string. If the file were a CSV, you&#8217;d need to split the string based on a comma.</p>
+
+<h2>Writing To A File</h2>
+
+<p><strong>In order to write to a file, you actually need to change the way in which you open it in the first place.</strong> Let&#8217;s say I&#8217;m going to write to <code>fixtures/my_contents.txt</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;../fixtures/my_contents.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">file</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;I am writing to a file from my program&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">file</span><span class="o">.</span><span class="n">close</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This time, you have the pass the argument <code>'w'</code>, which is the flag to write to a file. Without this additional argument to the <code>open</code> method, you can&#8217;t write to your file.</p>
+
+<p>Next, inside the <code>do</code> block, you use the method <code>write</code> method. This method accepts an argument: the string you wish to write to your file. Finally, we call the <code>close</code> method, to close the opened file. And lastly, and <code>end</code> to close our block.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2015/07/18/create-multiple-objects-from-single-form-in-rails/">Create Multiple Objects From Single Form in Rails</a></h1>
     
     
@@ -1376,120 +1494,6 @@ word.toUpperCase(); =&gt; "HELLO"
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/05/how-to-write-rspec-mailer-tests/">How to Write Rspec Mailer Tests</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-08-05T20:17:00-04:00" pubdate data-updated="true">Aug 5<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/08/05/how-to-write-rspec-mailer-tests/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><strong><em>The last few weeks have been a whirl-wind of building, which has been so wonderful.</em></strong> I really feel like I got to flex my muscles a little bit (I learned to encrypt things..post to come later) but the other side of building is testing. I built three different mailers, and then learned that you can actually test your mailers with rspec. And it&#8217;s not that difficult!</p>
-
-<p><strong>I chose a few very basic pieces of mailer functionality to test:</strong><br>
-1. Was it actually sending the email<br>
-2. Was the email being sent to the desired recipient<br>
-3. Was the subject line of the email correct<br>
-4. Was the email being sent from the correct address</p>
-
-<p><strong>This was also really helpful because up until this week, we&#8217;ve only been able to test mailers locally.</strong> These Rspec tests were essentially the only way I was able to tell if the mailers were functioning how I wanted them to function.</p>
-
-<p>So here was my mailer method:</p>
-
-<pre><code>def confirmation_email(ordered_story)
-  mail(to: story.email, subject: "Here Is Your Story!", content_type: "text/html")
-end
-</code></pre>
-
-<p><strong>In my mailer spec, the first thing I did was set up a few configurations</strong> for ActionMailer that I declared to happened before each test.</p>
-
-<pre><code>  before(:each) do
-    ActionMailer::Base.delivery_method = :test
-    ActionMailer::Base.perform_deliveries = true
-    ActionMailer::Base.deliveries = []
-    @story = Factory.create(:story)
-    EbookConfirmationMailer.confirmation_email(@story).deliver
-  end
-</code></pre>
-
-<p>I&#8217;m basically saying: send my emails in the testing environment (which does have to be explicitly declared), please actually perform all my deliveries, create an array of all my sent emails, build the factory for my story class (with an instance of that class), and then finally deliver my email.</p>
-
-<p><strong>Then, I wanted to clear all of that after each test so I have a clean slate before each test.</strong></p>
-
-<pre><code>after(:each) do
-  ActionMailer::Base.deliveries.clear
-end
-</code></pre>
-
-<p><strong>So now that I have all of that set up, the tests.</strong></p>
-
-<p><strong>1. Is the email being sent?</strong></p>
-
-<pre><code>  it 'should send an email' do
-    ActionMailer::Base.deliveries.count.should == 1
-  end
-</code></pre>
-
-<p>I had originally set up my array of delivered emails, so in this test, there should only be one email. My before statement only called one email to be delivered.</p>
-
-<p><strong>2. Is the email being sent to the desired recipient?</strong></p>
-
-<pre><code>  it 'renders the receiver email' do
-    ActionMailer::Base.deliveries.first.to.should == @story.email
-  end
-</code></pre>
-
-<p>The Story class, has an email attribute, which is what is declared as the <code>to:</code> in my mailer method. The Story Factory builds an instance of the class with an email address which is the one that should be used to send the email (@story.email).</p>
-
-<p><strong>3. Does the email have the correct subject line?</strong></p>
-
-<pre><code>  it 'should set the subject to the correct subject' do
-    ActionMailer::Base.deliveries.first.subject.should == 'Here Is Your Story!'
-  end
-</code></pre>
-
-<p>The subject line of the email was expplicitly defined in my mailer. So if my email is sending properly, that subject line should be rendered in the email.</p>
-
-<p><strong>4. Was the email being sent from the correct addres?</strong></p>
-
-<pre><code>  it 'renders the sender email' do  
-    ActionMailer::Base.deliveries.first.from.should == ['notifications@stories.com']
-  end
-</code></pre>
-
-<p>When I defined my mailer, I defined a default from address <code>default :from =&gt; "notifications@stories.com"</code>
-So just like the subject line, if the email is being sent properly, that should be the from address, plain and simple.</p>
-
-<p>I guess the next step with these will be testing the mailer views (I also recently learned that you can write tests for views! Cool!)..so clearly I have lots more blog posts to write.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1515,6 +1519,10 @@ So just like the subject line, if the email is being sent properly, that should 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/09/01/everything-you-need-to-know-about-working-with-text-files-in-ruby/">Everything You Need To Know About Working With Text Files in Ruby</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/18/create-multiple-objects-from-single-form-in-rails/">Create Multiple Objects From Single Form in Rails</a>
       </li>
     
@@ -1528,10 +1536,6 @@ So just like the subject line, if the email is being sent properly, that should 
     
       <li class="post">
         <a href="/blog/2013/11/16/keeping-confidence-in-the-face-of-something-new/">Keeping Confidence in the Face of Something New</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/14/the-difference-between-url-for-and-polymorphic-url/">The Difference between url_for and polymorphic_url</a>
       </li>
     
   </ul>

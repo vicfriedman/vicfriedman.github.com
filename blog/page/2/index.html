@@ -9,7 +9,7 @@
   <meta name="author" content="Victoria Friedman">
 
   
-  <meta name="description" content="So I was recently asked to encrypt an id, and then somehow take that encryption and display it as part of a URL. Essentially, it was a mock form of &hellip;">
+  <meta name="description" content="The last few weeks have been a whirl-wind of building, which has been so wonderful. I really feel like I got to flex my muscles a little bit (I &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -63,6 +63,120 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/05/how-to-write-rspec-mailer-tests/">How to Write Rspec Mailer Tests</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-05T20:17:00-04:00" pubdate data-updated="true">Aug 5<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/08/05/how-to-write-rspec-mailer-tests/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong><em>The last few weeks have been a whirl-wind of building, which has been so wonderful.</em></strong> I really feel like I got to flex my muscles a little bit (I learned to encrypt things..post to come later) but the other side of building is testing. I built three different mailers, and then learned that you can actually test your mailers with rspec. And it&#8217;s not that difficult!</p>
+
+<p><strong>I chose a few very basic pieces of mailer functionality to test:</strong><br>
+1. Was it actually sending the email<br>
+2. Was the email being sent to the desired recipient<br>
+3. Was the subject line of the email correct<br>
+4. Was the email being sent from the correct address</p>
+
+<p><strong>This was also really helpful because up until this week, we&#8217;ve only been able to test mailers locally.</strong> These Rspec tests were essentially the only way I was able to tell if the mailers were functioning how I wanted them to function.</p>
+
+<p>So here was my mailer method:</p>
+
+<pre><code>def confirmation_email(ordered_story)
+  mail(to: story.email, subject: "Here Is Your Story!", content_type: "text/html")
+end
+</code></pre>
+
+<p><strong>In my mailer spec, the first thing I did was set up a few configurations</strong> for ActionMailer that I declared to happened before each test.</p>
+
+<pre><code>  before(:each) do
+    ActionMailer::Base.delivery_method = :test
+    ActionMailer::Base.perform_deliveries = true
+    ActionMailer::Base.deliveries = []
+    @story = Factory.create(:story)
+    EbookConfirmationMailer.confirmation_email(@story).deliver
+  end
+</code></pre>
+
+<p>I&#8217;m basically saying: send my emails in the testing environment (which does have to be explicitly declared), please actually perform all my deliveries, create an array of all my sent emails, build the factory for my story class (with an instance of that class), and then finally deliver my email.</p>
+
+<p><strong>Then, I wanted to clear all of that after each test so I have a clean slate before each test.</strong></p>
+
+<pre><code>after(:each) do
+  ActionMailer::Base.deliveries.clear
+end
+</code></pre>
+
+<p><strong>So now that I have all of that set up, the tests.</strong></p>
+
+<p><strong>1. Is the email being sent?</strong></p>
+
+<pre><code>  it 'should send an email' do
+    ActionMailer::Base.deliveries.count.should == 1
+  end
+</code></pre>
+
+<p>I had originally set up my array of delivered emails, so in this test, there should only be one email. My before statement only called one email to be delivered.</p>
+
+<p><strong>2. Is the email being sent to the desired recipient?</strong></p>
+
+<pre><code>  it 'renders the receiver email' do
+    ActionMailer::Base.deliveries.first.to.should == @story.email
+  end
+</code></pre>
+
+<p>The Story class, has an email attribute, which is what is declared as the <code>to:</code> in my mailer method. The Story Factory builds an instance of the class with an email address which is the one that should be used to send the email (@story.email).</p>
+
+<p><strong>3. Does the email have the correct subject line?</strong></p>
+
+<pre><code>  it 'should set the subject to the correct subject' do
+    ActionMailer::Base.deliveries.first.subject.should == 'Here Is Your Story!'
+  end
+</code></pre>
+
+<p>The subject line of the email was expplicitly defined in my mailer. So if my email is sending properly, that subject line should be rendered in the email.</p>
+
+<p><strong>4. Was the email being sent from the correct addres?</strong></p>
+
+<pre><code>  it 'renders the sender email' do  
+    ActionMailer::Base.deliveries.first.from.should == ['notifications@stories.com']
+  end
+</code></pre>
+
+<p>When I defined my mailer, I defined a default from address <code>default :from =&gt; "notifications@stories.com"</code>
+So just like the subject line, if the email is being sent properly, that should be the from address, plain and simple.</p>
+
+<p>I guess the next step with these will be testing the mailer views (I also recently learned that you can write tests for views! Cool!)..so clearly I have lots more blog posts to write.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1055,130 +1169,6 @@ This command should return five, as there are five photos uploaded by users in t
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/06/24/oracle-instant-client/">Oracle Instant Client</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-06-24T21:00:00-04:00" pubdate data-updated="true">Jun 24<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/06/24/oracle-instant-client/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-38989132-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-
-
-<p><strong><em>So today was my first day as a Software Engineer at Time Inc.</em></strong> I can already tell it&#8217;s going to be such an incredible learning experience, and all we did was environment setup today.</p>
-
-<p><strong>The hardest part about all of this, was setting up the client for an Oracle database.</strong> An Oracle database is an object-relational database management system, which means that it is similar to a relational-database but uses an object-oriented model. Essential, it supports objects, classes and inheritence directly in the database schemas and query language, as well as supports custom data-types and methods.</p>
-
-<p>The process of installing took me roughly 4 hours, even with the help of some great blog guides. So I thought I would give it a go at simplyifying the process even further.</p>
-
-<p><strong>1. The first step is to find your operating system in order to download the necessary components.</strong> I was using a Mac OS X Intel. Those options can be found <a href="http://www.oracle.com/technetwork/database/features/instant-client/index-097480.html">here </a>.</p>
-
-<br>
-
-
-<p><strong>2. Download Instant Client Basic, SDK and SQL*Plus.</strong> SDK stands for software development kit, and is a set of developer tools. SQLPlus is a command line tool for making SQL queries to an Oracle database. Those options can be found <a href="http://www.oracle.com/technetwork/topics/intel-macsoft-096467.html">here</a>. One thing I will make note of, I originally tried downloading the latest Version, 11.2.0.3.0, but ended up having to remove all those directories and start over again with Version 10.2.0.4 with the 64-bit package.</p>
-
-<br>
-
-
-<p><strong>3. When I downloaded the instant client, SDK and SQLPlus, they were already unzipped,</strong> so I was able to bypass that step (I was using OS X, 10.8.5). The next step was to make a directory to store instant client: <code>mkdir ~/opt/oracle</code></p>
-
-<br>
-
-
-<p><strong>4. Because instant client, SQL*Plus and SDK all download into different directories,</strong> I combined the SQLPlus and SDK directories into the instant client directory, making everything much more compact.</p>
-
-<br>
-
-
-<p><strong>5. Next, I moved my instantclient directory into my <code>/opt/oracle</code> directory:</strong> <code>mv instantclient /opt/oracle</code></p>
-
-<br>
-
-
-<p><strong>6. Setting up sym links to the libraries:</strong></p>
-
-<pre><code>  ln -s libclntsh.dylib.10.1 libclntsh.dylib
-  ln -s libocci.dylib.10.1 libocci.dylib
-</code></pre>
-
-<br>
-
-
-<p><strong>7. The next step is to set up <code>ORACLE_HOME</code>, <code>NLS_LANG</code> and <code>DYLD_LIBRARY_PATH</code> variables.</strong> I chose to set up my variables inside my .bash_profile:</p>
-
-<pre><code>  export ORACLE_HOME=/opt/oracle
-  #export ORACLE_HOME=/usr/local/oracle
-  export DYLD_LIBRARY_PATH=$ORACLE_HOME/instantclient
-  export LD_LIBRARY_PATH=$DYLD_LIBRARY_PATH
-  export SQLPATH=$ORACLE_HOME/instantclient
-  export ARCHFLAGS="-arch x86_64"
-  export NLS_LANG="AMERICAN_AMERICA.UTF8"
-  export TNS_ADMIN=$ORACLE_HOME/network/admin
-  export PATH=$PATH:$MAVEN_HOME/bin:$SVN_HOME/bin:$GIT_HOME/bin:$AMQ_PATH/bin:$DYLD_LIBRARY_PATH
-</code></pre>
-
-<p>Obviously, these paths will change base on your own selection for directory names.</p>
-
-<br>
-
-
-<p><strong>8. The final step is to put SQL*Plus in your $PATH.</strong> I did this by creating a symlink (I already had usr/local/bin in my $PATH)</p>
-
-<pre><code>  ln -s /opt/oracle/instantclient/sqlplus /usr/local/bin/sqlplus
-</code></pre>
-
-<p>You can test to make sure this works by running <code>which sqlplus</code>, which should return <code>/usr/local/bin/sqlplus</code></p>
-
-<p><strong>9. The final step is to test it all out! Try running <code>gem install ruby-oci8</code></strong> and Oracle instant client should be all set up!</p>
-
-<ul>__Helpful Links:__
-  <li>http://ruby-oci8.rubyforge.org/en/file.install-instant-client.html</li>
-  <li>http://www.pixellatedvisions.com/2009/03/25/rails-on-oracle-part-1-installing-the-oracle-instant-client-on-mac-os-x</li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1206,6 +1196,10 @@ This command should return five, as there are five photos uploaded by users in t
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/09/01/everything-you-need-to-know-about-working-with-text-files-in-ruby/">Everything You Need To Know About Working With Text Files in Ruby</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/18/create-multiple-objects-from-single-form-in-rails/">Create Multiple Objects From Single Form in Rails</a>
       </li>
     
@@ -1219,10 +1213,6 @@ This command should return five, as there are five photos uploaded by users in t
     
       <li class="post">
         <a href="/blog/2013/11/16/keeping-confidence-in-the-face-of-something-new/">Keeping Confidence in the Face of Something New</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/14/the-difference-between-url-for-and-polymorphic-url/">The Difference between url_for and polymorphic_url</a>
       </li>
     
   </ul>
