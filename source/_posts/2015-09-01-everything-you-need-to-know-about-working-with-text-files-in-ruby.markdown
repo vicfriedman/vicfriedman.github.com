@@ -19,7 +19,7 @@ categories:
 
 </script>
 
- <img src="images/confused.gif" align="center">
+ <img src="images/confused.gif" align="middle">
 
 **When working with text files in my apps, I never seem to know when to read a file or when to just open it.** And once it's open how to I modify it from Ruby? I generally read through multiple different versions of docs, and end up going with my best bet (all while feeling equally as confused as Jennifer Lawrence). I figured there have to be rules around this..So here it is, consider this your cheat sheet to working with text files in Ruby.
 
