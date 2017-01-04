@@ -28,7 +28,7 @@ __Object manipulation in ActiveResource uses standard RESTful requests:__<br>
 __Creating an object will come from sending a POST request to the api.__
 Using methods available to ActiveResource, this will look like:
       Victoria = Person.new(:first_name => "Victoria")
-Looks a lot like ActiveResource huh? So what is ActiveResource actually doing here? 
+Looks a lot like ActiveRecord huh? So what is ActiveResource actually doing here? 
       POST http://api/profiles/localhost:3000/profiles.json
 It's sending a POST` request to the JSON of the profiles application. The body of the request looks something like this:
       {"Profile": {"first_name": "Victoria", "last_name": "Friedman"} }
